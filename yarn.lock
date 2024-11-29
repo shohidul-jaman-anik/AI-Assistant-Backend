@@ -783,10 +783,10 @@ autocannon@^7.15.0:
     subarg "^1.0.0"
     timestring "^6.0.0"
 
-axios@^1.6.8:
-  version "1.6.8"
-  resolved "https://registry.npmjs.org/axios/-/axios-1.6.8.tgz"
-  integrity sha512-v/ZHtJDU39mDpyBoFVkETcd/uNdxrWRrg3bKpOKzXFA6Bvqopts6ALSMU3y6ijYxbw2B+wPrIv46egTzJXCLGQ==
+axios@^1.6.8, axios@^1.7.4:
+  version "1.7.8"
+  resolved "https://registry.npmjs.org/axios/-/axios-1.7.8.tgz"
+  integrity sha512-Uu0wb7KNqK2t5K+YQyVCLM76prD5sRFjKHbJYCP1J7JFGEQ6nN7HWn9+04LAeiJ3ji54lgS/gZCH1oxyrf1SPw==
   dependencies:
     follow-redirects "^1.15.6"
     form-data "^4.0.0"
@@ -796,6 +796,11 @@ balanced-match@^1.0.0:
   version "1.0.2"
   resolved "https://registry.npmjs.org/balanced-match/-/balanced-match-1.0.2.tgz"
   integrity sha512-3oSeUO0TMV67hN1AmbXsK4yaqU7tjiHlbxRDZOpH0KW9+CeX4bRAaX0Anxt0tx2MrpRpWwQaPwIlISEJhYU5Pw==
+
+base-64@^1.0.0:
+  version "1.0.0"
+  resolved "https://registry.npmjs.org/base-64/-/base-64-1.0.0.tgz"
+  integrity sha512-kwDPIFCGx0NZHog36dj+tHiwP4QMzsZ3AgMViUBKI0+V5n4U0ufTCUMhnQ04diaRI8EX/QcPfql7zlhZ7j4zgg==
 
 base64-js@^1.2.0, base64-js@^1.3.0, base64-js@^1.3.1:
   version "1.5.1"
@@ -1420,6 +1425,11 @@ elastic-apm-node@^3.20.0:
     sql-summary "^1.0.1"
     stream-chopper "^3.0.1"
     unicode-byte-truncate "^1.0.0"
+
+email-validator@^2.0.4:
+  version "2.0.4"
+  resolved "https://registry.npmjs.org/email-validator/-/email-validator-2.0.4.tgz"
+  integrity sha512-gYCwo7kh5S3IDyZPLZf6hSS0MnZT8QmJFqYvbqlDZSbwdZlY6QZWxJ4i/6UhITOJ4XzyI647Bm2MXKCLqnJ4nQ==
 
 emoji-regex@^10.3.0:
   version "10.3.0"
@@ -2676,6 +2686,15 @@ mailgen@^2.0.28:
     ejs "^3.1.6"
     he "^1.2.0"
     juice "^8.0.0"
+
+mailgun.js@^10.2.4:
+  version "10.2.4"
+  resolved "https://registry.npmjs.org/mailgun.js/-/mailgun.js-10.2.4.tgz"
+  integrity sha512-l1Nth1YWGrUdRIahxsUIzVGoP7waLctS0MKFpd1QPzE8NEZqZ1PafYgw+c4ThombwJFyhF18SN1htOE78Kfv+w==
+  dependencies:
+    axios "^1.7.4"
+    base-64 "^1.0.0"
+    url-join "^4.0.1"
 
 make-dir@^3.1.0:
   version "3.1.0"
@@ -4056,6 +4075,11 @@ uri-js@^4.2.2:
   integrity sha512-7rKUyy33Q1yc98pQ1DAmLtwX109F7TIfWlW1Ydo8Wl1ii1SeHieeh0HHfPeL2fMXK6z0s8ecKs9frCuLJvndBg==
   dependencies:
     punycode "^2.1.0"
+
+url-join@^4.0.1:
+  version "4.0.1"
+  resolved "https://registry.npmjs.org/url-join/-/url-join-4.0.1.tgz"
+  integrity sha512-jk1+QP6ZJqyOiuEI9AEWQfju/nB2Pw466kbA0LEZljHwKeMgd9WrAEgEGxjPDD2+TNbbb37rTyhEfrCXfuKXnA==
 
 url-template@^2.0.8:
   version "2.0.8"

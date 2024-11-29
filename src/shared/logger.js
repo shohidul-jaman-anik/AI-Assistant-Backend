@@ -20,7 +20,7 @@ const myFormat = printf(({ level, message, label, timestamp }) => {
 module.exports.logger = winston.createLogger({
     level: 'info',
     format: combine(
-        label({ label: 'Rental Home' }),
+        label({ label: 'ASON' }),
         timestamp(),
         // colorize(),
         myFormat,
@@ -52,7 +52,7 @@ module.exports.logger = winston.createLogger({
 module.exports.errorlogger = winston.createLogger({
     level: 'error',
     format: combine(
-        label({ label: 'Rental Home' }),
+        label({ label: 'ASON' }),
         timestamp(),
         myFormat,
         prettyPrint()

@@ -47,3 +47,9 @@ exports.getAllUsersService = async (filters, paginationOptions) => {
         data: users
     };
 }
+
+
+exports.deleteUserAccountService = async userId => {
+    const result = await UserModel.deleteOne({ _id: userId });
+    return result;
+};
