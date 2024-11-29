@@ -17,13 +17,13 @@ module.exports.registrationOtpTemplate = async (email, token) => {
                 <div style="max-width: 1050px;  background-color: #ffffff; padding: 20px; border-radius: 8px; box-shadow: 0 2px 4px rgba(0, 0, 0, 0.1); margin: auto; width: 90%;">
                   <h2 style="color: #333333;">Email Verification</h2>
                   <p style="color: #666666; font-size: 18px;">Dear user,</p>
-                  <p style="color: #666666; font-size: 18px;">Thank you for signing up on Inso Ai! To complete your registration, please click the link below to verify your email address:</p>
+                  <p style="color: #666666; font-size: 18px;">Thank you for signing up on ASON Ai! To complete your registration, please click the link below to verify your email address:</p>
                   <button  style="margin-bottom: 20px; background-color: #242C36; color: #FFFFFF; border: none; display: inline-block; border-radius: 8px; transition: background-color 0.3s; padding: 8px 15px; cursor: pointer;  text-align: center; ">
                   <a href="https://ason-backend.onrender.com/api/v1/auth/register/confirmation/${token}" style="text-decoration: none; color: #FFFFFF; font-size: 18px;">Verify Email</a>
                   </button>
                   <p style="color: #666666; font-size: 18px;">If you didn't sign up for our service, you can ignore this email.</p>
                 </div>
-                <p style="color: #999999; margin-top: 20px;">This email was sent by Inso Ai.</p>
+                <p style="color: #999999; margin-top: 20px;">This email was sent by ASON Ai.</p>
               </div>`,
   };
   return mailData;
@@ -50,7 +50,7 @@ module.exports.forgetPassOtpTemplate = async (email, user, OTP) => {
           </p>
         </div>
         <p style="color: #999999; margin-top: 20px; text-align: center;">
-          This email was sent by Inso Ai.
+          This email was sent by ASON Ai.
         </p>
       </div>
     `,
@@ -78,7 +78,7 @@ module.exports.deleteUserOtpTemplate = async (user, OTP) => {
           </p>
         </div>
         <p style="color: #999999; margin-top: 20px; text-align: center;">
-          This email was sent by Inso Ai.
+          This email was sent by ASON Ai.
         </p>
       </div>
     `,

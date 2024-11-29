@@ -78,10 +78,12 @@ app.use(function (req, res, next) {
 
 
 mongoose
-  .connect(config.database_local, {
-    useNewUrlParser: true,
-    useUnifiedTopology: true,
-  })
+  .connect(config.database_local, 
+  //   {
+  //   useNewUrlParser: true,
+  //   useUnifiedTopology: true,
+  // }
+)
   .then(() => logger.info('Database connection successfully'))
   .catch(err => {
     logger.error('Error connecting to the database:', err);
