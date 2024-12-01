@@ -79,7 +79,7 @@ const register = async (req, res, next) => {
   session.startTransaction();
 
   try {
-    const { password, confirmPassword, email, profile } = req.body;
+    const { password, confirmPassword, username, email, profile } = req.body;
 
     const existingEmail = await UserModel.findOne({ email }).session(session);
     if (existingEmail) {
@@ -96,6 +96,7 @@ const register = async (req, res, next) => {
       const user = await UserModel.create(
         [
           {
+            username,
             email,
             password: hashedPassword,
             profile:

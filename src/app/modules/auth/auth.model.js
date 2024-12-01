@@ -3,7 +3,7 @@ const crypto = require('crypto');
 const emailValidator = require('email-validator');
 const UserSchema = new mongoose.Schema(
   {
-    firstName: String,
+    firstName: { type: String, default: null },
     lastName: String,
     username: {
       type: String,
@@ -70,71 +70,6 @@ UserSchema.methods.generateConfirmationToken = function () {
   return token;
 };
 
-UserSchema.methods.getAllFriendRequests = async function () {
-  const populatedFriendRequests = await UserModel.findById(this._id)
-    .populate({
-      path: 'friendRequests.sender',
-      select: 'firstName lastName username email profile', // Select the fields you want to include
-    })
-    .select('friendRequests'); // Only select the friendRequests field
-
-  return populatedFriendRequests.friendRequests;
-};
-
-// Methods to handle friend requests
-UserSchema.methods.sendFriendRequest = async function (receiverId) {
-  // Check if they are already friends
-  if (this.friends.includes(receiverId)) {
-    throw new Error('You are already friends with this user.');
-  }
-
-  // Check if a friend request has already been sent
-  const existingRequest = await UserModel.findOne({
-    _id: receiverId,
-    'friendRequests.sender': this._id,
-  });
-
-  if (existingRequest) {
-    throw new Error('Friend request already sent.');
-  }
-  const request = {
-    sender: this._id,
-    status: 'pending',
-  };
-  await UserModel.findByIdAndUpdate(receiverId, {
-    $push: { friendRequests: request },
-  });
-
-  return { status: 'Success', message: 'Friend request sent successfully' };
-};
-
-UserSchema.methods.acceptFriendRequest = async function (senderId) {
-  await UserModel.findByIdAndUpdate(senderId, {
-    $push: { friends: this._id },
-  });
-  this.friends.push(senderId);
-  this.friendRequests = this.friendRequests.filter(
-    req => req.sender.toString() !== senderId.toString(),
-  );
-  await this.save();
-};
-
-UserSchema.methods.rejectFriendRequest = async function (senderId) {
-  this.friendRequests = this.friendRequests.filter(
-    req => req.sender.toString() !== senderId.toString(),
-  );
-  await this.save();
-};
-
-// Before saving database
-UserSchema.pre('save', function () {
-  console.log('Before saving database');
-});
-
-// After saving database
-UserSchema.post('', function (doc) {
-  console.log(doc, 'After saving database');
-});
 
 const UserModel = mongoose.model('User', UserSchema);
 
