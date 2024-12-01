@@ -79,7 +79,7 @@ const register = async (req, res, next) => {
   session.startTransaction();
 
   try {
-    const { password, confirmPassword, username, email, profile } = req.body;
+    const { password, confirmPassword, email } = req.body;
 
     const existingEmail = await UserModel.findOne({ email }).session(session);
     if (existingEmail) {
@@ -96,12 +96,8 @@ const register = async (req, res, next) => {
       const user = await UserModel.create(
         [
           {
-            username,
             email,
             password: hashedPassword,
-            profile:
-              profile ||
-              'https://rental-home.nyc3.cdn.digitaloceanspaces.com/INSO-AI/Profile/profile.jpg',
           },
         ],
         { session },

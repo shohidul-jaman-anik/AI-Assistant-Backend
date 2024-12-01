@@ -3,15 +3,6 @@ const crypto = require('crypto');
 const emailValidator = require('email-validator');
 const UserSchema = new mongoose.Schema(
   {
-    firstName: { type: String, default: null },
-    lastName: String,
-    username: {
-      type: String,
-      require: [true, 'Please provide a username'],
-      unique: true,
-    },
-    description: String,
-    phone: String,
     email: {
       type: String,
       required: [true, 'Please provide a unique email'],
@@ -32,13 +23,7 @@ const UserSchema = new mongoose.Schema(
       },
       default: 'unauthorized',
     },
-    profile: { type: String },
-    isProfileComplete: {
-      type: Boolean,
-      default: false,
-    },
     plan: { type: String, enum: ['free', 'premium'], default: 'free' },
-    customerId: { type: String, unique: true },
     paymentStatus: {
       type: String,
       enum: ['active', 'inactive', 'pending'],
