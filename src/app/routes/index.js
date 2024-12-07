@@ -14,6 +14,7 @@ const notificationRoute = require('../../app/modules/notification/notification.r
 const streamingRoute = require('../../app/modules/streaming/streaming.route');
 const ollamaAiRoute = require('../../app/modules/ollamaAi/ollama.route');
 const chatGptRoute = require('../../app/modules/chatgptAi/chatgpt.route');
+const groqAiRoute = require('../../app/modules/groq/groq.route');
 
 
 const moduleRoutes = [
@@ -60,6 +61,10 @@ const moduleRoutes = [
   {
     path: '/chatgpt',
     route: chatGptRoute,
+  },
+  {
+    path: '/groq',
+    route: groqAiRoute,
   },
 ];
 

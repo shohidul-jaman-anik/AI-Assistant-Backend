@@ -23,5 +23,6 @@ module.exports = {
     mailgun_key: process.env.MAILGUN_KEY,
     mailgun_from: process.env.MAILGUN_FROM,
   },
+  groq_api_key: process.env.GROQ_API_KEY
   // stripe_secret_key: process.env.STRIPE_SECRET_KEY
 };
