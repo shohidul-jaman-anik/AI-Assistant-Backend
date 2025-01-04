@@ -29,7 +29,9 @@ const UserSchema = new mongoose.Schema(
       enum: ['active', 'inactive', 'pending'],
       default: 'inactive',
     },
-
+    llamaAiSessions: [
+      { type: mongoose.Schema.Types.ObjectId, ref: 'Llama' },
+    ],
     confirmationToken: String,
     confirmationTokenExpires: Date,
     resetPasswordOTP: String,
@@ -54,7 +56,6 @@ UserSchema.methods.generateConfirmationToken = function () {
 
   return token;
 };
-
 
 const UserModel = mongoose.model('User', UserSchema);
 
