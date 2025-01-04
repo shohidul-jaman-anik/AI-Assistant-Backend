@@ -117,3 +117,44 @@ exports.LlamaAiGetResponseFromDbBySessionId = catchAsync(async (req, res) => {
     data: responseData,
   });
 });
+
+
+
+exports.deleteOneAiResponse = catchAsync(async (req, res) => {
+  const id = req.params?.sessionId;
+  const result = await deleteOneLlamaAiSession(id);
+  console.log(result, 'resultttt');
+  if (!result.success) {
+    return res.status(httpStatus.INTERNAL_SERVER_ERROR).json({
+      status: 'fail',
+      error: result.message,
+    });
+  }
+
+  sendResponse(res, {
+    statusCode: httpStatus.NO_CONTENT,
+    success: true,
+    message: result?.message,
+    data: result.message,
+  });
+});
+
+exports.deleteAllAiResponses = catchAsync(async (req, res) => {
+  const id = req.params?.userId;
+  const result = await deleteAllAiResponsesService(id);
+  console.log(result, 'resultttt');
+
+  if (!result.success) {
+    return res.status(httpStatus.INTERNAL_SERVER_ERROR).json({
+      status: 'fail',
+      error: result.message,
+    });
+  }
+
+  sendResponse(res, {
+    statusCode: httpStatus.NO_CONTENT,
+    success: true,
+    message: 'Delete All Successfully',
+    data: result,
+  });
+});

@@ -12,8 +12,8 @@ router
   .route('/get-response-by-sessionid/:sessionId')
   .get(groqAiController.LlamaAiGetResponseFromDbBySessionId);
 
-// router
-//   .route('/delete-all-response-from-db/:userId')
-//   .delete(ollamaController.deleteAllAiResponses);
+router
+  .route('/delete-all-response-from-db/:userId')
+  .delete(ollamaController.deleteAllAiResponses);
 
 module.exports = router;
