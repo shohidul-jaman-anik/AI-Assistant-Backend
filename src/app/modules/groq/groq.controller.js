@@ -9,6 +9,8 @@ const UserModel = require('../auth/auth.model');
 const {
   getAiResponsesBySession,
   getAiResponsesByUserId,
+  deleteOneLlamaAiSession,
+  deleteAllAiResponsesService,
 } = require('./groq.service');
 
 const groq = new Groq({ apiKey: config.groq_api_key });

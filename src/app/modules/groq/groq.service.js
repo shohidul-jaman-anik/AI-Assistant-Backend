@@ -1,3 +1,5 @@
+const Llama = require("./groq.model");
+
 module.exports.getAiResponsesByUserId = async userId => {
   const sessionData = await UserModel.findOne({
     _id: userId,
@@ -17,7 +19,7 @@ module.exports.getAiResponsesByUserId = async userId => {
 };
 
 module.exports.getAiResponsesBySession = async id => {
-  const sessionData = await LlamaAiSession.findOne({
+  const sessionData = await Llama.findOne({
     sessionId: id,
   });
   console.log(sessionData, 'sessionData');
@@ -30,4 +32,100 @@ module.exports.getAiResponsesBySession = async id => {
     };
   }
   return sessionData;
+};
+
+exports.deleteOneLlamaAiSession = async sessionId => {
+  const userData = await Llama.findOne({
+    _id: sessionId,
+  });
+  if (!userData) {
+    throw new Error('Gemma2AiSession not found');
+  }
+  const deleteResult = await Llama.deleteOne({
+    _id: sessionId,
+  });
+
+  // Check if the LlamaAiSession was successfully deleted
+  if (deleteResult.deletedCount === 1) {
+    // Remove the LlamaAiSession reference from the user model
+    const userUpdateResult = await UserModel.updateOne(
+      { _id: userData.user },
+      { $pull: { llamaAiSessions: sessionId } },
+    );
+
+    console.log(userUpdateResult, 'userUpdateResult userUpdateResult');
+
+    // Check if the user model was successfully updated
+    if (userUpdateResult.modifiedCount === 1) {
+      return {
+        success: true,
+        message: 'LlamaAiSession and user reference deleted successfully',
+      };
+    } else {
+      throw new Error('Failed to update the user model');
+    }
+  } else {
+    throw new Error('Failed to delete the LlamaAiSession');
+  }
+};
+
+exports.deleteAllAiResponsesService = async userId => {
+  const session = await mongoose.startSession();
+
+  try {
+    await session.startTransaction();
+
+    // Fetch user data to get the LlamaAiSession array
+    const user = await UserModel.findById(userId).session(session);
+    if (
+      !user ||
+      !user.llamaAiSessions ||
+      !Array.isArray(user.llamaAiSessions)
+    ) {
+      throw new Error('User or LlamaAiSession data not found');
+    }
+
+    const aiSessionIds = user.Llama.map(id => id.toString());
+
+    // Delete the AI sessions
+    const deleteResults = await Promise.all(
+      aiSessionIds.map(id =>
+        Llama.deleteOne({ _id: id }).session(session),
+      ),
+    );
+
+    // Check if all AI sessions were successfully deleted
+    const allDeleted = deleteResults.every(result => result.deletedCount === 1);
+
+    if (allDeleted) {
+      // Remove the AI session references from the user model
+      const userUpdateResult = await UserModel.updateOne(
+        { _id: userId },
+        { $pull: { llamaAiSessions: { $in: aiSessionIds } } },
+      ).session(session);
+
+      if (userUpdateResult.acknowledged && userUpdateResult.modifiedCount > 0) {
+        await session.commitTransaction();
+        session.endSession();
+        return {
+          statusCode: 200,
+          success: true,
+          message: 'AI sessions and user references deleted successfully',
+        };
+      } else {
+        throw new Error('Failed to update the user model');
+      }
+    } else {
+      throw new Error('Failed to delete one or more AI sessions');
+    }
+  } catch (error) {
+    await session.abortTransaction();
+    session.endSession();
+    console.error('An error occurred:', error);
+    return {
+      success: false,
+      message: 'An internal server error occurred',
+      error: error.message,
+    };
+  }
 };
