@@ -13,7 +13,7 @@ const llamaResponseSchema = new mongoose.Schema({
         type: String,
         required: true,
       },
-      message: {
+      reply: {
         type: String,
         required: true,
       },

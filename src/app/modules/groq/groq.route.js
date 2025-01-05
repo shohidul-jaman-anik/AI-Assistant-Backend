@@ -13,7 +13,11 @@ router
   .get(groqAiController.LlamaAiGetResponseFromDbBySessionId);
 
 router
+  .route('/delete-single-response/:sessionId')
+  .delete(groqAiController.deleteOneAiResponse);
+
+router
   .route('/delete-all-response-from-db/:userId')
-  .delete(ollamaController.deleteAllAiResponses);
+  .delete(groqAiController.deleteAllAiResponses);
 
 module.exports = router;

@@ -1,3 +1,4 @@
+const UserModel = require("../auth/auth.model");
 const Llama = require("./groq.model");
 
 module.exports.getAiResponsesByUserId = async userId => {
