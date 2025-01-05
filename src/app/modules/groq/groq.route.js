@@ -18,6 +18,6 @@ router
 
 router
   .route('/delete-all-response-from-db/:userId')
-  .delete(groqAiController.deleteAllAiResponses);
+  .delete(groqAiController.deleteAllAiSessions);
 
 module.exports = router;
