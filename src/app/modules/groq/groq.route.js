@@ -13,8 +13,8 @@ router
   .get(groqAiController.LlamaAiGetResponseFromDbBySessionId);
 
 router
-  .route('/delete-single-response/:sessionId')
-  .delete(groqAiController.deleteOneAiResponse);
+  .route('/delete-single-response/:objectId')
+  .delete(groqAiController.deleteOneAiSession);
 
 router
   .route('/delete-all-response-from-db/:userId')

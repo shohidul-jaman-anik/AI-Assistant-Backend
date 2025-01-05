@@ -1,5 +1,8 @@
+const httpStatus = require("http-status");
 const UserModel = require("../auth/auth.model");
 const Llama = require("./groq.model");
+const mongoose = require('mongoose');
+
 
 module.exports.getAiResponsesByUserId = async userId => {
   const sessionData = await UserModel.findOne({
@@ -35,15 +38,15 @@ module.exports.getAiResponsesBySession = async id => {
   return sessionData;
 };
 
-exports.deleteOneLlamaAiSession = async sessionId => {
+exports.deleteOneLlamaAiSession = async objectId => {
   const userData = await Llama.findOne({
-    _id: sessionId,
+    _id: objectId,
   });
   if (!userData) {
-    throw new Error('Gemma2AiSession not found');
+    throw new Error('LlamaAiSession not found');
   }
   const deleteResult = await Llama.deleteOne({
-    _id: sessionId,
+    _id: objectId,
   });
 
   // Check if the LlamaAiSession was successfully deleted
@@ -51,7 +54,7 @@ exports.deleteOneLlamaAiSession = async sessionId => {
     // Remove the LlamaAiSession reference from the user model
     const userUpdateResult = await UserModel.updateOne(
       { _id: userData.user },
-      { $pull: { llamaAiSessions: sessionId } },
+      { $pull: { llamaAiSessions: objectId } },
     );
 
     console.log(userUpdateResult, 'userUpdateResult userUpdateResult');

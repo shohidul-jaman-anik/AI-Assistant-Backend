@@ -135,8 +135,8 @@ exports.LlamaAiGetResponseFromDbBySessionId = catchAsync(async (req, res) => {
   });
 });
 
-exports.deleteOneAiResponse = catchAsync(async (req, res) => {
-  const id = req.params?.sessionId;
+exports.deleteOneAiSession = catchAsync(async (req, res) => {
+  const id = req.params?.objectId;
   const result = await deleteOneLlamaAiSession(id);
   console.log(result, 'resultttt');
   if (!result.success) {
