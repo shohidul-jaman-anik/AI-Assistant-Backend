@@ -3,6 +3,7 @@ const router = express.Router();
 const groqAiController = require('./groq.controller');
 
 router.route('/get-response').post(groqAiController.GroqAiGetResponse);
+router.route('/get-response-anonymously').post(groqAiController.GroqAiGetResponseAnonymously);
 
 router
   .route('/get-response-from-db/:userId')
