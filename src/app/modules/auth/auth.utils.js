@@ -1,6 +1,6 @@
-const otpGenerator = require('otp-generator');
+import otpGenerator from 'otp-generator';
 
-module.exports.generateOTP = async () => {
+export const generateOTP = async () => {
   const otp = await otpGenerator.generate(6, {
     lowerCaseAlphabets: false,
     upperCaseAlphabets: false,
@@ -9,7 +9,7 @@ module.exports.generateOTP = async () => {
   return otp;
 };
 
-module.exports.registrationOtpTemplate = async (email, token) => {
+export const registrationOtpTemplate = async (email, token) => {
   const mailData = {
     userEmail: email,
     sub: 'Verify Your Account',
@@ -29,7 +29,7 @@ module.exports.registrationOtpTemplate = async (email, token) => {
   return mailData;
 };
 
-module.exports.forgetPassOtpTemplate = async (email, user, OTP) => {
+export const forgetPassOtpTemplate = async (email, user, OTP) => {
   const mailData = {
     userEmail: email,
     sub: 'Verify Your One-Time Password (OTP)', // Clear and informative subject
@@ -58,7 +58,7 @@ module.exports.forgetPassOtpTemplate = async (email, user, OTP) => {
   return mailData;
 };
 
-module.exports.deleteUserOtpTemplate = async (user, OTP) => {
+export const deleteUserOtpTemplate = async (user, OTP) => {
   const mailData = {
     userEmail: user?.email,
     sub: 'Delete Account OTP',

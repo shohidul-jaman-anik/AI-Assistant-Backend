@@ -1,8 +1,15 @@
-const mongoose = require('mongoose');
-const dotenv = require('dotenv').config();
-const colors = require('colors');
-const app = require('./index');
-const config = require('./config');
+// const mongoose = require('mongoose');
+// const dotenv = require('dotenv').config();
+// const colors = require('colors');
+// const app = require('./index');
+// const config = require('./config');
+
+import mongoose from 'mongoose';
+import dotenv from 'dotenv';
+import colors from 'colors';
+import app from './index';
+import config from './config';
+
 
 // database connection
 mongoose

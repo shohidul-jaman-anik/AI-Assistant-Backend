@@ -1,10 +1,9 @@
-const httpStatus = require("http-status");
-const UserModel = require("../auth/auth.model");
-const Llama = require("./groq.model");
-const mongoose = require('mongoose');
+import httpStatus from 'http-status';
+import mongoose from 'mongoose';
+import UserModel from '../auth/auth.model.js';
+import Llama from './groq.model.js';
 
-
-module.exports.getAiResponsesByUserId = async userId => {
+const getAiResponsesByUserId = async userId => {
   const sessionData = await UserModel.findOne({
     _id: userId,
   })
@@ -22,7 +21,7 @@ module.exports.getAiResponsesByUserId = async userId => {
   return sessionData;
 };
 
-module.exports.getAiResponsesBySession = async id => {
+const getAiResponsesBySession = async id => {
   const sessionData = await Llama.findOne({
     sessionId: id,
   });
@@ -38,7 +37,7 @@ module.exports.getAiResponsesBySession = async id => {
   return sessionData;
 };
 
-exports.deleteOneLlamaAiSession = async objectId => {
+const deleteOneLlamaAiSession = async objectId => {
   const userData = await Llama.findOne({
     _id: objectId,
   });
@@ -73,8 +72,7 @@ exports.deleteOneLlamaAiSession = async objectId => {
   }
 };
 
-
-exports.deleteAllAiSessionsService = async userId => {
+const deleteAllAiSessionsService = async userId => {
   const session = await mongoose.startSession();
 
   try {
@@ -82,7 +80,11 @@ exports.deleteAllAiSessionsService = async userId => {
 
     // Fetch user data to get the LlamaAiSession array
     const user = await UserModel.findById(userId).session(session);
-    if (!user || !user.llamaAiSessions || !Array.isArray(user.llamaAiSessions)) {
+    if (
+      !user ||
+      !user.llamaAiSessions ||
+      !Array.isArray(user.llamaAiSessions)
+    ) {
       throw new Error('User or LlamaAiSession data not found');
     }
 
@@ -131,4 +133,11 @@ exports.deleteAllAiSessionsService = async userId => {
       error: error.message,
     };
   }
+};
+
+export const LlamaAiService = {
+  getAiResponsesByUserId,
+  getAiResponsesBySession,
+  deleteOneLlamaAiSession,
+  deleteAllAiSessionsService,
 };

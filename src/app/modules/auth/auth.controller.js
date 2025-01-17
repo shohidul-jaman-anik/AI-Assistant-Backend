@@ -1,29 +1,22 @@
-const bcrypt = require('bcrypt');
-const jwt = require('jsonwebtoken');
+import bcrypt from 'bcrypt';
+import jwt from 'jsonwebtoken';
 
-const {
-  getAllUsersService,
-  deleteUserAccountService,
-} = require('./auth.service');
-const UserModel = require('./auth.model');
-const mongoose = require('mongoose');
-const pick = require('../../middlewares/other/pick');
-const config = require('../../../../config');
-const httpStatus = require('http-status');
-const {
-  sendMailWithMailGun,
-} = require('../../middlewares/sendEmail/sendMailWithMailGun');
-const {
-  sendMailWithGmail,
-} = require('../../middlewares/sendEmail/verifyRegisterEmail');
-const formData = require('form-data');
-const Mailgun = require('mailgun.js');
-const {
-  generateOTP,
-  forgetPassOtpTemplate,
-  registrationOtpTemplate,
+import formData from 'form-data';
+import httpStatus from 'http-status';
+import Mailgun from 'mailgun.js';
+import mongoose from 'mongoose';
+import config from '../../../../config/index.js';
+import pick from '../../middlewares/other/pick.js';
+import { sendMailWithMailGun } from '../../middlewares/sendEmail/sendMailWithMailGun.js';
+import UserModel from './auth.model.js';
+import { getAllUsersService } from './auth.service.js';
+import {
   deleteUserOtpTemplate,
-} = require('./auth.utils');
+  forgetPassOtpTemplate,
+  generateOTP,
+  registrationOtpTemplate,
+} from './auth.utils.js';
+
 const mailgun = new Mailgun(formData);
 
 const ProtectCommonRoute = async (req, res, next) => {
@@ -610,7 +603,7 @@ const sendMailWithMailGunController = async (req, res) => {
   }
 };
 
-module.exports.authController = {
+export const authController = {
   ProtectCommonRoute,
   verifyAdmin,
   register,

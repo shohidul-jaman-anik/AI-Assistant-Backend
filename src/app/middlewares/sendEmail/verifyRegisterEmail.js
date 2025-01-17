@@ -1,7 +1,11 @@
 // WITH GMAIL
-const nodemailer = require('nodemailer');
-const { google } = require('googleapis');
-const config = require('../../../../config');
+// const nodemailer = require('nodemailer');
+// const { google } = require('googleapis');
+// const config = require('../../../../config');
+import { google } from 'googleapis';
+import nodemailer from 'nodemailer';
+import config from '../../../../config';
+// import config from '../../../../config';
 
 const oAuth2Client = new google.auth.OAuth2(
   config.client_id,
@@ -10,7 +14,7 @@ const oAuth2Client = new google.auth.OAuth2(
 );
 oAuth2Client.setCredentials({ refresh_token: config.refresh_token });
 
-module.exports.sendMailForRegisterWithGmail = async data => {
+export const sendMailForRegisterWithGmail = async data => {
   const accessToken = await oAuth2Client.getAccessToken();
 
   let transporter = nodemailer.createTransport({

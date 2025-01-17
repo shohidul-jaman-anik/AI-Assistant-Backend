@@ -1,4 +1,5 @@
 {
+  "type": "module",
   "name": "ason-backend",
   "version": "1.0.0",
   "description": "",
@@ -15,6 +16,7 @@
   "license": "ISC",
   "dependencies": {
     "@apollo/server": "^4.10.4",
+    "@langchain/core": "^0.3.30",
     "autocannon": "^7.15.0",
     "axios": "^1.6.8",
     "bcrypt": "^5.1.1",
@@ -32,6 +34,7 @@
     "http": "^0.0.1-security",
     "http-status": "^1.7.4",
     "jsonwebtoken": "^9.0.2",
+    "langchain": "^0.3.11",
     "livekit-server-sdk": "^2.3.0",
     "mailgen": "^2.0.28",
     "mailgun.js": "^10.2.4",

@@ -1,4 +1,5 @@
-const mongoose = require('mongoose');
+// import mongoose from 'mongoose';
+import mongoose from "mongoose";
 
 const llamaResponseSchema = new mongoose.Schema({
   user: { type: mongoose.Schema.Types.ObjectId, ref: 'User' },
@@ -28,4 +29,4 @@ const llamaResponseSchema = new mongoose.Schema({
 
 const Llama = mongoose.model('Llama', llamaResponseSchema);
 
-module.exports = Llama;
+export default Llama;

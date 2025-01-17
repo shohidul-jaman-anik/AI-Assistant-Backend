@@ -1,11 +1,7 @@
-const express = require('express');
-const { authController } = require('./auth.controller');
+import express from 'express';
+import { authController } from './auth.controller.js';
+
 const router = express.Router();
-const limiter = require('../../middlewares/rateLimit/authLimiter');
-const UserValidationSchema = require('./auth.validation');
-const {
-  validateRequest,
-} = require('../../middlewares/validateRequest/validateRequest');
 
 router.route('/user/single-user/:userId').get(authController.getUser); // user with id
 router.route('/user/:userEmail').get(authController.getUserByEmail); // user with email
@@ -14,8 +10,8 @@ router.route('/user/:userEmail').get(authController.getUserByEmail); // user wit
 router
   .route('/register')
   .post(
-    limiter.authLimiter,
-    validateRequest(UserValidationSchema),
+    // limiter.authLimiter,
+    // validateRequest(UserValidationSchema),
     authController.register,
   ); // Register user
 router.route('/register/confirmation/:token').get(authController.confirmEmail); // verify mail
@@ -35,4 +31,4 @@ router
   .delete(authController.deleteUserAccountOTP); // use to delete account
 router.route('/delete-account/:id').delete(authController.deleteUserAccount); // use to delete account
 
-module.exports = router;
+export const authRoutes = router;

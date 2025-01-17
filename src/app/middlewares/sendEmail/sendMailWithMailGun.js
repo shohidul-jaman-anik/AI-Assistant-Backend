@@ -1,13 +1,21 @@
-const formData = require('form-data');
-const Mailgun = require('mailgun.js');
-const config = require('../../../../config');
+// const formData = require('form-data');
+// const Mailgun = require('mailgun.js');
+// const config = require('../../../../config');
+// const mailgun = new Mailgun(formData);
+
+import formData from 'form-data';
+import Mailgun from 'mailgun.js';
+import config from '../../../../config/index.js';
+
 const mailgun = new Mailgun(formData);
+
+
 const mg = mailgun.client({
   username: 'api',
   key: `${config.mailgun?.mailgun_key}`,
 });
 
-module.exports.sendMailWithMailGun = async mailData => {
+export const  sendMailWithMailGun = async mailData => {
   const { sub, message, userEmail } = mailData;
 
   return new Promise((resolve, reject) => {

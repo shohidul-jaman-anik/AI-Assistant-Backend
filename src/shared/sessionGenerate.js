@@ -1,5 +1,9 @@
-const crypto = require('crypto');
+// const crypto = require('crypto');
+import crypto from 'crypto';
 
-module.exports.generateSessionId = () => {
+const generateSessionId = () => {
   return crypto.randomBytes(24).toString('hex');
 };
+
+
+export default generateSessionId;

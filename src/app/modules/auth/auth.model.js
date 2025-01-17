@@ -1,6 +1,8 @@
-const mongoose = require('mongoose');
-const crypto = require('crypto');
-const emailValidator = require('email-validator');
+import mongoose from 'mongoose';
+import crypto from 'crypto';
+import emailValidator from 'email-validator';
+
+
 const UserSchema = new mongoose.Schema(
   {
     email: {
@@ -59,4 +61,5 @@ UserSchema.methods.generateConfirmationToken = function () {
 
 const UserModel = mongoose.model('User', UserSchema);
 
-module.exports = UserModel;
+
+export default UserModel; 

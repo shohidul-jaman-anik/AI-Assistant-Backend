@@ -1,24 +1,26 @@
-const express = require('express');
+import express from 'express';
+import { LlamaAiController } from './groq.controller.js';
 const router = express.Router();
-const groqAiController = require('./groq.controller');
 
-router.route('/get-response').post(groqAiController.GroqAiGetResponse);
-router.route('/get-response-anonymously').post(groqAiController.GroqAiGetResponseAnonymously);
+router.route('/get-response').post(LlamaAiController.GroqAiGetResponse);
+// router
+//   .route('/get-response-anonymously')
+//   .post(LlamaAiController.GroqAiGetResponseAnonymously);
 
 router
   .route('/get-response-from-db/:userId')
-  .get(groqAiController.LlamaAiGetResponseFromDbByUserId);
+  .get(LlamaAiController.LlamaAiGetResponseFromDbByUserId);
 
 router
   .route('/get-response-by-sessionid/:sessionId')
-  .get(groqAiController.LlamaAiGetResponseFromDbBySessionId);
+  .get(LlamaAiController.LlamaAiGetResponseFromDbBySessionId);
 
 router
   .route('/delete-single-response/:objectId')
-  .delete(groqAiController.deleteOneAiSession);
+  .delete(LlamaAiController.deleteOneAiSession);
 
 router
   .route('/delete-all-response-from-db/:userId')
-  .delete(groqAiController.deleteAllAiSessions);
+  .delete(LlamaAiController.deleteAllAiSessions);
 
-module.exports = router;
+export const llamaAiRoutes = router;
