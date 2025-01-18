@@ -3,9 +3,9 @@ import { LlamaAiController } from './groq.controller.js';
 const router = express.Router();
 
 router.route('/get-response').post(LlamaAiController.GroqAiGetResponse);
-// router
-//   .route('/get-response-anonymously')
-//   .post(LlamaAiController.GroqAiGetResponseAnonymously);
+router
+  .route('/get-response-anonymously')
+  .post(LlamaAiController.GroqAiGetResponseAnonymously);
 
 router
   .route('/get-response-from-db/:userId')
