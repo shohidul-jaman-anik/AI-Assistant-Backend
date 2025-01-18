@@ -48,6 +48,20 @@ app.set('trust proxy', 'loopback');
 // Helmet middleware for security headers
 app.use(helmet());
 
+
+const corsConfig = {
+  origin: [
+    'https://ason-web.netlify.app',
+    'http://localhost:3000',
+  ],
+  credentials: true,
+  methods: ["GET", "POST", "DELETE", "PUT", "PATCH"],
+  allowedHeaders: ["Origin", "X-Requested-With", "Content-Type", "Accept", "Authorization"],
+  preflightContinue: false,
+  optionsSuccessStatus: 204
+};
+app.use(cors(corsConfig))
+
 // Additional Helmet security configurations
 app.use(
   helmet.contentSecurityPolicy({
