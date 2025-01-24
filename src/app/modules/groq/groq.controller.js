@@ -4,10 +4,10 @@ import config from '../../../../config/index.js';
 import UserModel from '../auth/auth.model.js';
 import Llama from './groq.model.js';
 
-import  generateSessionId  from '../../../shared/sessionGenerate.js';
-import { LlamaAiService } from './groq.service.js';
 import catchAsync from '../../../shared/catchAsync.js';
 import sendResponse from '../../../shared/sendResponse.js';
+import generateSessionId from '../../../shared/sessionGenerate.js';
+import { LlamaAiService } from './groq.service.js';
 
 const groq = new Groq({ apiKey: config.groq_api_key });
 
@@ -99,7 +99,10 @@ const GroqAiGetResponse = catchAsync(async (req, res) => {
     statusCode: httpStatus.OK,
     success: true,
     message: 'Response processed successfully.',
-    data: reply,
+    data: {
+      sessionId: sessionId || currentSessionId,
+      reply,
+    },
   });
 });
 
@@ -162,12 +165,7 @@ const GroqAiGetResponseAnonymously = catchAsync(async (req, res) => {
   });
 });
 
-
-
-
-
 // import { LLMChain, ConversationChain, ConversationBufferMemory } from 'langchain';
-
 
 // // Initialize memory outside the function to persist across requests
 // const memory = new ConversationBufferMemory();
