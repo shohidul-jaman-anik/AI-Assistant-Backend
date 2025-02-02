@@ -340,20 +340,135 @@ import { LlamaAiService } from './groq.service.js';
 // });
 
 // ==========================================================
+// import zepPackage from '@getzep/zep-js';
+// import { ChatGroq } from '@langchain/groq';
+// import { randomUUID } from 'crypto';
+// import { ConversationChain } from 'langchain/chains';
+// import { BufferMemory } from 'langchain/memory';
+// import UserModel from '../auth/auth.model.js';
+// import Llama from './groq.model.js';
+// const { Memory, Message, NotFoundError, ZepClient } = zepPackage;
+// const sessionMemoryStore = {}; // In-memory store for session-based memory (for demonstration, use a DB in production)
+
+// const GroqAiGetResponse = catchAsync(async (req, res) => {
+//   const prompt = req.body?.prompt;
+//   const userId = req.body?.user;
+//   const sessionId = req.body?.sessionId || randomUUID(); // Unique session ID for each request
+
+//   if (!prompt) {
+//     return sendResponse(res, {
+//       statusCode: httpStatus.BAD_REQUEST,
+//       success: false,
+//       message: 'Validation Error',
+//       errorMessages: [{ path: 'prompt', message: 'Prompt is required.' }],
+//     });
+//   }
+
+//   const user = await UserModel.findById(userId);
+//   if (!user) {
+//     return sendResponse(res, {
+//       statusCode: httpStatus.NOT_FOUND,
+//       success: false,
+//       message: 'User not found.',
+//     });
+//   }
+
+//   // Retrieve existing memory or create a new memory for the session
+//   let memory = sessionMemoryStore[sessionId];
+//   if (!memory) {
+//     memory = new BufferMemory({
+//       returnMessages: true,
+//       memoryKey: 'history',
+//     });
+//     sessionMemoryStore[sessionId] = memory; // Store the memory for this session
+//   }
+
+//   const model = new ChatGroq({
+//     model: 'llama3-8b-8192', // Choose from available Groq models
+//     temperature: 0.7,
+//     apiKey: process.env.GROQ_API_KEY, // Make sure to set this in your environment variables
+//   });
+
+//   const chain = new ConversationChain({ llm: model, memory });
+
+//   console.log('Memory Initialized:', memory);
+
+//   try {
+//     // First invocation with the user prompt
+//     const res1 = await chain.invoke({ input: prompt });
+//     console.log('First Response:', res1);
+
+//     if (!res1 || !res1.response) {
+//       throw new Error('Invalid response received from the Llama model');
+//     }
+
+//     const reply = res1?.response || 'No reply generated';
+
+//     // Database logic to save the response
+//     const responseData = {
+//       prompt,
+//       model: res1?.model || 'llama3-8b-8192',
+//       reply: reply || 'No reply generated',
+//       total_time: res1?.usage?.total_time || 0,
+//     };
+
+//     let llamaSession = await Llama.findOne({
+//       user: userId,
+//       sessionId: sessionId,
+//     });
+
+//     if (llamaSession) {
+//       llamaSession.responses.push(responseData);
+//       await llamaSession.save();
+//     } else {
+//       llamaSession = await Llama.create({
+//         user: userId,
+//         sessionId: sessionId,
+//         responses: [responseData],
+//       });
+
+//       await UserModel.findByIdAndUpdate(userId, {
+//         $push: { llamaAiSessions: llamaSession._id },
+//       });
+//     }
+
+//     // Send the response to the frontend
+//     sendResponse(res, {
+//       statusCode: httpStatus.OK,
+//       success: true,
+//       message: 'Response processed successfully.',
+//       data: {
+//         sessionId: sessionId,
+//         reply: reply,
+//       },
+//     });
+//   } catch (error) {
+//     console.error('Error in ConversationChain:', error);
+//     sendResponse(res, {
+//       statusCode: httpStatus.INTERNAL_SERVER_ERROR,
+//       success: false,
+//       message: 'Failed to get response',
+//       error: error.message,
+//     });
+//   }
+// });
+
 import zepPackage from '@getzep/zep-js';
-import { ChatGroq } from '@langchain/groq';
 import { randomUUID } from 'crypto';
-import { ConversationChain } from 'langchain/chains';
-import { BufferMemory } from 'langchain/memory';
 import UserModel from '../auth/auth.model.js';
 import Llama from './groq.model.js';
 const { Memory, Message, NotFoundError, ZepClient } = zepPackage;
-const sessionMemoryStore = {}; // In-memory store for session-based memory (for demonstration, use a DB in production)
+import { ChatGroq } from '@langchain/groq';
+import { BufferMemory } from 'langchain/memory';
+import { ConversationChain } from 'langchain/chains';
+import { HumanMessage, AIMessage } from "@langchain/core/messages";
+
+const sessionMemoryStore = {}; 
 
 const GroqAiGetResponse = catchAsync(async (req, res) => {
   const prompt = req.body?.prompt;
   const userId = req.body?.user;
-  const sessionId = req.body?.sessionId || randomUUID(); // Unique session ID for each request
+  const sessionId = req.body?.sessionId || randomUUID(); // Generate unique session ID if not provided
 
   if (!prompt) {
     return sendResponse(res, {
@@ -386,7 +501,7 @@ const GroqAiGetResponse = catchAsync(async (req, res) => {
   const model = new ChatGroq({
     model: 'llama3-8b-8192', // Choose from available Groq models
     temperature: 0.7,
-    apiKey: process.env.GROQ_API_KEY, // Make sure to set this in your environment variables
+    apiKey: process.env.GROQ_API_KEY, // Ensure this is set in your environment variables
   });
 
   const chain = new ConversationChain({ llm: model, memory });
@@ -394,7 +509,12 @@ const GroqAiGetResponse = catchAsync(async (req, res) => {
   console.log('Memory Initialized:', memory);
 
   try {
-    // First invocation with the user prompt
+    // Store user message in chat history
+    if (memory.chatHistory) {
+      await memory.chatHistory.addMessage(new HumanMessage(prompt));
+    }
+
+    // Invoke model with the current memory
     const res1 = await chain.invoke({ input: prompt });
     console.log('First Response:', res1);
 
@@ -404,7 +524,12 @@ const GroqAiGetResponse = catchAsync(async (req, res) => {
 
     const reply = res1?.response || 'No reply generated';
 
-    // Database logic to save the response
+    // Store AI response in chat history
+    if (memory.chatHistory) {
+      await memory.chatHistory.addMessage(new AIMessage(reply));
+    }
+
+    // Save response in the database
     const responseData = {
       prompt,
       model: res1?.model || 'llama3-8b-8192',
@@ -432,7 +557,7 @@ const GroqAiGetResponse = catchAsync(async (req, res) => {
       });
     }
 
-    // Send the response to the frontend
+    // Send response to the frontend
     sendResponse(res, {
       statusCode: httpStatus.OK,
       success: true,
