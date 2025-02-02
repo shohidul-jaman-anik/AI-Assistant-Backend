@@ -1,8 +1,3 @@
-// const formData = require('form-data');
-// const Mailgun = require('mailgun.js');
-// const config = require('../../../../config');
-// const mailgun = new Mailgun(formData);
-
 import formData from 'form-data';
 import Mailgun from 'mailgun.js';
 import config from '../../../../config/index.js';

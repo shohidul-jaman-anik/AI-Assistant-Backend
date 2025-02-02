@@ -1,5 +1,3 @@
-// const multer = require('multer');
-// const path = require('path');
 import multer from 'multer';
 import path from 'path';
 

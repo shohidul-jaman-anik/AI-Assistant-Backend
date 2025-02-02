@@ -1,12 +1,3 @@
-// const zod = require('zod');
-// const { ZodError } = require('zod');
-// const ApiError = require("../../../errors/ApiError");
-// const { handleCastError } = require("../../../errors/handleCastError");
-// const { handleValidationError } = require("../../../errors/handleValidationError");
-// const { handleZodError } = require("../../../errors/handleZodError");
-// const config = require('../../../../config');
-// const { errorlogger } = require('../../../shared/logger');
-
 import { ZodError } from 'zod';
 import ApiError from '../../../errors/ApiError.js';
 import config from '../../../../config/index.js';

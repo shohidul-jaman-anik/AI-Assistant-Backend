@@ -1,19 +1,3 @@
-// const express = require('express');
-// const app = express();
-// const cors = require('cors');
-// const morgan = require('morgan');
-// const router = require('./src/app/routes/index');
-// const httpStatus = require('http-status');
-// require('dotenv').config();
-// const mongoose = require('mongoose');
-// const dotenv = require('dotenv').config();
-// const colors = require('colors');
-// const config = require('./config');
-// const helmet = require("helmet");
-// const toobusy = require('toobusy-js');
-// const globalErrorHandler = require('./src/app/middlewares/globalErrorHandler/globalErrorHandler');
-// const { logger } = require('./src/shared/logger');
-
 import cors from 'cors';
 import dotenv from 'dotenv';
 import express from 'express';

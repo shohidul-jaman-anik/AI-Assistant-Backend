@@ -1,8 +1,3 @@
-// const httpStatus = require('http-status');
-// const { catchAsync } = require('../../../shared/catchAsync');
-// const { sendResponse } = require('../../../shared/sendResponse');
-// const otpGenerator = require("otp-generator");
-
 import httpStatus from 'http-status';
 import otpGenerator from 'otp-generator';
 import { catchAsync } from '../../../shared/catchAsync';

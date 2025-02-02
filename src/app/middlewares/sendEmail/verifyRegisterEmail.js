@@ -1,7 +1,3 @@
-// WITH GMAIL
-// const nodemailer = require('nodemailer');
-// const { google } = require('googleapis');
-// const config = require('../../../../config');
 import { google } from 'googleapis';
 import nodemailer from 'nodemailer';
 import config from '../../../../config';
