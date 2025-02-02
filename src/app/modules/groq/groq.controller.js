@@ -368,16 +368,21 @@ import { ChatGroq } from '@langchain/groq';
 
 const sessionUUid = randomUUID(); // Unique session ID for each request
 const zepURL = 'http://localhost:5000';
+const sessionMemoryStore = {};
 
 const GroqAiGetResponse = catchAsync(async (req, res) => {
   const prompt = req.body?.prompt;
-  const sessionId = req.body?.sessionId || "default-session";
-
-  // Simple in-memory conversation storage
-  const memory = new BufferMemory({
-    returnMessages: true,
-    memoryKey: "history",
-  });
+  const sessionId = req.body?.sessionId || randomUUID(); // Unique session ID for each request
+  
+  // Retrieve existing memory or create a new memory for the session
+  let memory = sessionMemoryStore[sessionId];
+  if (!memory) {
+    memory = new BufferMemory({
+      returnMessages: true,
+      memoryKey: "history",
+    });
+    sessionMemoryStore[sessionId] = memory; // Store the memory for this session
+  }
 
   const model = new ChatGroq({
     model: "llama3-8b-8192", // Choose from available Groq models
@@ -390,18 +395,16 @@ const GroqAiGetResponse = catchAsync(async (req, res) => {
   console.log("Memory Initialized:", memory);
 
   try {
+    // First invocation with the user prompt
     const res1 = await chain.invoke({ input: prompt });
-    console.log({ res1 });
+    console.log("First Response:", res1);
 
-    const res2 = await chain.invoke({
-      input: "What did I just say my name was?",
-    });
-
+    // Add logic for follow-up questions if needed, or directly return the result
     sendResponse(res, {
       statusCode: httpStatus.OK,
       success: true,
       message: "Get Response successfully",
-      data: res1,
+      data: res1, // Send the response from the model
     });
   } catch (error) {
     console.error("Error in ConversationChain:", error);
@@ -413,8 +416,6 @@ const GroqAiGetResponse = catchAsync(async (req, res) => {
     });
   }
 });
-
-
 
 
 const LlamaAiGetResponseFromDbByUserId = catchAsync(async (req, res) => {
