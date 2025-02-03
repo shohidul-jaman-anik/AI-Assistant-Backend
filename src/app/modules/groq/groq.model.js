@@ -14,7 +14,7 @@ const llamaResponseSchema = new mongoose.Schema({
         type: String,
         required: true,
       },
-      data: {
+      reply: {
         type: String,
         // required: true,
       },

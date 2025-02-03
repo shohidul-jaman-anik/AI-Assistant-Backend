@@ -11,11 +11,13 @@ const getAiResponsesByUserId = async userId => {
     .populate({
       path: 'llamaAiSessions',
     });
+  console.log(sessionData, 'sessionData');
   if (!sessionData) {
     return {
       statusCode: httpStatus.NOT_FOUND,
       success: false,
       message: 'Session not found',
+      reply: sessionData,
     };
   }
   return sessionData;
@@ -32,6 +34,7 @@ const getAiResponsesBySession = async id => {
       statusCode: httpStatus.NOT_FOUND,
       success: false,
       message: 'Session not found',
+      response: sessionData,
     };
   }
   return sessionData;
