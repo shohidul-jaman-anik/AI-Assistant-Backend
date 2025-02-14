@@ -471,10 +471,10 @@ import axios from 'axios';
 import { randomUUID } from 'crypto';
 import { ConversationChain } from 'langchain/chains';
 import { BufferMemory } from 'langchain/memory';
+import { Serper } from 'serper';
 import config from '../../../../config/index.js';
 import UserModel from '../auth/auth.model.js';
 import Llama from './groq.model.js';
-import { Serper } from 'serper';
 
 const { ZepClient } = zepPackage;
 
@@ -612,14 +612,13 @@ const { ZepClient } = zepPackage;
 //   }
 // });
 
-
 const sessionMemoryStore = {}; // Stores session memory for each user session
 
 const GroqAiGetResponse = catchAsync(async (req, res) => {
   const prompt = req.body?.prompt;
   const userId = req.body?.user;
   const sessionId = req.body?.sessionId || randomUUID(); // Unique session ID if not provided
-  console.log("Serper API Key:", config.serper_api_key); // Debugging
+  console.log('Serper API Key:', config.serper_api_key); // Debugging
 
   if (!prompt) {
     return sendResponse(res, {
@@ -663,10 +662,30 @@ const GroqAiGetResponse = catchAsync(async (req, res) => {
     // Fetch real-time search results using Serper
     const serper = new Serper({ apiKey: config.serper_api_key });
 
-    const searchResults = await serper.search({ q: prompt, gl: 'us', hl: 'en' });
-    const searchSummary = searchResults?.organic?.slice(0, 3).map((r) => r.snippet).join(' ');
+    const searchResults = await serper.search({
+      q: prompt,
+      gl: 'us',
+      hl: 'en',
+    });
 
-    const enrichedPrompt = searchSummary ? `${prompt}\n\nAdditional Context: ${searchSummary}` : prompt;
+    // Extract top 3 search results
+    const searchSummary = searchResults?.organic
+      ?.slice(0, 3)
+      .map(r => r.snippet)
+      .join(' ');
+
+    // Format detailed search results
+    const formattedSearchResults =
+      searchResults?.organic?.slice(0, 3).map((r, index) => ({
+        title: r.title,
+        link: r.link,
+        snippet: r.snippet,
+        position: index + 1,
+      })) || [];
+
+    const enrichedPrompt = searchSummary
+      ? `${prompt}\n\nAdditional Context: ${searchSummary}`
+      : prompt;
 
     // Store user message in chat history
     await memory.chatHistory.addMessage(new HumanMessage(enrichedPrompt));
@@ -713,9 +732,10 @@ const GroqAiGetResponse = catchAsync(async (req, res) => {
       success: true,
       message: 'Response processed successfully.',
       data: {
-        prompt,
         sessionId,
+        prompt,
         reply,
+        search_results: formattedSearchResults, // Include search results in response
       },
     });
   } catch (error) {
@@ -728,7 +748,6 @@ const GroqAiGetResponse = catchAsync(async (req, res) => {
     });
   }
 });
-
 
 const fetchSearchResults = async query => {
   try {
