@@ -682,6 +682,7 @@ const GroqAiGetResponse = catchAsync(async (req, res) => {
         snippet: r.snippet,
         position: index + 1,
       })) || [];
+    console.log('Formatted Search Results:', formattedSearchResults); 
 
     const enrichedPrompt = searchSummary
       ? `${prompt}\n\nAdditional Context: ${searchSummary}`
@@ -704,6 +705,7 @@ const GroqAiGetResponse = catchAsync(async (req, res) => {
       prompt,
       model: 'llama3-8b-8192',
       reply,
+      search_results: formattedSearchResults,
       total_time: res1?.usage?.total_time || 0,
     };
 

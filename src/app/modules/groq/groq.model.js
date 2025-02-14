@@ -18,6 +18,26 @@ const llamaResponseSchema = new mongoose.Schema({
         type: String,
         // required: true,
       },
+      search_results: [
+        {
+          title: {
+            type: String,
+            required: true,
+          },
+          link: {
+            type: String,
+            required: true,
+          },
+          snippet: {
+            type: String,
+            required: true,
+          },
+          position: {
+            type: Number,
+            required: true,
+          },
+        },
+      ],
       total_time: {
         type: String,
         required: true,
