@@ -2696,6 +2696,14 @@ isexe@^2.0.0:
   resolved "https://registry.npmjs.org/isexe/-/isexe-2.0.0.tgz"
   integrity sha512-RHxMLp9lnKHGHRng9QFhRCMbYAcVpn69smSGcq3f36xjgVVWThj4qqLbTLlq7Ssj8B+fIQ1EuCEGI2lKsyQeIw==
 
+isomorphic-unfetch@^4.0.2:
+  version "4.0.2"
+  resolved "https://registry.npmjs.org/isomorphic-unfetch/-/isomorphic-unfetch-4.0.2.tgz"
+  integrity sha512-1Yd+CF/7al18/N2BDbsLBcp6RO3tucSW+jcLq24dqdX5MNbCNTw1z4BsGsp4zNmjr/Izm2cs/cEqZPp4kvWSCA==
+  dependencies:
+    node-fetch "^3.2.0"
+    unfetch "^5.0.0"
+
 jake@^10.8.5:
   version "10.9.2"
   resolved "https://registry.npmjs.org/jake/-/jake-10.9.2.tgz"
@@ -3392,7 +3400,7 @@ node-fetch@^2.6.9:
   dependencies:
     whatwg-url "^5.0.0"
 
-node-fetch@^3.3.2:
+node-fetch@^3.2.0, node-fetch@^3.3.2:
   version "3.3.2"
   resolved "https://registry.npmjs.org/node-fetch/-/node-fetch-3.3.2.tgz"
   integrity sha512-dRB78srN/l6gqWulah9SrxeYnxeddIG30+GOqK/9OlLVyLg3HPnr6SqOWTWOXKRwC2eGYCkZ59NNuSgvSrpgOA==
@@ -4048,6 +4056,13 @@ send@0.19.0:
     range-parser "~1.2.1"
     statuses "2.0.1"
 
+serper@^1.0.6:
+  version "1.0.6"
+  resolved "https://registry.npmjs.org/serper/-/serper-1.0.6.tgz"
+  integrity sha512-cG2SjXfzsLTglsRPlIiGn8EGZGMlIoAFqQO+kuqbbKVgnugNlxyvFcW4qX1Ne/3lElcJ9TDCYu3Zrg31RhQaAQ==
+  dependencies:
+    isomorphic-unfetch "^4.0.2"
+
 serve-static@1.16.2:
   version "1.16.2"
   resolved "https://registry.npmjs.org/serve-static/-/serve-static-1.16.2.tgz"
@@ -4543,6 +4558,11 @@ undici@^6.21.0:
   version "6.21.1"
   resolved "https://registry.npmjs.org/undici/-/undici-6.21.1.tgz"
   integrity sha512-q/1rj5D0/zayJB2FraXdaWxbhWiNKDvu8naDT2dl1yTlvJp4BLtOcp2a5BvgGNQpYYJzau7tf1WgKv3b+7mqpQ==
+
+unfetch@^5.0.0:
+  version "5.0.0"
+  resolved "https://registry.npmjs.org/unfetch/-/unfetch-5.0.0.tgz"
+  integrity sha512-3xM2c89siXg0nHvlmYsQ2zkLASvVMBisZm5lF3gFDqfF2xonNStDJyMpvaOBe0a1Edxmqrf2E0HBdmy9QyZaeg==
 
 unicode-byte-truncate@^1.0.0:
   version "1.0.0"
