@@ -22,17 +22,17 @@ const TogetherAiImgGeneration = catchAsync(async (req, res) => {
     n:1,
     image_url: 'https://github.com/nutlope.png',
     response_format: 'url',
-    image_loras:[
-        {"path": "https://replicate.com/fofr/flux-black-light", "scale": 0.8},
-        {"path": "https://huggingface.co/XLabs-AI/flux-RealismLora", "scale": 0.8},
-    ],
-    // image_loras: [
-    //   { path: 'https://huggingface.co/multimodalart/flux-tarot-v1', scale: 1 },
-    //   {
-    //     path: 'https://huggingface.co/Shakker-Labs/FLUX.1-dev-LoRA-add-details',
-    //     scale: 0.8,
-    //   },
+    // image_loras:[
+    //     {"path": "https://replicate.com/fofr/flux-black-light", "scale": 0.8},
+    //     {"path": "https://huggingface.co/XLabs-AI/flux-RealismLora", "scale": 0.8},
     // ],
+    image_loras: [
+      { path: 'https://huggingface.co/multimodalart/flux-tarot-v1', scale: 1 },
+      {
+        path: 'https://huggingface.co/Shakker-Labs/FLUX.1-dev-LoRA-add-details',
+        scale: 0.8,
+      },
+    ],
   });
 
   sendResponse(res, {
