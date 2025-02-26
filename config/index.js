@@ -26,5 +26,6 @@ export default {
   groq_api_key: process.env.GROQ_API_KEY,
   tavily_api_key: process.env.TAVILY_API_KEY,
   serper_api_key: process.env.SERPER_API_KEY,
-  together_secret_key: process.env.TOGETHER_API_KEY
+  together_secret_key: process.env.TOGETHER_API_KEY,
+  gemini_secret_key: process.env.GEMINI_API_KEY
 };

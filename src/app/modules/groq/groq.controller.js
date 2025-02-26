@@ -279,110 +279,110 @@ import { LlamaAiService } from './groq.service.js';
 // const sessionMemoryStore = {}; // Stores session memory for each user session
 
 // const GroqAiGetResponse = catchAsync(async (req, res) => {
-//   const prompt = req.body?.prompt;
-//   const userId = req.body?.user;
-//   const sessionId = req.body?.sessionId || randomUUID(); // Unique session ID if not provided
+  // const prompt = req.body?.prompt;
+  // const userId = req.body?.user;
+  // const sessionId = req.body?.sessionId || randomUUID(); // Unique session ID if not provided
 
-//   if (!prompt) {
-//     return sendResponse(res, {
-//       statusCode: httpStatus.BAD_REQUEST,
-//       success: false,
-//       message: 'Validation Error',
-//       errorMessages: [{ path: 'prompt', message: 'Prompt is required.' }],
-//     });
-//   }
+  // if (!prompt) {
+  //   return sendResponse(res, {
+  //     statusCode: httpStatus.BAD_REQUEST,
+  //     success: false,
+  //     message: 'Validation Error',
+  //     errorMessages: [{ path: 'prompt', message: 'Prompt is required.' }],
+  //   });
+  // }
 
-//   const user = await UserModel.findById(userId);
-//   if (!user) {
-//     return sendResponse(res, {
-//       statusCode: httpStatus.NOT_FOUND,
-//       success: false,
-//       message: 'User not found.',
-//     });
-//   }
+  // const user = await UserModel.findById(userId);
+  // if (!user) {
+  //   return sendResponse(res, {
+  //     statusCode: httpStatus.NOT_FOUND,
+  //     success: false,
+  //     message: 'User not found.',
+  //   });
+  // }
 
-//   // Initialize session memory for conversation history
-//   let memory = sessionMemoryStore[sessionId];
-//   if (!memory) {
-//     memory = new BufferMemory({
-//       returnMessages: true,
-//       memoryKey: 'history',
-//       chatHistory: new InMemoryChatMessageHistory(), // Explicitly define chat history storage
-//     });
-//     sessionMemoryStore[sessionId] = memory;
-//   }
+  // // Initialize session memory for conversation history
+  // let memory = sessionMemoryStore[sessionId];
+  // if (!memory) {
+  //   memory = new BufferMemory({
+  //     returnMessages: true,
+  //     memoryKey: 'history',
+  //     chatHistory: new InMemoryChatMessageHistory(), // Explicitly define chat history storage
+  //   });
+  //   sessionMemoryStore[sessionId] = memory;
+  // }
 
-//   const model = new ChatGroq({
-//     model: 'llama3-8b-8192',
-//     temperature: 0.7,
-//     apiKey: process.env.GROQ_API_KEY,
-//   });
+  // const model = new ChatGroq({
+  //   model: 'llama3-8b-8192',
+  //   temperature: 0.7,
+  //   apiKey: process.env.GROQ_API_KEY,
+  // });
 
-//   const chain = new ConversationChain({ llm: model, memory });
+  // const chain = new ConversationChain({ llm: model, memory });
 
-//   console.log('Memory Initialized:', memory);
+  // console.log('Memory Initialized:', memory);
 
-//   try {
-//     // Store user message in chat history
-//     await memory.chatHistory.addMessage(new HumanMessage(prompt));
+  // try {
+  //   // Store user message in chat history
+  //   await memory.chatHistory.addMessage(new HumanMessage(prompt));
 
-//     // Invoke model with the full conversation context
-//     const res1 = await chain.invoke({ input: prompt });
-//     console.log('Model Response:', res1);
+  //   // Invoke model with the full conversation context
+  //   const res1 = await chain.invoke({ input: prompt });
+  //   console.log('Model Response:', res1);
 
-//     const reply = res1?.response || 'No reply generated'; // Extract correct response
+  //   const reply = res1?.response || 'No reply generated'; // Extract correct response
 
-//     // Store AI response in chat history
-//     await memory.chatHistory.addMessage(new AIMessage(reply));
+  //   // Store AI response in chat history
+  //   await memory.chatHistory.addMessage(new AIMessage(reply));
 
-//     // Save response in the database
-//     const responseData = {
-//       prompt,
-//       model: 'llama3-8b-8192',
-//       reply: res1?.response || 'No reply generated',
-//       total_time: res1?.usage?.total_time || 0,
-//     };
+  //   // Save response in the database
+  //   const responseData = {
+  //     prompt,
+  //     model: 'llama3-8b-8192',
+  //     reply: res1?.response || 'No reply generated',
+  //     total_time: res1?.usage?.total_time || 0,
+  //   };
 
-//     let llamaSession = await Llama.findOne({ user: userId, sessionId });
+  //   let llamaSession = await Llama.findOne({ user: userId, sessionId });
 
-//     if (llamaSession) {
-//       console.log('Existing Session Found:', llamaSession);
-//       llamaSession?.responses?.push(responseData);
-//       await llamaSession.save();
-//       console.log('Updated Session:', llamaSession);
-//     } else {
-//       console.log('Creating New Session...');
-//       llamaSession = await Llama.create({
-//         user: userId,
-//         sessionId,
-//         responses: [responseData],
-//       });
-//       console.log('New Session Created:', llamaSession);
-//       await UserModel.findByIdAndUpdate(userId, {
-//         $push: { llamaAiSessions: llamaSession._id },
-//       });
-//     }
+  //   if (llamaSession) {
+  //     console.log('Existing Session Found:', llamaSession);
+  //     llamaSession?.responses?.push(responseData);
+  //     await llamaSession.save();
+  //     console.log('Updated Session:', llamaSession);
+  //   } else {
+  //     console.log('Creating New Session...');
+  //     llamaSession = await Llama.create({
+  //       user: userId,
+  //       sessionId,
+  //       responses: [responseData],
+  //     });
+  //     console.log('New Session Created:', llamaSession);
+  //     await UserModel.findByIdAndUpdate(userId, {
+  //       $push: { llamaAiSessions: llamaSession._id },
+  //     });
+  //   }
 
-//     // Send response to the frontend
-//     sendResponse(res, {
-//       statusCode: httpStatus.OK,
-//       success: true,
-//       message: 'Response processed successfully.',
-//       data: {
-//         prompt,
-//         sessionId,
-//         reply,
-//       },
-//     });
-//   } catch (error) {
-//     console.error('Error in ConversationChain:', error);
-//     sendResponse(res, {
-//       statusCode: httpStatus.INTERNAL_SERVER_ERROR,
-//       success: false,
-//       message: 'Failed to get response',
-//       error: error.message,
-//     });
-//   }
+  //   // Send response to the frontend
+  //   sendResponse(res, {
+  //     statusCode: httpStatus.OK,
+  //     success: true,
+  //     message: 'Response processed successfully.',
+  //     data: {
+  //       prompt,
+  //       sessionId,
+  //       reply,
+  //     },
+  //   });
+  // } catch (error) {
+  //   console.error('Error in ConversationChain:', error);
+  //   sendResponse(res, {
+  //     statusCode: httpStatus.INTERNAL_SERVER_ERROR,
+  //     success: false,
+  //     message: 'Failed to get response',
+  //     error: error.message,
+  //   });
+  // }
 // });
 
 // const MAX_MEMORY_SIZE = 12; // Limits stored messages per session

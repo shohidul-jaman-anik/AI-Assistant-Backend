@@ -3,6 +3,7 @@ import { llamaAiRoutes } from '../modules/groq/groq.route.js';
 import { authRoutes } from '../modules/auth/auth.route.js';
 import { tavilyAiRoutes } from '../modules/tavily/tavily.route.js';
 import { togetherAiRoutes } from '../modules/togetherAi/togeterAi.route.js';
+import { geminiAiRoutes } from '../modules/gemini/gemini.route.js';
 
 const router = express.Router();
 
@@ -56,6 +57,10 @@ const moduleRoutes = [
   {
     path: '/tavily',
     route: tavilyAiRoutes,
+  },
+  {
+    path: '/gemini',
+    route: geminiAiRoutes,
   },
 ];
 

@@ -32,7 +32,7 @@ const UserSchema = new mongoose.Schema(
       default: 'inactive',
     },
     llamaAiSessions: [
-      { type: mongoose.Schema.Types.ObjectId, ref: 'Llama' },
+      { type: mongoose.Schema.Types.ObjectId, ref: 'Chat-History' },
     ],
     confirmationToken: String,
     confirmationTokenExpires: Date,

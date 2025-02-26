@@ -47,6 +47,6 @@ const llamaResponseSchema = new mongoose.Schema({
   createdAt: { type: Date, default: Date.now },
 });
 
-const Llama = mongoose.model('Llama', llamaResponseSchema);
+const Llama = mongoose.model('Chat-History', llamaResponseSchema);
 
 export default Llama;
