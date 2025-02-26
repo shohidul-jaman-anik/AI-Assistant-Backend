@@ -30,9 +30,9 @@ const GeminiAiGetResponseAnonymously = catchAsync(async (req, res) => {
     });
   }
 
-  console.log(userId, 'userIduserIduserId');
+
   const user = await UserModel.findById(userId);
-  console.log(user, 'user user user');
+ 
 
   if (!user) {
     return sendResponse(res, {
@@ -101,6 +101,9 @@ const GeminiAiGetResponseAnonymously = catchAsync(async (req, res) => {
     });
   }
 });
+
+
+
 
 export const GeminiAiController = {
   GeminiAiGetResponseAnonymously,
