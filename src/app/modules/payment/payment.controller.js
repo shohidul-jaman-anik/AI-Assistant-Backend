@@ -4,7 +4,7 @@ import sendResponse from '../../../shared/sendResponse.js';
 import UserModel from '../auth/auth.model.js';
 import SubscriptionModel from './payment.model.js';
 import { PaymentService } from './payment.service.js';
-import { checkUsageLimits } from '../../middlewares/checkUsageLimits/checkUsageLimits.js';
+import { checkImageUsageLimits, checkPromtsUsageLimits, checkUsageLimits } from '../../middlewares/checkUsageLimits/checkUsageLimits.js';
 import { checkFreePlanLimits } from '../../middlewares/checkFreePlanLimits/checkFreePlanLimits.js';
 
 const createCheckoutSession = catchAsync(async (req, res, next) => {
@@ -75,7 +75,7 @@ const incrementPromptsUsed = async (userId) => {
     const user = await checkFreePlanLimits(userId, 'prompt');
 
     if (user.isSubscribed) {
-      const subscription = await checkUsageLimits(userId);
+      const subscription = await checkPromtsUsageLimits(userId);
       console.log("Subscription check result:", subscription);
 
       if (!subscription || !subscription._id) {
@@ -107,7 +107,7 @@ const incrementImagesUsed = async (userId) => {
     const user = await checkFreePlanLimits(userId, 'image');
 
     if (user.isSubscribed) {
-      const subscription = await checkUsageLimits(userId);
+      const subscription = await checkImageUsageLimits(userId);
       console.log("Subscription check result:", subscription);
 
       if (!subscription || !subscription._id) {

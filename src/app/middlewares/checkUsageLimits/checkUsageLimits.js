@@ -7,11 +7,11 @@ const limits = {
   enterprise: { prompts: 1000, images: 100 },
 };
 
-export const checkUsageLimits = async (userId) => {
-const subscription = await SubscriptionModel.findOne(
+export const checkPromtsUsageLimits = async userId => {
+  const subscription = await SubscriptionModel.findOne(
     { userId, paymentStatus: 'paid', expiresAt: { $gte: new Date() } }, // Ensure it's not expired
     {},
-    { sort: { expiresAt: -1 } } // Get the latest subscription first
+    { sort: { expiresAt: -1 } }, // Get the latest subscription first
   );
 
   if (!subscription) {
@@ -22,12 +22,35 @@ const subscription = await SubscriptionModel.findOne(
 
   // ✅ Use correct field names inside `usage`
   if (subscription.usage.promptsUsed >= planLimits.prompts) {
-    throw new Error(`Your ${subscription.plan_name} plan prompts limit reached..`);
+    throw new Error(
+      `Your ${subscription.plan_name} plan prompts limit reached..`,
+    );
   }
+
+
+  return subscription;
+};
+
+
+export const checkImageUsageLimits = async userId => {
+  const subscription = await SubscriptionModel.findOne(
+    { userId, paymentStatus: 'paid', expiresAt: { $gte: new Date() } }, // Ensure it's not expired
+    {},
+    { sort: { expiresAt: -1 } }, // Get the latest subscription first
+  );
+
+  if (!subscription) {
+    throw new Error('No active subscription found.');
+  }
+
+  const planLimits = limits[subscription.plan_name];
+
 
   if (subscription.usage.imagesUsed >= planLimits.images) {
     throw new Error('Image generation limit reached.');
-    throw new Error(`Your ${subscription.plan_name} plan image generation limit reached..`);
+    throw new Error(
+      `Your ${subscription.plan_name} plan image generation limit reached..`,
+    );
   }
 
   return subscription;
