@@ -27,5 +27,8 @@ export default {
   tavily_api_key: process.env.TAVILY_API_KEY,
   serper_api_key: process.env.SERPER_API_KEY,
   together_secret_key: process.env.TOGETHER_API_KEY,
-  gemini_secret_key: process.env.GEMINI_API_KEY
+  gemini_secret_key: process.env.GEMINI_API_KEY,
+  deepseek_secret_key: process.env.DEEPSEEK_SUMVANOVA_API_KEY,
+  stripe_secret_key: process.env.STRIPE_SECRET_KEY,
+  stripe_webhook_secret_key: process.env.STRIPE_WEBHOOK_SECRET,
 };

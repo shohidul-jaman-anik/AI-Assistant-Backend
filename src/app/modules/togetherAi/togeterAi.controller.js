@@ -3,6 +3,7 @@ import Together from 'together-ai';
 import config from '../../../../config/index.js';
 import catchAsync from '../../../shared/catchAsync.js';
 import sendResponse from '../../../shared/sendResponse.js';
+import { paymentController } from '../payment/payment.controller.js';
 
 const together = new Together({ apiKey: config.together_secret_key });
 
@@ -19,7 +20,7 @@ const TogetherAiImgGeneration = catchAsync(async (req, res) => {
     height: 1024,
     steps: 28,
     prompt: prompt,
-    n:1,
+    n: 1,
     image_url: 'https://github.com/nutlope.png',
     response_format: 'url',
     // image_loras:[
@@ -34,6 +35,24 @@ const TogetherAiImgGeneration = catchAsync(async (req, res) => {
       },
     ],
   });
+
+  // *✅ Increment images usage only if AI generates a response*
+  try {
+    const paymentResult = await paymentController.incrementImagesUsed(user);
+
+    if (!paymentResult.success) {
+      return res
+        .status(400)
+        .json({ success: false, message: paymentResult.message });
+    }
+  } catch (error) {
+    console.error('Error in incrementImagesUsed:', error);
+
+    return res.status(400).json({
+      success: false,
+      message: error.message || 'An error occurred while updating image usage.',
+    });
+  }
 
   sendResponse(res, {
     statusCode: httpStatus.OK,

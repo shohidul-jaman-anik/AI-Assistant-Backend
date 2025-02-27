@@ -1,143 +1,144 @@
-const { catchAsync } = require("../../../shared/catchAsync");
-const { sendResponse } = require("../../../shared/sendResponse");
-const { getPaymentService, updatePaymentService, deletePaymentService, createPaymentService, getAllPaymentService, getSinglePaymentService, calculateMonthlyStatisticsService, calculateYearlyStatisticsService, calculateQuarterlyStatisticsService, getOwnerPaymentService, getTenantsPaymentService } = require("./payment.service")
+import mongoose from 'mongoose';
+import catchAsync from '../../../shared/catchAsync.js';
+import sendResponse from '../../../shared/sendResponse.js';
+import UserModel from '../auth/auth.model.js';
+import SubscriptionModel from './payment.model.js';
+import { PaymentService } from './payment.service.js';
+import { checkUsageLimits } from '../../middlewares/checkUsageLimits/checkUsageLimits.js';
+import { checkFreePlanLimits } from '../../middlewares/checkFreePlanLimits/checkFreePlanLimits.js';
+
+const createCheckoutSession = catchAsync(async (req, res, next) => {
+  const { userId, plan } = req.body;
+  console.log(userId,plan)
+  
+  if (!mongoose.Types.ObjectId.isValid(userId)) {
+    console.error('Invalid User ID:', userId);
+    return res.status(400).json({ error: 'Invalid User ID' });
+  }
+
+  const user = await UserModel.findById(userId);
+  if (!user) return res.status(404).json({ error: "User not found" });
+
+  const sessionUrl = await PaymentService.createCheckoutSessionService(user, plan);
+
+  sendResponse(res, {
+    statusCode: 200,
+    success: true,
+    message: "Checkout session created successfully",
+    data: { url: sessionUrl },
+  });
+});
+
+const handleWebhook = catchAsync(async (req, res, next) => {
+  await PaymentService.handleWebhookService(req, res);
+});
 
 
-module.exports.createPayment = async (req, res, next) => {
-    try {
-        const data = req.body
-        const price = data.price;
-        const amount = price * 100;
-        const paymentIntent = await createPaymentService(amount);
-
-        res.send({
-            clientSecret: paymentIntent.client_secret,
-        });
-
-    } catch (error) {
-        res.status(400).json({
-            status: "Fail",
-            message: "Payment not yet",
-            error: error.message
-        })
-        console.log(error, 'error')
-    }
-}
-
-module.exports.getTenantsPayment = catchAsync(async (req, res) => {
-
-    const email = req?.query?.email;
-    const result = await getTenantsPaymentService(email);
-
+const getAllSubscriptions = catchAsync(async (req, res, next) => {
+  const subscriptions = await SubscriptionModel.find({}).sort({ createdAt: -1 }); // ✅ Sort by latest first
     sendResponse(res, {
-        statusCode: httpStatus.CREATED,
+        statusCode: 200,
         success: true,
-        message: "get Payment successfully",
-        data: result,
+        message: "All subscriptions fetched successfully",
+        data: subscriptions,
     });
 });
 
 
-module.exports.getOwnerPayment = async (req, res) => {
-    try {
-        const email = req?.query?.email;
-        const result = await getOwnerPaymentService(email);
+const getSubscriptionsByUserId = catchAsync(async (req, res, next) => {
+  const { userId } = req.params;
+  if (!userId) return res.status(400).json({ error: "User ID is required" });
 
+  const subscriptions = await SubscriptionModel.find({ userId })
+    .populate('userId', 'email')
+    .sort({ createdAt: -1 }); // ✅ Sort by latest first
 
-        // Calculate monthly statistics
-        const monthlyStats = await calculateMonthlyStatisticsService(email);
+  if (!subscriptions.length) {
+      return sendResponse(res, {
+          statusCode: 404,
+          success: false,
+          message: "No subscriptions found for this user",
+      });
+  }
 
-
-        // Calculate yearly statistics
-        const yearlyStats = await calculateYearlyStatisticsService(email);
-
-
-        // Calculate yearly statistics
-        const quarterlyStats = await calculateQuarterlyStatisticsService(email);
-
-
-        res.status(200).json({
-            status: "success",
-            message: "get Payment successfully",
-            data: {
-                data: result,
-                monthlyStatistics: monthlyStats,
-                yearlyStatistics: yearlyStats,
-                quarterStatistics: quarterlyStats
-            }
-        });
-    } catch (error) {
-        res.status(400).json({
-            status: "fail",
-            message: "Couldn't get Payment",
-            error: error.message
-        });
-    }
-}
-
-
-module.exports.getAllPayment = catchAsync(async (req, res) => {
-
-    const result = await getAllPaymentService();
-
-    sendResponse(res, {
-        statusCode: httpStatus.CREATED,
-        success: true,
-        message: "get Payment successfully",
-        data: result,
-    });
-});
-
-module.exports.getSinglePayment = catchAsync(async (req, res) => {
-
-    const id = req.params.id;
-    const result = await getSinglePaymentService(id);
-
-    sendResponse(res, {
-        statusCode: httpStatus.CREATED,
-        success: true,
-        message: "get Payment successfully",
-        data: result,
-    });
+  sendResponse(res, {
+      statusCode: 200,
+      success: true,
+      message: "User subscriptions fetched successfully",
+      data: subscriptions,
+  });
 });
 
 
-module.exports.updatePayment = catchAsync(async (req, res) => {
+const incrementPromptsUsed = async (userId) => {
+  try {
+    const user = await checkFreePlanLimits(userId, 'prompt');
 
-    const payments = req.body
-    const updatedPayments = await updatePaymentService(payments);
+    if (user.isSubscribed) {
+      const subscription = await checkUsageLimits(userId);
+      console.log("Subscription check result:", subscription);
 
-    sendResponse(res, {
-        statusCode: httpStatus.CREATED,
-        success: true,
-        message: "Update successfully",
-        data: updatedPayments,
-    });
-});
+      if (!subscription || !subscription._id) {
+        throw new Error('Subscription not found or invalid.');
+      }
 
-
-exports.deletePayment = catchAsync(async (req, res) => {
-
-    const { id } = req.params
-    console.log(id);
-    const result = await deletePaymentService(id)
-
-
-    if (!result.deletedCount) {
-        return res.status(400).json({
-            status: "fail",
-            error: "Could't delete"
-        })
+      await SubscriptionModel.updateOne(
+        { _id: subscription._id },
+        { $inc: { 'usage.promptsUsed': 1 } }
+      );
+    } else {
+      // Increment free plan usage
+      user.freePlanUsage.promptsUsed += 1;
+      await user.save();
     }
 
-    sendResponse(res, {
-        statusCode: httpStatus.CREATED,
-        success: true,
-        message: "Delete Successfull",
-        data: result,
-    });
-});
+    return { success: true, message: 'Prompt usage updated successfully.' };
+
+  } catch (error) {
+    console.error('Error in incrementPromptsUsed:', error);
+    return { success: false, message: error.message };
+  }
+};
 
 
 
+const incrementImagesUsed = async (userId) => {
+  try {
+    const user = await checkFreePlanLimits(userId, 'image');
 
+    if (user.isSubscribed) {
+      const subscription = await checkUsageLimits(userId);
+      console.log("Subscription check result:", subscription);
+
+      if (!subscription || !subscription._id) {
+        throw new Error('Subscription not found or invalid.');
+      }
+
+      await SubscriptionModel.updateOne(
+        { _id: subscription._id },
+        { $inc: { 'usage.imagesUsed': 1 } }
+      );
+    } else {
+      // Increment free plan usage
+      user.freePlanUsage.imagesUsed += 1;
+      await user.save();
+    }
+
+    return { success: true, message: 'Image usage updated successfully.' };
+
+  } catch (error) {
+    console.error('Error in incrementImagesUsed:', error);
+    return { success: false, message: error.message || 'An error occurred while updating image usage.' };
+  }
+};
+
+
+
+export const paymentController = {
+    createCheckoutSession,
+    handleWebhook,
+    getAllSubscriptions,
+    getSubscriptionsByUserId,
+    incrementPromptsUsed,
+    incrementImagesUsed
+};

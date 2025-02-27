@@ -475,6 +475,7 @@ import { Serper } from 'serper';
 import config from '../../../../config/index.js';
 import UserModel from '../auth/auth.model.js';
 import Llama from './groq.model.js';
+import { paymentController } from '../payment/payment.controller.js';
 
 const { ZepClient } = zepPackage;
 
@@ -696,6 +697,22 @@ const GroqAiGetResponse = catchAsync(async (req, res) => {
     console.log('Model Response:', res1);
 
     const reply = res1?.response || 'No reply generated';
+
+    try {
+      const paymentResult = await paymentController.incrementPromptsUsed(userId);
+    
+      if (!paymentResult.success) {
+        return res.status(400).json({ success: false, message: paymentResult.message });
+      }
+    } catch (error) {
+      console.error('Error in incrementPromptsUsed:', error);
+    
+      // Send the full error message as a response
+      return res.status(400).json({
+        success: false,
+        message: error.message || 'An error occurred while updating prompt usage.',
+      });
+    }  
 
     // Store AI response in chat history
     await memory.chatHistory.addMessage(new AIMessage(reply));

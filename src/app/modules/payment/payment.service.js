@@ -1,247 +1,142 @@
-const Payment = require("./payment.model");
-const stripe = require("stripe")(process.env.STRIPE_SECRET_KEY);
+import Stripe from 'stripe';
+const stripe = new Stripe(process.env.STRIPE_SECRET_KEY);
+import UserModel from '../auth/auth.model.js';
+import SubscriptionModel from './payment.model.js';
+import moment from 'moment';
 
 
+const createCheckoutSessionService = async (user, plan) => {
+  if (!['personal', 'professional', 'business', 'enterprise'].includes(plan.plan_name)) {
+    throw new Error('Invalid plan name');
+  }
+  if (!['month', 'year'].includes(plan.duration)) {
+    throw new Error('Invalid plan duration');
+  }
 
-exports.createPaymentService = async (amount) => {
-    const payment = await stripe.paymentIntents.create({
-        amount: amount,
-        currency: "usd",
-        payment_method_types: [
-            "card"
-        ],
-    })
-
-    return payment;
-}
-
-module.exports.getTenantsPaymentService = async (userEmail) => {
-    const result = await Payment.find({ 'formData.email': userEmail });
-    return result;
-}
-
-
-module.exports.getOwnerPaymentService = async (userEmail) => {
-    const results = await Payment.find({ ownerEmail: userEmail });
-    return results;
-}
-
-
-
-module.exports.getAllPaymentService = async () => {
-    const results = await Payment.find({});
-
-
-    const processedResults = results.map(payment => {
-        const price = parseFloat(payment.price) || 0;
-        const propertyType = payment.propertyType.split(" ")[0];
-        const transactionId = payment.transactionId.slice(0, 9);
-        const subTotal = price * payment.quantity;
-
-
-        return {
-            ...payment.toObject(),
-            propertyType,
-            transactionId,
-            subTotal,
-        };
-    });
-
-
-    return processedResults;
-}
-
-
-module.exports.calculateMonthlyStatisticsService = async (sellerEmail) => {
-    const monthlyStats = await Payment.aggregate([
-        {
-            $match: { ownerEmail: sellerEmail } // Filter by seller email
+  const session = await stripe.checkout.sessions.create({
+    payment_method_types: ['card'],
+    customer_email: user.email,
+    line_items: [
+      {
+        price_data: {
+          currency: 'usd',
+          product_data: { name: plan.plan_name },
+          unit_amount: plan.price * 100,
+          recurring: { interval: plan.duration },
         },
-        {
-            $group: {
-                _id: { $dateToString: { format: "%Y-%m", date: "$formData.date" } },
-                income: { $sum: { $multiply: ["$price", "$quantity"] } }, // Calculate income
-                expenses: { $sum: { $multiply: ["$price", "$quantity", { $divide: ["$discount", 100] }] } }, // Calculate expenses considering discount
-                count: { $sum: 1 } // Count new orders
-            }
-        },
-        {
-            $project: {
-                _id: 0,
-                month: "$_id",
-                income: 1,
-                expenses: 1,
-                count: 1,
-                averageOrderValue: { $divide: ["$income", "$count"] }, // Calculate average order value
-                revenue: { $add: ["$income", "$expenses"] }, // Calculate revenue
-                profit: { $subtract: ["$income", "$expenses"] } // Calculate profit
-            }
-        }
-    ]);
+        quantity: 1,
+      },
+    ],
+    mode: 'subscription',
+    metadata: {
+      plan_name: plan.plan_name,
+      duration: plan.duration,
+    },
+    // success_url: `${process.env.CLIENT_URL}/success?session_id={CHECKOUT_SESSION_ID}`,
+    // success_url: `${process.env.CLIENT_URL}`,
+    // cancel_url: `${process.env.CLIENT_URL}`,
+    success_url: `${process.env.BASE_URL}`,
+    cancel_url: `${process.env.BASE_URL}`,
+  });
 
-
-    return monthlyStats;
-}
-
-
-module.exports.calculateYearlyStatisticsService = async (sellerEmail) => {
-    const yearlyStats = await Payment.aggregate([
-        {
-            $match: { ownerEmail: sellerEmail } // Filter by seller email
-        },
-        {
-            $group: {
-                _id: {
-                    year: { $dateToString: { format: "%Y", date: "$formData.date" } },
-                    orderID: "$_id" // Group by order ID to count orders
-                },
-                income: { $sum: { $multiply: ["$price", "$quantity"] } }, // Calculate income
-                expenses: { $sum: { $multiply: ["$price", "$quantity", { $divide: ["$discount", 100] }] } }, // Calculate expenses considering discount
-                salesVolume: { $sum: "$quantity" } // Calculate sales volume
-            }
-        },
-        {
-            $group: {
-                _id: "$_id.year",
-                income: { $sum: "$income" },
-                expenses: { $sum: "$expenses" },
-                profit: { $sum: { $subtract: ["$income", "$expenses"] } }, // Calculate profit
-                totalOrderValue: { $sum: { $add: ["$income", "$expenses"] } }, // Calculate total order value
-                totalOrders: { $sum: 1 }, // Count the number of orders
-                salesVolume: { $sum: "$salesVolume" } // Calculate total sales volume
-            }
-        },
-        {
-            $project: {
-                _id: 0,
-                year: "$_id",
-                income: 1,
-                expenses: 1,
-                profit: 1,
-                totalOrderValue: 1,
-                totalOrders: 1,
-                salesVolume: 1,
-                incomePercentage: { $multiply: [{ $divide: ["$income", "$totalOrderValue"] }, 100] },
-                expensesPercentage: { $multiply: [{ $divide: ["$expenses", "$totalOrderValue"] }, 100] },
-                orderPercentage: { $multiply: [{ $divide: ["$profit", "$totalOrderValue"] }, 100] } // Calculate order percentage (profit margin)
-            }
-        }
-    ]);
-    return yearlyStats;
-}
-
-
-
-
-module.exports.calculateQuarterlyStatisticsService = async (sellerEmail) => {
-    const quarterlyStats = await Payment.aggregate([
-        {
-            $match: { ownerEmail: sellerEmail } // Filter by seller email
-        },
-        {
-            $group: {
-                _id: {
-                    quarter: {
-                        $let: {
-                            vars: {
-                                month: { $month: { $toDate: "$formData.date" } },
-                                year: { $year: { $toDate: "$formData.date" } }
-                            },
-                            in: {
-                                $concat: [
-                                    "Q",
-                                    {
-                                        $cond: [
-                                            { $lte: ["$$month", 3] },
-                                            "1",
-                                            {
-                                                $cond: [
-                                                    { $lte: ["$$month", 6] },
-                                                    "2",
-                                                    {
-                                                        $cond: [
-                                                            { $lte: ["$$month", 9] },
-                                                            "3",
-                                                            "4"
-                                                        ]
-                                                    }
-                                                ]
-                                            }
-                                        ]
-                                    },
-                                    "-",
-                                    { $toString: "$$year" }
-                                ]
-                            }
-                        }
-                    },
-                    propertyType: "$propertyType"
-                },
-                value: { $sum: { $multiply: ["$price", "$quantity"] } },
-            }
-        },
-        {
-            $group: {
-                _id: "$_id.quarter",
-                categories: { $push: { propertyType: "$_id.propertyType", value: "$value" } }
-            }
-        },
-        {
-            $project: {
-                _id: 0,
-                name: "$_id",
-                categories: 1
-            }
-        }
-    ]);
-
-    // Assigning trend values to quarterly statistics
-    const quarterStatistics = quarterlyStats.map((quarter, index) => ({
-        ...quarter,
-    }));
-
-
-    return quarterStatistics;
+  return session.url;
 };
 
 
-module.exports.getSinglePaymentService = async (id) => {
-    const singlePayment = await Payment.findOne({ _id: id });
-    const price = parseFloat(singlePayment.price) || 0;
-    const subTotal = price * singlePayment.quantity;
+const handleWebhookService = async (req, res) => {
+  const endpointSecret = process.env.STRIPE_WEBHOOK_SECRET;
+  const sig = req.headers['stripe-signature'];
 
+  if (!sig || !endpointSecret) {
+    return res.status(400).send('Webhook Error: Missing Stripe Signature or Secret');
+  }
 
-    return {
-        ...singlePayment.toObject(),
-        subTotal
-    };
-};
+  let event;
+  try {
+    event = stripe.webhooks.constructEvent(req.body, sig, endpointSecret);
+  } catch (err) {
+    return res.status(400).send(`Webhook signature verification failed. ${err.message}`);
+  }
 
+  try {
+    if (event.type === 'checkout.session.completed') {
+      const session = event.data.object;
+      const user = await UserModel.findOne({ email: session.customer_email });
 
-exports.updatePaymentService = async (payments) => {
-    if (!Array.isArray(payments)) {
-        payments = [payments];
+      if (!user) {
+        console.warn(`⚠️ No user found with email: ${session.customer_email}`);
+        return res.status(404).send('User not found');
+      }
+
+      const subscriptionData = {
+        userId: user._id,
+        transactionId: session.id,
+        price: session.amount_total / 100,
+        plan_name: session.metadata.plan_name,
+        duration: session.metadata.duration,
+        expiresAt: getExpirationDate(session.metadata.duration),
+        paymentStatus: session.payment_status || 'pending',
+        invoiceUrl: null,
+      };
+
+      if (session.subscription) {
+        try {
+          const stripeSubscription = await stripe.subscriptions.retrieve(session.subscription);
+          if (stripeSubscription.latest_invoice) {
+            const invoice = await stripe.invoices.retrieve(stripeSubscription.latest_invoice);
+            subscriptionData.invoiceUrl = invoice.hosted_invoice_url;
+          }
+        } catch (error) {
+          console.error('⚠️ Error retrieving invoice:', error.message);
+        }
+      }
+
+      const newSubscription = new SubscriptionModel(subscriptionData);
+      user.isSubscribed = true;
+      user.subscription = {
+        price: session.amount_total / 100,
+        plan_name: session.metadata.plan_name,
+        duration: session.metadata.duration,
+        expiresAt: getExpirationDate(session.metadata.duration),
+      };
+
+      await Promise.all([newSubscription.save(), user.save()]);
+
+      console.log('✅ Subscription created and user updated successfully.');
     }
 
-    // const updateOperations = payments.map(async (payment) => {
-    //     const filter = { _id: ObjectId(payment.payment) };
-    //     const updateDoc = {
-    //         $set: {
-    //             paid: true,
-    //             transactionId: payment.transactionId,
-    //         }
-    //     };
-    //     await AddToCart.updateOne(filter, updateDoc, { runValidators: true });
-    // });
+    if (event.type === 'customer.subscription.deleted') {
+      const subscription = event.data.object;
 
-    // await Promise.all(updateOperations);
+      const existingSubscription = await SubscriptionModel.findOne({ transactionId: subscription.id });
+      if (existingSubscription) {
+        existingSubscription.paymentStatus = 'expired';
+        await existingSubscription.save();
 
-    const insertPayment = await Payment.insertMany(payments);
-    return insertPayment
-}
+        const user = await UserModel.findById(existingSubscription.userId);
+        if (user) {
+          user.isSubscribed = false;
+          user.subscription = null;
+          await user.save();
+          console.log(`🚨 User subscription status updated: ${user.email}`);
+        }
+      }
+    }
 
-exports.deletePaymentService = async (id) => {
-    const result = await Payment.deleteOne({ _id: id })
-    return result
-}
+    res.status(200).send('Webhook processed successfully');
+  } catch (error) {
+    console.error('❌ Error processing webhook:', error.message);
+    res.status(500).send('Internal server error');
+  }
+};
 
+const getExpirationDate = (duration) => {
+  return duration === "month"
+    ? moment().add(1, 'months').toDate()
+    : moment().add(1, 'years').toDate();
+};
+
+export const PaymentService = {
+  createCheckoutSessionService,
+  handleWebhookService,
+};

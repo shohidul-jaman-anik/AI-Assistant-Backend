@@ -1,13 +1,17 @@
-const express = require("express")
-const router = express.Router()
-const paymentRoute = require("./payment.controller")
+import express from 'express';
+import { paymentController } from './payment.controller.js';
+const router = express.Router();
 
-router.route('/delete/:id').delete(paymentRoute.deletePayment)
-router.route('/createPaymentIntent').post(paymentRoute.createPayment)
-router.route('/updatePayment').patch(paymentRoute.updatePayment)
-router.route('/owner/paymentItems').get(paymentRoute.getOwnerPayment)
-router.route('/tenants/paymentItem').get(paymentRoute.getTenantsPayment)
-router.route('/singlePayment/:id').get(paymentRoute.getSinglePayment)
-router.route('/allPayments').get(paymentRoute.getAllPayment)
 
-module.exports = router;
+router.route('/create-checkout-session').post(paymentController.createCheckoutSession)
+router.route('/admin/all').get(paymentController.getAllSubscriptions)
+router.route('/:userId').get(paymentController.getSubscriptionsByUserId)
+
+// Stripe Webhook Handling (Needs raw body)
+router.route("/webhook").post(
+    express.raw({ type: "application/json" }), 
+    paymentController.handleWebhook
+);
+
+
+export const subscriptionRoutes = router;

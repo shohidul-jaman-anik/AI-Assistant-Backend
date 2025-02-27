@@ -13,17 +13,27 @@ import router from './src/app/routes/index.js';
 // import { logger } from './src/shared/logger';
 import config from './config/index.js';
 import { logger } from './src/shared/logger.js';
+import bodyParser from 'body-parser';
+import './src/app/middlewares/resetUsage/resetUsage.js';
+
+
+
 
 // Load environment variables
 dotenv.config();
 
 const app = express();
 
+
+// ✅ Use body-parser raw() FIRST for Stripe webhook before any JSON parsing
+app.use('/api/v1/subscription/webhook', express.raw({ type: 'application/json' }));
+
 // Middleware
 app.use(cors());
 app.use(express.json());
 app.use(morgan('tiny'));
 app.use(express.urlencoded({ extended: true }));
+app.use(bodyParser.urlencoded({ extended: true }));
 app.disable('x-powered-by');
 
 // Enable trust proxy (For Rate-Limit)
@@ -31,6 +41,7 @@ app.set('trust proxy', 'loopback');
 
 // Helmet middleware for security headers
 app.use(helmet());
+
 
 
 const corsConfig = {

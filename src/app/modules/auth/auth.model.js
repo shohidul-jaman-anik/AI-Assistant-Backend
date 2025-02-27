@@ -1,7 +1,6 @@
-import mongoose from 'mongoose';
 import crypto from 'crypto';
 import emailValidator from 'email-validator';
-
+import mongoose from 'mongoose';
 
 const UserSchema = new mongoose.Schema(
   {
@@ -18,18 +17,30 @@ const UserSchema = new mongoose.Schema(
       required: [true, 'Please provide a password'],
       unique: false,
     },
+    isSubscribed: {
+      type: Boolean,
+      default: false,
+    },
+    // should show user collection for running subscription availblabe:
+    subscription: {
+      price: { type: Number }, // e.g., 150
+      plan_name: { type: String }, // "personal", "business"
+      duration: { type: String, enum: ['month', 'year'] }, // "month" or "year"
+      expiresAt: { type: Date },
+      status: { type: String, enum: ['paid', 'expired'], default: 'paid' },
+    },
+
+    freePlanUsage: {
+      promptsUsed: { type: Number, default: 0 },
+      imagesUsed: { type: Number, default: 0 },
+      lastResetAt: { type: Date, default: Date.now }, // Track when the usage was last reset
+    },
     role: {
       type: String,
       enum: {
         values: ['user', 'buyer', 'admin', 'unauthorized'],
       },
       default: 'unauthorized',
-    },
-    plan: { type: String, enum: ['free', 'premium'], default: 'free' },
-    paymentStatus: {
-      type: String,
-      enum: ['active', 'inactive', 'pending'],
-      default: 'inactive',
     },
     llamaAiSessions: [
       { type: mongoose.Schema.Types.ObjectId, ref: 'Chat-History' },
@@ -61,5 +72,4 @@ UserSchema.methods.generateConfirmationToken = function () {
 
 const UserModel = mongoose.model('User', UserSchema);
 
-
-export default UserModel; 
+export default UserModel;
