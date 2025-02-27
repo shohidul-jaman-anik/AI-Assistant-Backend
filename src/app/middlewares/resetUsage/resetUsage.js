@@ -3,7 +3,7 @@ import SubscriptionModel from '../../modules/payment/payment.model.js';
 import UserModel from '../../modules/auth/auth.model.js';
 
 cron.schedule(
-  '50 17 * * *', // Runs at 3:11 PM UTC (3:11 PM Bangladesh Time)
+  '0 0 * * *', // Runs at 3:11 PM UTC (3:11 PM Bangladesh Time)
   async () => {
     console.log(`⏳ Running scheduled task at ${new Date().toLocaleString('en-US', { timeZone: 'Asia/Dhaka' })}`);
 
