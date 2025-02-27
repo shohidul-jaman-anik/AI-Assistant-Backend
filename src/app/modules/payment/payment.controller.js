@@ -4,7 +4,7 @@ import sendResponse from '../../../shared/sendResponse.js';
 import UserModel from '../auth/auth.model.js';
 import SubscriptionModel from './payment.model.js';
 import { PaymentService } from './payment.service.js';
-import { checkImageUsageLimits, checkPromtsUsageLimits, checkUsageLimits } from '../../middlewares/checkUsageLimits/checkUsageLimits.js';
+import { checkImageUsageLimits, checkPromtsUsageLimits } from '../../middlewares/checkUsageLimits/checkUsageLimits.js';
 import { checkFreePlanLimits } from '../../middlewares/checkFreePlanLimits/checkFreePlanLimits.js';
 
 const createCheckoutSession = catchAsync(async (req, res, next) => {
