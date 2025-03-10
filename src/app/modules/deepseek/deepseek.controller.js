@@ -1,44 +1,35 @@
-import { GoogleGenerativeAI } from '@google/generative-ai';
+import Groq from "groq-sdk";
 import { InMemoryChatMessageHistory } from '@langchain/core/chat_history';
 import { AIMessage, HumanMessage } from '@langchain/core/messages';
 import { randomUUID } from 'crypto';
 import httpStatus from 'http-status';
-import config from '../../../../config/index.js';
 import catchAsync from '../../../shared/catchAsync.js';
 import sendResponse from '../../../shared/sendResponse.js';
 import UserModel from '../auth/auth.model.js';
 import Llama from '../groq/groq.model.js';
-// import { ConversationChain } from 'langchain/chains';
 import { BufferMemory } from 'langchain/memory';
 
-const client = new GoogleGenerativeAI(config.gemini_secret_key);
-const model = client.getGenerativeModel({ model: "gemini-1.5-flash" });
+const groq = new Groq(); // Initialize the Groq SDK
 
 const sessionMemoryStore = {};
 
-const GeminiAiGetResponseAnonymously = catchAsync(async (req, res) => {
-  const prompt = req.body?.prompt;
-  const userId = req.body?.user;
-  const sessionId = req.body?.sessionId || randomUUID();
+const DeepseekAiGetResponse = catchAsync(async (req, res) => {
+  const { prompt, user: userId, sessionId = randomUUID() } = req.body;
 
   if (!prompt) {
     return sendResponse(res, {
       statusCode: httpStatus.BAD_REQUEST,
       success: false,
-      message: 'Validation Error',
-      errorMessages: [{ path: 'prompt', message: 'Prompt is required.' }],
+      message: "Prompt is required.",
     });
   }
 
-
   const user = await UserModel.findById(userId);
- 
-
   if (!user) {
     return sendResponse(res, {
       statusCode: httpStatus.NOT_FOUND,
       success: false,
-      message: 'User not found.',
+      message: "User not found.",
     });
   }
 
@@ -46,7 +37,7 @@ const GeminiAiGetResponseAnonymously = catchAsync(async (req, res) => {
   if (!memory) {
     memory = new BufferMemory({
       returnMessages: true,
-      memoryKey: 'history',
+      memoryKey: "history",
       chatHistory: new InMemoryChatMessageHistory(),
     });
     sessionMemoryStore[sessionId] = memory;
@@ -55,48 +46,61 @@ const GeminiAiGetResponseAnonymously = catchAsync(async (req, res) => {
   try {
     await memory.chatHistory.addMessage(new HumanMessage(prompt));
 
-    // Call Gemini AI to generate a response
-    const result = await model.generateContent(prompt);
-    const reply =
-      result?.response?.candidates?.[0]?.content?.parts?.[0]?.text || 'No reply generated';
+    const startTime = Date.now(); // Record start time
+
+    // Call Groq API to generate a response using the deepseek model
+    const completion = await groq.chat.completions.create({
+      model: "deepseek-r1-distill-qwen-32b", // Use the deepseek model
+      messages: [
+        {
+          role: "user",
+          content: prompt,
+        },
+      ],
+    });
+
+    const endTime = Date.now(); // Record end time
+    const totalTime = endTime - startTime; // Calculate total time taken
+
+    const reply = completion.choices[0]?.message?.content || "No reply generated";
 
     await memory.chatHistory.addMessage(new AIMessage(reply));
 
     const responseData = {
       prompt,
-      model: 'gemini-pro',
+      model: "deepseek-r1-distill-qwen-32b",
       reply,
-      total_time: result?.usage?.total_time || 0,
+      total_time: totalTime, // Add total time to response data
     };
 
-    let geminiSession = await Llama.findOne({ user: userId, sessionId });
+    let deepseekSession = await Llama.findOne({ user: userId, sessionId });
 
-    if (geminiSession) {
-      geminiSession.responses.push(responseData);
-      await geminiSession.save();
+    if (deepseekSession) {
+      deepseekSession.responses.push(responseData);
+      await deepseekSession.save();
     } else {
-      geminiSession = await Llama.create({
+      deepseekSession = await Llama.create({
         user: userId,
         sessionId,
         responses: [responseData],
       });
       await UserModel.findByIdAndUpdate(userId, {
-        $push: { llamaAiSessions: geminiSession._id },
+        $push: { llamaAiSessions: deepseekSession._id },
       });
     }
 
     sendResponse(res, {
       statusCode: httpStatus.OK,
       success: true,
-      message: 'Response processed successfully.',
+      message: "Response processed successfully.",
       data: { prompt, sessionId, reply },
     });
   } catch (error) {
-    console.error('Error in Gemini AI:', error);
+    console.error("Error in Groq DeepSeek AI:", error);
     sendResponse(res, {
       statusCode: httpStatus.INTERNAL_SERVER_ERROR,
       success: false,
-      message: 'Failed to get response',
+      message: "Failed to get response",
       error: error.message,
     });
   }
@@ -104,7 +108,6 @@ const GeminiAiGetResponseAnonymously = catchAsync(async (req, res) => {
 
 
 
-
-export const GeminiAiController = {
-  GeminiAiGetResponseAnonymously,
+export const DeepseekAiController = {
+  DeepseekAiGetResponse,
 };

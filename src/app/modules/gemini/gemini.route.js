@@ -4,7 +4,7 @@ import { GeminiAiController } from './gemini.controller.js';
 const router = express.Router();
 
 router
-  .route('/get-response-anonymously')
+  .route('/get-response')
   .post(GeminiAiController.GeminiAiGetResponseAnonymously);
 
 export const geminiAiRoutes = router;
