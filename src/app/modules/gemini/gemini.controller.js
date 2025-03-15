@@ -319,7 +319,7 @@ const GeminiAiGetResponse = catchAsync(async (req, res) => {
 
     const responseData = {
       prompt,
-      model: 'gemini-pro',
+      model: 'gemini-1.5-flash',
       reply,
       total_time: result?.usage?.total_time || 0,
     };
