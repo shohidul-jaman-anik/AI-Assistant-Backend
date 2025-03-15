@@ -471,7 +471,7 @@ import axios from 'axios';
 import { randomUUID } from 'crypto';
 import { ConversationChain } from 'langchain/chains';
 import { BufferMemory } from 'langchain/memory';
-import { Serper } from 'serper';
+// import { Serper } from 'serper';
 import config from '../../../../config/index.js';
 import UserModel from '../auth/auth.model.js';
 import Llama from './groq.model.js';
@@ -613,13 +613,184 @@ const { ZepClient } = zepPackage;
 //   }
 // });
 
+
+
+
+
+// =========================================================
+//          With Serper Groq and langchain
+// ==========================================================
+
+
+
+
+// const sessionMemoryStore = {}; // Stores session memory for each user session
+
+// const GroqAiGetResponse = catchAsync(async (req, res) => {
+//   const prompt = req.body?.prompt;
+//   const userId = req.body?.user;
+//   const sessionId = req.body?.sessionId || randomUUID(); // Unique session ID if not provided
+//   console.log('Serper API Key:', config.serper_api_key); // Debugging
+
+//   if (!prompt) {
+//     return sendResponse(res, {
+//       statusCode: httpStatus.BAD_REQUEST,
+//       success: false,
+//       message: 'Validation Error',
+//       errorMessages: [{ path: 'prompt', message: 'Prompt is required.' }],
+//     });
+//   }
+
+//   const user = await UserModel.findById(userId);
+//   if (!user) {
+//     return sendResponse(res, {
+//       statusCode: httpStatus.NOT_FOUND,
+//       success: false,
+//       message: 'User not found.',
+//     });
+//   }
+
+//   // Initialize session memory for conversation history
+//   let memory = sessionMemoryStore[sessionId];
+//   if (!memory) {
+//     memory = new BufferMemory({
+//       returnMessages: true,
+//       memoryKey: 'history',
+//       chatHistory: new InMemoryChatMessageHistory(),
+//     });
+//     sessionMemoryStore[sessionId] = memory;
+//   }
+
+//   const model = new ChatGroq({
+//     model: 'llama3-8b-8192',
+//     temperature: 0.7,
+//     apiKey: config.groq_api_key,
+//   });
+
+//   const chain = new ConversationChain({ llm: model, memory });
+//   console.log('Memory Initialized:', memory);
+
+//   try {
+//     // Fetch real-time search results using Serper
+//     const serper = new Serper({ apiKey: config.serper_api_key });
+
+//     const searchResults = await serper.search({
+//       q: prompt,
+//       gl: 'us',
+//       hl: 'en',
+//     });
+
+//     // Extract top 3 search results
+//     const searchSummary = searchResults?.organic
+//       ?.slice(0, 3)
+//       .map(r => r.snippet)
+//       .join(' ');
+
+//     // Format detailed search results
+//     const formattedSearchResults =
+//       searchResults?.organic?.slice(0, 3).map((r, index) => ({
+//         title: r.title,
+//         link: r.link,
+//         snippet: r.snippet,
+//         position: index + 1,
+//       })) || [];
+//     console.log('Formatted Search Results:', formattedSearchResults); 
+
+//     const enrichedPrompt = searchSummary
+//       ? `${prompt}\n\nAdditional Context: ${searchSummary}`
+//       : prompt;
+
+//     // Store user message in chat history
+//     await memory.chatHistory.addMessage(new HumanMessage(enrichedPrompt));
+
+//     // Invoke model with search-enhanced context
+//     const res1 = await chain.invoke({ input: enrichedPrompt });
+//     console.log('Model Response:', res1);
+
+//     const reply = res1?.response || 'No reply generated';
+
+//     try {
+//       const paymentResult = await paymentController.incrementPromptsUsed(userId);
+    
+//       if (!paymentResult.success) {
+//         return res.status(400).json({ success: false, message: paymentResult.message });
+//       }
+//     } catch (error) {
+//       console.error('Error in incrementPromptsUsed:', error);
+    
+//       // Send the full error message as a response
+//       return res.status(400).json({
+//         success: false,
+//         message: error.message || 'An error occurred while updating prompt usage.',
+//       });
+//     }  
+
+//     // Store AI response in chat history
+//     await memory.chatHistory.addMessage(new AIMessage(reply));
+
+//     // Save response in the database
+//     const responseData = {
+//       prompt,
+//       model: 'llama3-8b-8192',
+//       reply,
+//       search_results: formattedSearchResults,
+//       total_time: res1?.usage?.total_time || 0,
+//     };
+
+//     let llamaSession = await Llama.findOne({ user: userId, sessionId });
+
+//     if (llamaSession) {
+//       console.log('Existing Session Found:', llamaSession);
+//       llamaSession?.responses?.push(responseData);
+//       await llamaSession.save();
+//       console.log('Updated Session:', llamaSession);
+//     } else {
+//       console.log('Creating New Session...');
+//       llamaSession = await Llama.create({
+//         user: userId,
+//         sessionId,
+//         responses: [responseData],
+//       });
+//       console.log('New Session Created:', llamaSession);
+//       await UserModel.findByIdAndUpdate(userId, {
+//         $push: { llamaAiSessions: llamaSession._id },
+//       });
+//     }
+
+//     sendResponse(res, {
+//       statusCode: httpStatus.OK,
+//       success: true,
+//       message: 'Response processed successfully.',
+//       data: {
+//         sessionId,
+//         prompt,
+//         reply,
+//         search_results: formattedSearchResults, // Include search results in response
+//       },
+//     });
+//   } catch (error) {
+//     console.error('Error in ConversationChain:', error);
+//     sendResponse(res, {
+//       statusCode: httpStatus.INTERNAL_SERVER_ERROR,
+//       success: false,
+//       message: 'Failed to get response',
+//       error: error.message,
+//     });
+//   }
+// });
+
+
+
+// =========================================================
+//          Without Serper 
+// ==========================================================
+
 const sessionMemoryStore = {}; // Stores session memory for each user session
 
 const GroqAiGetResponse = catchAsync(async (req, res) => {
   const prompt = req.body?.prompt;
   const userId = req.body?.user;
   const sessionId = req.body?.sessionId || randomUUID(); // Unique session ID if not provided
-  console.log('Serper API Key:', config.serper_api_key); // Debugging
 
   if (!prompt) {
     return sendResponse(res, {
@@ -660,40 +831,11 @@ const GroqAiGetResponse = catchAsync(async (req, res) => {
   console.log('Memory Initialized:', memory);
 
   try {
-    // Fetch real-time search results using Serper
-    const serper = new Serper({ apiKey: config.serper_api_key });
-
-    const searchResults = await serper.search({
-      q: prompt,
-      gl: 'us',
-      hl: 'en',
-    });
-
-    // Extract top 3 search results
-    const searchSummary = searchResults?.organic
-      ?.slice(0, 3)
-      .map(r => r.snippet)
-      .join(' ');
-
-    // Format detailed search results
-    const formattedSearchResults =
-      searchResults?.organic?.slice(0, 3).map((r, index) => ({
-        title: r.title,
-        link: r.link,
-        snippet: r.snippet,
-        position: index + 1,
-      })) || [];
-    console.log('Formatted Search Results:', formattedSearchResults); 
-
-    const enrichedPrompt = searchSummary
-      ? `${prompt}\n\nAdditional Context: ${searchSummary}`
-      : prompt;
-
     // Store user message in chat history
-    await memory.chatHistory.addMessage(new HumanMessage(enrichedPrompt));
+    await memory.chatHistory.addMessage(new HumanMessage(prompt));
 
-    // Invoke model with search-enhanced context
-    const res1 = await chain.invoke({ input: enrichedPrompt });
+    // Invoke model
+    const res1 = await chain.invoke({ input: prompt });
     console.log('Model Response:', res1);
 
     const reply = res1?.response || 'No reply generated';
@@ -722,7 +864,6 @@ const GroqAiGetResponse = catchAsync(async (req, res) => {
       prompt,
       model: 'llama3-8b-8192',
       reply,
-      search_results: formattedSearchResults,
       total_time: res1?.usage?.total_time || 0,
     };
 
@@ -754,7 +895,6 @@ const GroqAiGetResponse = catchAsync(async (req, res) => {
         sessionId,
         prompt,
         reply,
-        search_results: formattedSearchResults, // Include search results in response
       },
     });
   } catch (error) {
@@ -767,6 +907,7 @@ const GroqAiGetResponse = catchAsync(async (req, res) => {
     });
   }
 });
+
 
 const fetchSearchResults = async query => {
   try {

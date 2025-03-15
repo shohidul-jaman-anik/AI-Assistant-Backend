@@ -5,6 +5,6 @@ const router = express.Router();
 
 router
   .route('/get-response')
-  .post(GeminiAiController.GeminiAiGetResponseAnonymously);
+  .post(GeminiAiController.GeminiAiGetResponse);
 
 export const geminiAiRoutes = router;
