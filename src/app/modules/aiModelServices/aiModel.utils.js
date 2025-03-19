@@ -1,22 +1,25 @@
 const aiEndpoints = [
   {
     title: 'Llama3-8b-8192',
-    enabled: true,
+    enabled: false,
     default: true,
+    add: '/groq/get-response',
     history: '/groq/get-response-from-db/',
     delete: '/groq/delete-all-response-from-db/',
   },
   {
-    title: 'Gemini-1.5-flash',
+    title: 'Gemini-1.5-Flash',
     enabled: true,
     default: false,
+    add: 'gemini/get-response',
     history: '/groq/get-response-from-db/',
     delete: '/groq/delete-all-response-from-db/',
   },
   {
-    title: 'Deepseek-r1-distill-qwen-32b',
+    title: 'Deepseek-R1-Distill-Qwen-32b',
     enabled: true,
     default: false,
+    add: '/deepseek/get-response',
     history: '/groq/get-response-from-db/',
     delete: '/groq/delete-all-response-from-db/',
   },
@@ -24,6 +27,7 @@ const aiEndpoints = [
     title: 'Qwen-2.5-coder-32b',
     enabled: true,
     default: false,
+    add: '/qwen/coder/get-response',
     history: '/groq/get-response-from-db/',
     delete: '/groq/delete-all-response-from-db/',
   },
@@ -31,9 +35,18 @@ const aiEndpoints = [
     title: 'Qween-QWQ-32b',
     enabled: true,
     default: false,
+    add: '/qwen/qwq/get-response',
     history: '/groq/get-response-from-db/',
     delete: '/groq/delete-all-response-from-db/',
   },
+
+  // {
+  //   title: 'Black-Forest-Labs/FLUX.1-Dev-Lora',
+  //   enabled: true,
+  //   default: false,
+  //   history: '/img-generation/create-img',
+  //   delete: '/groq/delete-all-response-from-db/',
+  // },
 ];
 
 export default aiEndpoints;
