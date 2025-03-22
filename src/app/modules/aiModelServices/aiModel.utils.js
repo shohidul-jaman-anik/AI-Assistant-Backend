@@ -11,7 +11,7 @@ const aiEndpoints = [
     title: 'Gemini-1.5-Flash',
     enabled: true,
     default: false,
-    add: '/ gemini/get-response',
+    add: '/gemini/get-response',
     history: '/groq/get-response-from-db/',
     delete: '/groq/delete-all-response-from-db/',
   },
