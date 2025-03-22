@@ -5,6 +5,7 @@ const getAiSocketEndpoint = async (req, res) => {
     res.status(200).json({
       status: 'Success',
       message: 'Get aiSocketEndpoint successfully',
+      anonymously:'/groq/get-response-anonymously',
       data: aiEndpoints,
     });
   } catch (error) {
