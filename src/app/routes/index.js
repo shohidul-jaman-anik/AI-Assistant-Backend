@@ -9,6 +9,7 @@ import { togetherAiRoutes } from '../modules/togetherAi/togeterAi.route.js';
 import { serperAiRoutes } from '../modules/serper/serper.route.js';
 import { qwenAiRoutes } from '../modules/qwen/qwen.route.js';
 import { aiModelEndpointRoutes } from '../modules/aiModelServices/aiEndpoint.route.js';
+import { openAIAiRoutes } from '../modules/openAi/openAi.route.js';
 
 const router = express.Router();
 
@@ -48,6 +49,10 @@ const moduleRoutes = [
   {
     path: '/qwen',
     route: qwenAiRoutes,
+  },
+  {
+    path: '/openai',
+    route: openAIAiRoutes,
   },
   {
     path: '/api-endpoint',

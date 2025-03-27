@@ -1,10 +1,10 @@
 import express from 'express';
-import { GeminiAiController } from './gemini.controller.js';
+import { openAIAiController } from './openAi.controller.js';
 
 const router = express.Router();
 
 router
   .route('/get-response')
-  .post(GeminiAiController.GeminiAiGetResponse);
+  .post(openAIAiController.Gpt4oMiniGetResponse);
 
-export const geminiAiRoutes = router;
+export const openAIAiRoutes = router;
