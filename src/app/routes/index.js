@@ -8,7 +8,7 @@ import { tavilyAiRoutes } from '../modules/tavily/tavily.route.js';
 import { togetherAiRoutes } from '../modules/togetherAi/togeterAi.route.js';
 import { serperAiRoutes } from '../modules/serper/serper.route.js';
 import { qwenAiRoutes } from '../modules/qwen/qwen.route.js';
-import { aiModelEndpointRoutes } from '../modules/aiModelServices/aiModel.route.js';
+import { aiModelEndpointRoutes } from '../modules/aiModelServices/aiEndpoint.route.js';
 
 const router = express.Router();
 
