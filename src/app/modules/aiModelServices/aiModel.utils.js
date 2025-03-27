@@ -2,7 +2,7 @@ const aiEndpoints = [
   {
     title: 'Llama3-8b-8192',
     enabled: false,
-    default: true,
+    default: false,
     add: '/groq/get-response',
     history: '/groq/get-response-from-db/',
     delete: '/groq/delete-all-response-from-db/',
@@ -10,7 +10,7 @@ const aiEndpoints = [
   {
     title: 'Gemini-1.5-Flash',
     enabled: true,
-    default: false,
+    default: true,
     add: '/gemini/get-response',
     history: '/groq/get-response-from-db/',
     delete: '/groq/delete-all-response-from-db/',
@@ -25,7 +25,7 @@ const aiEndpoints = [
   },
   {
     title: 'Qwen-2.5-coder-32b',
-    enabled: true,
+    enabled: false,
     default: false,
     add: '/qwen/coder/get-response',
     history: '/groq/get-response-from-db/',
