@@ -39,20 +39,21 @@ const getAllUsersService = async (filters, paginationOptions) => {
     .limit(limit);
 
   const total = await UserModel.estimatedDocumentCount();
-  const totalSeller = await UserModel.countDocuments({
-    $and: [{ seller: true }, { role: 'seller' }],
+  const paidUser = await UserModel.countDocuments({
+    "subscription.status": "paid"
   });
-  const totalBuyer = await UserModel.countDocuments({ role: 'buyer' });
+  const freeUser = await UserModel.countDocuments({ plan: 'free' });
   const unverifyUsers = await UserModel.countDocuments({
     role: 'unauthorized',
   });
+  
   return {
     meta: {
       page,
       limit,
       total,
-      totalSeller,
-      totalBuyer,
+      paidUser,
+      freeUser,
       unverifyUsers,
     },
     data: users,

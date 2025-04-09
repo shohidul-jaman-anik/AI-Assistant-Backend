@@ -67,6 +67,7 @@ const updateAiSocketEndpoint = async (req, res) => {
 const addAiEndpoint = async (req, res) => {
   try {
     const {
+      id,
       title,
       enabled,
       default: isDefault,
@@ -76,7 +77,7 @@ const addAiEndpoint = async (req, res) => {
     } = req.body;
 
     // Validate required fields
-    if (!title || !add || !history || !deleteUrl) {
+    if (!title || !add || !history || !deleteUrl || !_id) {
       return res.status(400).json({
         status: 'fail',
         message: 'All fields (title, add, history, delete) are required.',
@@ -84,11 +85,26 @@ const addAiEndpoint = async (req, res) => {
     }
 
     // Check if the title already exists
-    const existingEndpoint = await AiEndpoint.findOne({ title });
+    // const existingEndpoint = await AiEndpoint.findOne({ title });
+    // if (existingEndpoint) {
+    //   return res.status(400).json({
+    //     status: 'fail',
+    //     message: `AI endpoint '${title}' already exists.`,
+    //   });
+    // }
+
+    // Check if the title or _id already exists
+    const existingEndpoint = await AiEndpoint.findOne({
+      $or: [
+        { title }, // Check for matching title
+        { _id: id }, // Check for matching _id
+      ],
+    });
+
     if (existingEndpoint) {
       return res.status(400).json({
         status: 'fail',
-        message: `AI endpoint '${title}' already exists.`,
+        message: `AI endpoint with ${existingEndpoint.title ? `'${existingEndpoint.title}'` : `'${existingEndpoint._id}'`} already exists.`,
       });
     }
 
@@ -121,7 +137,7 @@ const getAiEndpointForApp = async (req, res) => {
     res.status(200).json({
       status: 'Success',
       message: 'Get aiSocketEndpoint successfully',
-      anonymously:'/groq/get-response-anonymously',
+      anonymously: '/groq/get-response-anonymously',
       data: aiEndpoints,
     });
   } catch (error) {
@@ -136,5 +152,5 @@ export const AiEndpointsController = {
   getAiSocketEndpoint,
   updateAiSocketEndpoint,
   addAiEndpoint,
-  getAiEndpointForApp
+  getAiEndpointForApp,
 };
