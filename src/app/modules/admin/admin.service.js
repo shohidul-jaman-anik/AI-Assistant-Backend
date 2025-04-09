@@ -1,5 +1,5 @@
-import paginationHelpers from "../../helpers/paginationHelpers.js";
-import UserModel from "../auth/auth.model.js";
+import paginationHelpers from '../../helpers/paginationHelpers.js';
+import UserModel from '../auth/auth.model.js';
 
 // ===========================================
 //                  All Users
@@ -33,6 +33,7 @@ const getAllUsersService = async (filters, paginationOptions) => {
   }
 
   const users = await UserModel.find({ $and: andConditions })
+    .select('email isSubscribed role subscription')
     .sort(sortConditions)
     .skip(skip)
     .limit(limit);
@@ -58,16 +59,16 @@ const getAllUsersService = async (filters, paginationOptions) => {
   };
 };
 
-const updateUserRoleService = async (id, userRole) => {
-  const filter = { _id: id };
-  const updateDoc = {
-    $set: { role: userRole },
-  };
-  const result = await UserModel.updateOne(filter, updateDoc, {
-    runValidators: true,
-  });
-  return result;
-};
+// const updateUserRoleService = async (id, userRole) => {
+//   const filter = { _id: id };
+//   const updateDoc = {
+//     $set: { role: userRole },
+//   };
+//   const result = await UserModel.updateOne(filter, updateDoc, {
+//     runValidators: true,
+//   });
+//   return result;
+// };
 
 //===================  Buyer =========================
 const getAllBuyerServices = async () => {
@@ -86,7 +87,7 @@ const getSellerServiceById = async id => {
 const makeAdminService = async userId => {
   const filter = { _id: userId };
   const updateDoc = {
-    $set: { role: 'admin', seller: true },
+    $set: { role: 'admin' },
   };
   const result = await UserModel.updateOne(filter, updateDoc, {
     runValidators: true,
@@ -115,7 +116,6 @@ const getAdminServices = async email => {
 
 export const AdminService = {
   getAllUsersService,
-  updateUserRoleService,
   getAllBuyerServices,
   getSellerServiceById,
   makeAdminService,

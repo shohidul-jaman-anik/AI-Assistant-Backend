@@ -3,18 +3,18 @@ import { AdminController } from './admin.controller.js';
 import { authController } from '../auth/auth.controller.js';
 const router = express.Router();
 
-router.route('/makeSeller/:id').put(AdminController.makeAdmin);
-router.route('/updateUserRole/:id').put(AdminController.updateUserRole);
+router.route('/make-seller/:id').put(AdminController.makeAdmin);
+router.route('/update-user-role/:id').put(AdminController.updateUserRole);
 
-router.route('/deleteUser/:id').delete(AdminController.deleteUser);
-
-router
-  .route('/allUser')
-  .get(AdminController.getAllUser);
-
+router.route('/delete-user/:id').delete(authController.verifyAdmin, AdminController.deleteUser);
 
 router
-  .route('/allUsers')
+  .route('/buyer/all-user')
+  .get(AdminController.getAllBuyer);
+
+
+router
+  .route('/all-user')
   .get(authController.verifyAdmin, AdminController.getAllUsers);
 
 router.route('/admin/:email').get(AdminController.getAdmin);

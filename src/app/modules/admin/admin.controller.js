@@ -4,7 +4,7 @@ import { paginationFields } from './admin.constant.js';
 import { AdminService } from './admin.service.js';
 
 
-const getAllUser = async (req, res, next) => {
+const getAllBuyer = async (req, res, next) => {
   try {
     // const buyers = await UserModel.findOne({ role: 'buyer' })
     const buyers = await AdminService.getAllBuyerServices();
@@ -42,6 +42,7 @@ const makeAdmin = async (req, res) => {
     console.log(error, 'error');
   }
 };
+
 const deleteUser = async (req, res) => {
   try {
     const { id } = req.params;
@@ -101,11 +102,9 @@ const getAllUsers = async (req, res, next) => {
 const updateUserRole = async (req, res) => {
   try {
     const { id } = req.params;
-    // console.log(id, 'userRole iddddddddddd');
-    const userRole = req.body.role;
-    // console.log(userRole, 'user userRole');
 
-    const result = await AdminService.updateUserRoleService(id, userRole);
+
+    const result = await AdminService.makeAdminService(id);
     res.status(200).json({
       status: 'Success',
       message: 'Update Role successfully',
@@ -142,7 +141,7 @@ const getAdmin = async (req, res, next) => {
 
 export const AdminController = {
   makeAdmin,
-  getAllUser,
+  getAllBuyer,
   deleteUser,
   getAllUsers,
   updateUserRole,
