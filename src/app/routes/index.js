@@ -10,10 +10,16 @@ import { serperAiRoutes } from '../modules/serper/serper.route.js';
 import { qwenAiRoutes } from '../modules/qwen/qwen.route.js';
 import { aiModelEndpointRoutes } from '../modules/aiModelServices/aiEndpoint.route.js';
 import { openAIAiRoutes } from '../modules/openAi/openAi.route.js';
+import { wishperAiRoutes } from '../modules/wishper/wishper.route.js';
+import { adminRoutes } from '../modules/admin/admin.route.js';
 
 const router = express.Router();
 
 const moduleRoutes = [
+  {
+    path: '/admin',
+    route: adminRoutes,
+  },
   {
     path: '/auth',
     route: authRoutes,
@@ -49,6 +55,10 @@ const moduleRoutes = [
   {
     path: '/qwen',
     route: qwenAiRoutes,
+  },
+  {
+    path: '/wishper',
+    route: wishperAiRoutes,
   },
   {
     path: '/openai',

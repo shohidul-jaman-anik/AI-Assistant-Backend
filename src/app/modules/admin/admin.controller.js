@@ -1,18 +1,13 @@
-const pick = require('../../middlewares/other/pick');
-const { paginationFields } = require('./admin.constant');
-const {
-  getAdminServices,
-  deleteUserService,
-  updateUserRoleService,
-  getAllUsersService,
-  makeAdminService,
-  getAllBuyerServices,
-} = require('./admin.service');
+// const pick = require('../../middlewares/other/pick');
+import pick from '../../middlewares/other/pick.js';
+import { paginationFields } from './admin.constant.js';
+import { AdminService } from './admin.service.js';
+
 
 const getAllUser = async (req, res, next) => {
   try {
     // const buyers = await UserModel.findOne({ role: 'buyer' })
-    const buyers = await getAllBuyerServices();
+    const buyers = await AdminService.getAllBuyerServices();
     res.status(200).json({
       status: 'Success',
       message: 'All user get Successfully',
@@ -32,7 +27,7 @@ const makeAdmin = async (req, res) => {
     const { id } = req.params;
     const filter = { _id: id };
 
-    const result = makeAdminService(filter);
+    const result = AdminService.makeAdminService(filter);
     res.status(200).json({
       status: 'Success',
       message: 'Create admin successfully',
@@ -50,7 +45,7 @@ const makeAdmin = async (req, res) => {
 const deleteUser = async (req, res) => {
   try {
     const { id } = req.params;
-    const result = await deleteUserService(id);
+    const result = await AdminService.deleteUserService(id);
 
     if (!result.deletedCount) {
       return res.status(400).json({
@@ -84,7 +79,10 @@ const getAllUsers = async (req, res, next) => {
 
     const paginationOptions = pick(req.query, paginationFields);
 
-    const users = await getAllUsersService(filters, paginationOptions);
+    const users = await AdminService.getAllUsersService(
+      filters,
+      paginationOptions,
+    );
     res.status(200).json({
       status: 'Success',
       message: 'Users find Successfully',
@@ -107,7 +105,7 @@ const updateUserRole = async (req, res) => {
     const userRole = req.body.role;
     // console.log(userRole, 'user userRole');
 
-    const result = await updateUserRoleService(id, userRole);
+    const result = await AdminService.updateUserRoleService(id, userRole);
     res.status(200).json({
       status: 'Success',
       message: 'Update Role successfully',
@@ -127,7 +125,7 @@ const getAdmin = async (req, res, next) => {
   try {
     const { email } = req.params;
     // console.log(email, 'admin email');
-    const admin = await getAdminServices(email);
+    const admin = await AdminService.getAdminServices(email);
     res.status(200).json({
       status: 'Success',
       message: 'Admin get Successfully',
@@ -142,7 +140,7 @@ const getAdmin = async (req, res, next) => {
   }
 };
 
-module.exports.adminController = {
+export const AdminController = {
   makeAdmin,
   getAllUser,
   deleteUser,

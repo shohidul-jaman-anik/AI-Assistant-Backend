@@ -1,13 +1,11 @@
-const paginationHelpers = require('../../helpers/paginationHelpers');
-const UserModel = require('../auth/auth.model');
-
-
+import paginationHelpers from "../../helpers/paginationHelpers.js";
+import UserModel from "../auth/auth.model.js";
 
 // ===========================================
 //                  All Users
 //============================================
 
-module.exports.getAllUsersService = async (filters, paginationOptions) => {
+const getAllUsersService = async (filters, paginationOptions) => {
   const { searchTerm } = filters;
 
   const productsSearchAbleFields = ['email', 'firstName', 'lastName'];
@@ -60,7 +58,7 @@ module.exports.getAllUsersService = async (filters, paginationOptions) => {
   };
 };
 
-module.exports.updateUserRoleService = async (id, userRole) => {
+const updateUserRoleService = async (id, userRole) => {
   const filter = { _id: id };
   const updateDoc = {
     $set: { role: userRole },
@@ -72,20 +70,20 @@ module.exports.updateUserRoleService = async (id, userRole) => {
 };
 
 //===================  Buyer =========================
-module.exports.getAllBuyerServices = async () => {
+const getAllBuyerServices = async () => {
   const result = await UserModel.find({ role: 'buyer' });
   return result;
 };
 
 //====================  Admin ========================
 
-module.exports.getSellerServiceById = async id => {
+const getSellerServiceById = async id => {
   const result = await UserModel.findOne({ _id: id });
   console.log(result);
   return result;
 };
 
-module.exports.makeAdminService = async userId => {
+const makeAdminService = async userId => {
   const filter = { _id: userId };
   const updateDoc = {
     $set: { role: 'admin', seller: true },
@@ -96,14 +94,14 @@ module.exports.makeAdminService = async userId => {
   return result;
 };
 
-exports.deleteUserService = async id => {
+const deleteUserService = async id => {
   const result = await UserModel.deleteOne({ _id: id });
   return result;
 };
 
 //==================== Sup Admin ========================
 
-module.exports.getAdminServices = async email => {
+const getAdminServices = async email => {
   // const admin = await UserModel.find({ email: email })
   // const isAdmin = admin.role === "admin"
   // return isAdmin;
@@ -113,4 +111,14 @@ module.exports.getAdminServices = async email => {
   } else {
     return false;
   }
+};
+
+export const AdminService = {
+  getAllUsersService,
+  updateUserRoleService,
+  getAllBuyerServices,
+  getSellerServiceById,
+  makeAdminService,
+  deleteUserService,
+  getAdminServices,
 };

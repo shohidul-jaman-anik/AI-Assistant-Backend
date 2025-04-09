@@ -1,23 +1,23 @@
-const express = require('express');
-const { adminController } = require('./admin.controller');
-const { authController } = require('../auth/auth.controller');
+import express from 'express';
+import { AdminController } from './admin.controller.js';
+import { authController } from '../auth/auth.controller.js';
 const router = express.Router();
 
-router.route('/makeSeller/:id').put(adminController.makeAdmin);
-router.route('/updateUserRole/:id').put(adminController.updateUserRole);
+router.route('/makeSeller/:id').put(AdminController.makeAdmin);
+router.route('/updateUserRole/:id').put(AdminController.updateUserRole);
 
-router.route('/deleteUser/:id').delete(adminController.deleteUser);
+router.route('/deleteUser/:id').delete(AdminController.deleteUser);
 
 router
   .route('/allUser')
-  .get(adminController.getAllUser);
+  .get(AdminController.getAllUser);
 
 
 router
   .route('/allUsers')
-  .get(authController.verifyAdmin, adminController.getAllUsers);
+  .get(authController.verifyAdmin, AdminController.getAllUsers);
 
-router.route('/admin/:email').get(adminController.getAdmin);
+router.route('/admin/:email').get(AdminController.getAdmin);
 
 
-module.exports = router;
+export const adminRoutes = router;

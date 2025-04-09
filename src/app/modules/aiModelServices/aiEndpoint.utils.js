@@ -6,7 +6,7 @@ const aiEndpoints = [
     add: '/gemini/get-response',
     history: '/groq/get-response-from-db/',
     delete: '/groq/delete-all-response-from-db/',
-  }, 
+  },
   // {
   //   title: 'Llama3-8b-8192',
   //   enabled: false,
@@ -39,7 +39,6 @@ const aiEndpoints = [
   //   history: '/groq/get-response-from-db/',
   //   delete: '/groq/delete-all-response-from-db/',
   // },
-
   // {
   //   title: 'Black-Forest-Labs/FLUX.1-Dev-Lora',
   //   enabled: true,
@@ -48,5 +47,7 @@ const aiEndpoints = [
   //   delete: '/groq/delete-all-response-from-db/',
   // },
 ];
+
+
 
 export default aiEndpoints;
