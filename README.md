@@ -10,10 +10,6 @@ ASON AI is a powerful AI-driven platform designed to revolutionize content creat
 - **Music Composition:** Create custom music tracks tailored to your preferences and needs.
 - **Audio Enhancement:** Utilize AI to enhance the quality of existing audio, removing noise and improving clarity.
 
-### 🎥 **Video Generation**
-- **AI-Driven Video Creation:** Generate videos from scripts, ideas, or prompts with automatic voiceovers.
-- **Video Editing Assistance:** Automate video editing tasks such as cutting, transitioning, and applying effects using AI.
-- **Style Transfer:** Apply various visual styles to videos with advanced neural networks for a unique look.
 
 ### 💬 **Prompt-Based AI**
 - **Conversational AI:** Engage in dynamic, context-aware conversations with AI that remembers previous interactions.
