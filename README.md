@@ -5,21 +5,19 @@ ASON AI is a powerful AI-driven platform designed to revolutionize content creat
 
 🌟 **Key Features**
 
+### 💬 **Prompt-Based AI**
+
+- **Conversational AI:** Engage in dynamic, context-aware conversations with AI that remembers previous interactions.
+- **Custom AI Agents:** Design and deploy AI agents tailored for specific roles like customer support, content creation, and data analysis.
+- **AI Content Generation:** Generate blog posts, articles, and social media content from simple prompts.
+- **Integrated AI Agents:**
+  - **Browser-Use Agent:** Automate web browsing tasks, fetch data from websites, and interact with web-based content seamlessly.
+  - **Composio Agent:** Manage complex workflows, automate tasks, and integrate with third-party systems through a customizable orchestration process.
+
 ### 🎧 **Audio Generation**
 - **Text-to-Speech (TTS):** Transform text into natural, human-like speech with cutting-edge AI models.
 - **Music Composition:** Create custom music tracks tailored to your preferences and needs.
 - **Audio Enhancement:** Utilize AI to enhance the quality of existing audio, removing noise and improving clarity.
-
-
-### 💬 **Prompt-Based AI**
-- **Conversational AI:** Engage in dynamic, context-aware conversations with AI that remembers previous interactions.
-- **Custom AI Agents:** Design and deploy AI agents tailored for specific roles like customer support, content creation, and data analysis.
-- **AI Content Generation:** Generate blog posts, articles, and social media content from simple prompts.
-
-### 🔗 **Integrations**
-- **Slack Integration:** Leverage AI capabilities directly within Slack for real-time assistance and content generation.
-- **API Access:** Integrate ASON AI features into your own applications with a comprehensive API.
-- **Third-Party Integrations:** Seamlessly connect with other popular platforms and services for extended functionality.
 
 ### 📈 **Analytics & Insights**
 - **Usage Analytics:** Track and analyze how AI models are being utilized and assess their performance.
