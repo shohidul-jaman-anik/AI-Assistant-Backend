@@ -69,6 +69,7 @@ const addAiEndpoint = async (req, res) => {
     const {
       id,
       title,
+      nickName,
       enabled,
       default: isDefault,
       add,
@@ -77,7 +78,7 @@ const addAiEndpoint = async (req, res) => {
     } = req.body;
 
     // Validate required fields
-    if (!title || !add || !history || !deleteUrl || !_id) {
+    if (!title || !add || !history || !deleteUrl || !nickName) {
       return res.status(400).json({
         status: 'fail',
         message: 'All fields (title, add, history, delete) are required.',
@@ -111,6 +112,7 @@ const addAiEndpoint = async (req, res) => {
     // Create and save the new endpoint
     const newEndpoint = await AiEndpoint.create({
       title,
+      nickName,
       enabled: enabled || false,
       default: isDefault || false,
       add,
