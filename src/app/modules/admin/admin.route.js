@@ -19,5 +19,7 @@ router
 
 router.route('/admin/:email').get(AdminController.getAdmin);
 
+router.route('/all-user/statistics').get(AdminController.getUserStatisticsByMonth);
+
 
 export const adminRoutes = router;

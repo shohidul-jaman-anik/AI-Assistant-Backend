@@ -32,7 +32,38 @@ ASON AI is a powerful AI-driven platform designed to revolutionize content creat
 ### 📚 **Documentation**
 - **Comprehensive Guides:** Visit our Documentation Portal for setup, usage guides, and API references.
 
-🚀 **Getting Started**
+
+
+## 📦 Tech Stack
+
+### Core Service
+- **Node.js / Express** — Backend Framework for the ASON API Gateway
+- **MongoDB** — Primary Database for user data and application storage
+- **Redis** — Caching and Session Management
+- **Socket.IO** — Real-Time Communication
+- **RabbitMQ** — Messaging & Task Queuing for event-driven architecture
+- **Elasticsearch + Kibana** — Logging & Monitoring
+- **Grafana** — Visualization & Metrics
+- **Docker + Docker Compose** — Containerized Microservices for efficient deployment and management
+
+### AI-Agent Service
+- **Python** — Core language for AI agent development
+- **PostgreSQL** — Database for storing AI-specific data and model states
+- **Socket.IO** — Real-Time Communication for AI agent interactions
+- **Redis** — Caching and session management
+- **RabbitMQ** — Messaging & Task Queuing for orchestrating AI agents
+- **Elasticsearch + Kibana** — Logging & Monitoring for AI agent operations
+- **Grafana** — Visualization & Metrics for AI system performance
+- **Docker + Docker Compose** — Containerized Microservices for AI agent deployment and scalability
+
+### API Gateway
+- **TypeScript** — Language for developing the API Gateway with strong typing
+- **Redis** — Caching and Session Management for API Gateway
+- **RabbitMQ** — Messaging & Task Queuing for API Gateway services
+- **Elasticsearch + Kibana** — Logging & Monitoring for API Gateway activities
+- **Grafana** — Visualization & Metrics for API Gateway performance
+- **Docker + Docker Compose** — Containerized Microservices for API Gateway
+
 
 ### **Prerequisites**
 - **Node.js (v18+):** Required for running the platform.

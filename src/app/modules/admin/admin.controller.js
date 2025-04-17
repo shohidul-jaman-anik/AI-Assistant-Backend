@@ -1,4 +1,7 @@
 // const pick = require('../../middlewares/other/pick');
+import httpStatus from 'http-status';
+import catchAsync from '../../../shared/catchAsync.js';
+import sendResponse from '../../../shared/sendResponse.js';
 import pick from '../../middlewares/other/pick.js';
 import { paginationFields } from './admin.constant.js';
 import { AdminService } from './admin.service.js';
@@ -139,6 +142,16 @@ const getAdmin = async (req, res, next) => {
   }
 };
 
+const getUserStatisticsByMonth = catchAsync(async (req, res) => {
+  const result = await AdminService.getUserStatisticsByMonthService();
+  sendResponse(res, {
+    statusCode: httpStatus.OK,
+    success: true,
+    message: 'Get User Statistics Successfully',
+    data: result,
+  });
+});
+
 export const AdminController = {
   makeAdmin,
   getAllBuyer,
@@ -146,4 +159,5 @@ export const AdminController = {
   getAllUsers,
   updateUserRole,
   getAdmin,
+  getUserStatisticsByMonth
 };

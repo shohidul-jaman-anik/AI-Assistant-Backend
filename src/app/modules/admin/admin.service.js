@@ -115,6 +115,61 @@ const getAdminServices = async email => {
   }
 };
 
+
+const getUserStatisticsByMonthService = async () => {
+  const aggregationResult = await UserModel.aggregate([
+    {
+      $group: {
+        _id: {
+          year: { $year: '$createdAt' },
+          month: { $month: '$createdAt' },
+        },
+        count: { $sum: 1 },
+      },
+    },
+    {
+      $sort: { '_id.year': 1, '_id.month': 1 },
+    },
+  ]);
+
+  const result = aggregationResult.reduce((acc, item) => {
+    const year = item._id.year;
+    const month = item._id.month;
+    const count = item.count;
+    const monthName = new Date(year, month - 1).toLocaleString('default', {
+      month: 'long',
+    });
+
+    if (!acc[year]) {
+      acc[year] = {
+        year,
+        totalMonth: 0,
+        months: {},
+      };
+    }
+
+    acc[year].months[monthName] = count;
+    acc[year].totalMonth += 1;
+
+    return acc;
+  }, {});
+
+  const data = Object.values(result).map(item => ({
+    count: Object.values(item.months).reduce((sum, count) => sum + count, 0),
+    year: item.year,
+    totalMonth: item.totalMonth,
+    month: item.months,
+  }));
+
+  return {
+    statusCode: 200,
+    success: true,
+    message: 'Get User Statistics Successfully',
+    data: data,
+  };
+};
+
+
 export const AdminService = {
   getAllUsersService,
   getAllBuyerServices,
@@ -122,4 +177,5 @@ export const AdminService = {
   makeAdminService,
   deleteUserService,
   getAdminServices,
+  getUserStatisticsByMonthService
 };
