@@ -12,7 +12,7 @@ import { aiModelEndpointRoutes } from '../modules/aiModelServices/aiEndpoint.rou
 import { openAIAiRoutes } from '../modules/openAi/openAi.route.js';
 import { wishperAiRoutes } from '../modules/wishper/wishper.route.js';
 import { adminRoutes } from '../modules/admin/admin.route.js';
-import { llama4AiRoutes } from '../modules/Llama4/Llama4.route.js';
+import { llama4AiRoutes } from '../modules/Llama4/llama4.route.js';
 
 const router = express.Router();
 
