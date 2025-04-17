@@ -1,5 +1,5 @@
 import express from 'express';
-import { Llama4AiController } from './Llama4.controller.js';
+import { Llama4AiController } from './llama4.controller.js';
 
 const router = express.Router();
 
