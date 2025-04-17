@@ -6,141 +6,98 @@ import pick from '../../middlewares/other/pick.js';
 import { paginationFields } from './admin.constant.js';
 import { AdminService } from './admin.service.js';
 
+const getAllBuyer = catchAsync(async (req, res) => {
+  // const buyers = await UserModel.findOne({ role: 'buyer' })
+  const buyers = await AdminService.getAllBuyerServices();
 
-const getAllBuyer = async (req, res, next) => {
-  try {
-    // const buyers = await UserModel.findOne({ role: 'buyer' })
-    const buyers = await AdminService.getAllBuyerServices();
-    res.status(200).json({
-      status: 'Success',
-      message: 'All user get Successfully',
-      data: buyers,
-    });
-  } catch (error) {
-    res.status(400).json({
-      status: 'Fail',
-      message: "All user couldn't found Successfully",
-      error: error.message,
-    });
-  }
-};
+  sendResponse(res, {
+    statusCode: httpStatus.OK,
+    success: true,
+    message: 'Get All Paid User',
+    data: result,
+  });
+});
 
-const makeAdmin = async (req, res) => {
-  try {
-    const { id } = req.params;
-    const filter = { _id: id };
+const makeAdmin = catchAsync(async (req, res) => {
+  const { id } = req.params;
+  const filter = { _id: id };
 
-    const result = AdminService.makeAdminService(filter);
-    res.status(200).json({
-      status: 'Success',
-      message: 'Create admin successfully',
-      data: result,
-    });
-  } catch (error) {
-    res.status(400).json({
-      status: 'Fail',
-      message: "Couldn't make admin successfully",
-      error: error.message,
-    });
-    console.log(error, 'error');
-  }
-};
+  const result = AdminService.makeAdminService(filter);
 
-const deleteUser = async (req, res) => {
-  try {
-    const { id } = req.params;
-    const result = await AdminService.deleteUserService(id);
+  sendResponse(res, {
+    statusCode: httpStatus.OK,
+    success: true,
+    message: 'Create admin successfully',
+    data: result,
+  });
+});
 
-    if (!result.deletedCount) {
-      return res.status(400).json({
-        status: 'fail',
-        error: "Could't delete the user",
-      });
-    }
-    res.status(200).json({
-      status: 'Success',
-      message: 'User Delete Successfully',
-      data: result,
-    });
-  } catch (error) {
-    res.status(400).json({
-      status: 'Fail',
-      message: "User couldn't Delete Successfully",
-      error: error.message,
-    });
-    console.log(error, 'error');
-  }
-};
+const deleteUser = catchAsync(async (req, res) => {
+  const { id } = req.params;
+  const result = await AdminService.deleteUserService(id);
 
-const getAllUsers = async (req, res, next) => {
-  try {
-    const filters = pick(req.query, [
-      'searchTerm',
-      'email',
-      'firstName',
-      'lastName',
-    ]);
-
-    const paginationOptions = pick(req.query, paginationFields);
-
-    const users = await AdminService.getAllUsersService(
-      filters,
-      paginationOptions,
-    );
-    res.status(200).json({
-      status: 'Success',
-      message: 'Users find Successfully',
-      meta: users.meta,
-      data: users.data,
-    });
-  } catch (error) {
-    res.status(400).json({
-      status: 'Fail',
-      message: "Users couldn't found Successfully",
-      error: error.message,
+  if (!result.deletedCount) {
+    return res.status(400).json({
+      status: 'fail',
+      error: "Could't delete the user",
     });
   }
-};
 
-const updateUserRole = async (req, res) => {
-  try {
-    const { id } = req.params;
+  sendResponse(res, {
+    statusCode: httpStatus.OK,
+    success: true,
+    message: 'User Delete Successfully',
+    data: users,
+  });
+});
 
+const getAllUsers = catchAsync(async (req, res) => {
+  const filters = pick(req.query, [
+    'searchTerm',
+    'email',
+    'firstName',
+    'lastName',
+  ]);
 
-    const result = await AdminService.makeAdminService(id);
-    res.status(200).json({
-      status: 'Success',
-      message: 'Update Role successfully',
-      data: result,
-    });
-  } catch (error) {
-    res.status(400).json({
-      status: 'Fail',
-      message: "Couldn't update Role",
-      error: error.message,
-    });
-    console.log(error, 'error');
-  }
-};
+  const paginationOptions = pick(req.query, paginationFields);
 
-const getAdmin = async (req, res, next) => {
-  try {
-    const { email } = req.params;
-    // console.log(email, 'admin email');
-    const admin = await AdminService.getAdminServices(email);
-    res.status(200).json({
-      status: 'Success',
-      message: 'Admin get Successfully',
-      data: admin,
-    });
-  } catch (error) {
-    res.status(400).json({
-      status: 'Fail',
-      message: "Admin couldn't found Successfully",
-      error: error.message,
-    });
-  }
-};
+  const users = await AdminService.getAllUsersService(
+    filters,
+    paginationOptions,
+  );
+
+  sendResponse(res, {
+    statusCode: httpStatus.OK,
+    success: true,
+    message: 'Users find Successfully',
+    data: users,
+  });
+});
+
+const updateUserRole = catchAsync(async (req, res) => {
+  const { id } = req.params;
+
+  const result = await AdminService.makeAdminService(id);
+
+  sendResponse(res, {
+    statusCode: httpStatus.OK,
+    success: true,
+    message: 'Update Role successfully',
+    data: result,
+  });
+});
+
+const getAdmin = catchAsync(async (req, res) => {
+  const { email } = req.params;
+  const admin = await AdminService.getAdminServices(email);
+
+  sendResponse(res, {
+    statusCode: httpStatus.OK,
+    success: true,
+    message: 'Admin get Successfully',
+    data: admin,
+  });
+});
 
 const getUserStatisticsByMonth = catchAsync(async (req, res) => {
   const result = await AdminService.getUserStatisticsByMonthService();
@@ -159,5 +116,5 @@ export const AdminController = {
   getAllUsers,
   updateUserRole,
   getAdmin,
-  getUserStatisticsByMonth
+  getUserStatisticsByMonth,
 };
