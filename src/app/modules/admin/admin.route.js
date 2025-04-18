@@ -16,6 +16,10 @@ router
 router
   .route('/all-user')
   .get(authController.verifyAdmin, AdminController.getAllUsers);
+  
+router
+  .route('/all-payment')
+  .get(authController.verifyAdmin, AdminController.getAllPayment);
 
 router.route('/admin/:email').get(AdminController.getAdmin);
 

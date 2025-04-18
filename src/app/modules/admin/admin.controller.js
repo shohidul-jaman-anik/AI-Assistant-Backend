@@ -109,6 +109,29 @@ const getUserStatisticsByMonth = catchAsync(async (req, res) => {
   });
 });
 
+const getAllPayment = catchAsync(async (req, res) => {
+  const filters = pick(req.query, [
+    'searchTerm',
+    'price',
+    'plan_name',
+    'duration',
+  ]);
+
+  const paginationOptions = pick(req.query, paginationFields);
+
+  const result = await AdminService.getAllPaymentService(
+    filters,
+    paginationOptions,
+  );
+
+  sendResponse(res, {
+    statusCode: httpStatus.OK,
+    success: true,
+    message: 'Get All Paid User',
+    data: result,
+  });
+});
+
 export const AdminController = {
   makeAdmin,
   getAllBuyer,
@@ -117,4 +140,5 @@ export const AdminController = {
   updateUserRole,
   getAdmin,
   getUserStatisticsByMonth,
+  getAllPayment,
 };

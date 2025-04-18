@@ -1,5 +1,6 @@
 import paginationHelpers from '../../helpers/paginationHelpers.js';
 import UserModel from '../auth/auth.model.js';
+import SubscriptionModel from '../payment/payment.model.js';
 
 // ===========================================
 //                  All Users
@@ -40,13 +41,13 @@ const getAllUsersService = async (filters, paginationOptions) => {
 
   const total = await UserModel.estimatedDocumentCount();
   const paidUser = await UserModel.countDocuments({
-    "subscription.status": "paid"
+    'subscription.status': 'paid',
   });
   const freeUser = await UserModel.countDocuments({ plan: 'free' });
   const unverifyUsers = await UserModel.countDocuments({
     role: 'unauthorized',
   });
-  
+
   return {
     meta: {
       page,
@@ -115,7 +116,6 @@ const getAdminServices = async email => {
   }
 };
 
-
 const getUserStatisticsByMonthService = async () => {
   const aggregationResult = await UserModel.aggregate([
     {
@@ -169,6 +169,68 @@ const getUserStatisticsByMonthService = async () => {
   };
 };
 
+const getAllPaymentService = async (filters, paginationOptions) => {
+  const { searchTerm } = filters;
+
+  const productsSearchAbleFields = ['price', 'plan_name', 'duration', 'expiresAt'];
+  const andConditions = [];
+
+  // Add a default condition if andConditions is empty
+  if (andConditions.length === 0) {
+    andConditions.push({});
+  }
+
+  if (searchTerm) {
+    andConditions.push({
+      $or: productsSearchAbleFields.map(field => ({
+        [field]: { $regex: searchTerm, $options: 'i' },
+      })),
+    });
+  }
+
+  const { page, limit, skip, sortBy, sortOrder } =
+    paginationHelpers.calculatePagination(paginationOptions);
+
+  const sortConditions = {};
+  if (sortBy && sortOrder) {
+    sortConditions[sortBy] = sortOrder;
+  }
+
+  const users = await SubscriptionModel.find({ $and: andConditions })
+    .select('transactionId price plan_name duration expiresAt')
+    .sort(sortConditions)
+    .skip(skip)
+    .limit(limit);
+
+  const total = await SubscriptionModel.estimatedDocumentCount();
+  const paidUser = await SubscriptionModel.countDocuments({
+    paymentStatus: 'paid',
+  });
+  const freeUser = await SubscriptionModel.countDocuments({ plan: 'free' });
+  const professionalPlan = await SubscriptionModel.countDocuments({
+    plan_name: 'professional',
+  });
+  const personalPlan = await SubscriptionModel.countDocuments({
+    plan_name: 'personal',
+  });
+  const businessPlan = await SubscriptionModel.countDocuments({
+    plan_name: 'business',
+  });
+
+  return {
+    meta: {
+      page,
+      limit,
+      total,
+      paidUser,
+      freeUser,
+      professionalPlan,
+      personalPlan,
+      businessPlan,
+    },
+    data: users,
+  };
+};
 
 export const AdminService = {
   getAllUsersService,
@@ -177,5 +239,6 @@ export const AdminService = {
   makeAdminService,
   deleteUserService,
   getAdminServices,
-  getUserStatisticsByMonthService
+  getUserStatisticsByMonthService,
+  getAllPaymentService
 };
