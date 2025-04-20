@@ -279,110 +279,110 @@ import { LlamaAiService } from './groq.service.js';
 // const sessionMemoryStore = {}; // Stores session memory for each user session
 
 // const GroqAiGetResponse = catchAsync(async (req, res) => {
-  // const prompt = req.body?.prompt;
-  // const userId = req.body?.user;
-  // const sessionId = req.body?.sessionId || randomUUID(); // Unique session ID if not provided
+// const prompt = req.body?.prompt;
+// const userId = req.body?.user;
+// const sessionId = req.body?.sessionId || randomUUID(); // Unique session ID if not provided
 
-  // if (!prompt) {
-  //   return sendResponse(res, {
-  //     statusCode: httpStatus.BAD_REQUEST,
-  //     success: false,
-  //     message: 'Validation Error',
-  //     errorMessages: [{ path: 'prompt', message: 'Prompt is required.' }],
-  //   });
-  // }
+// if (!prompt) {
+//   return sendResponse(res, {
+//     statusCode: httpStatus.BAD_REQUEST,
+//     success: false,
+//     message: 'Validation Error',
+//     errorMessages: [{ path: 'prompt', message: 'Prompt is required.' }],
+//   });
+// }
 
-  // const user = await UserModel.findById(userId);
-  // if (!user) {
-  //   return sendResponse(res, {
-  //     statusCode: httpStatus.NOT_FOUND,
-  //     success: false,
-  //     message: 'User not found.',
-  //   });
-  // }
+// const user = await UserModel.findById(userId);
+// if (!user) {
+//   return sendResponse(res, {
+//     statusCode: httpStatus.NOT_FOUND,
+//     success: false,
+//     message: 'User not found.',
+//   });
+// }
 
-  // // Initialize session memory for conversation history
-  // let memory = sessionMemoryStore[sessionId];
-  // if (!memory) {
-  //   memory = new BufferMemory({
-  //     returnMessages: true,
-  //     memoryKey: 'history',
-  //     chatHistory: new InMemoryChatMessageHistory(), // Explicitly define chat history storage
-  //   });
-  //   sessionMemoryStore[sessionId] = memory;
-  // }
+// // Initialize session memory for conversation history
+// let memory = sessionMemoryStore[sessionId];
+// if (!memory) {
+//   memory = new BufferMemory({
+//     returnMessages: true,
+//     memoryKey: 'history',
+//     chatHistory: new InMemoryChatMessageHistory(), // Explicitly define chat history storage
+//   });
+//   sessionMemoryStore[sessionId] = memory;
+// }
 
-  // const model = new ChatGroq({
-  //   model: 'llama3-8b-8192',
-  //   temperature: 0.7,
-  //   apiKey: process.env.GROQ_API_KEY,
-  // });
+// const model = new ChatGroq({
+//   model: 'llama3-8b-8192',
+//   temperature: 0.7,
+//   apiKey: process.env.GROQ_API_KEY,
+// });
 
-  // const chain = new ConversationChain({ llm: model, memory });
+// const chain = new ConversationChain({ llm: model, memory });
 
-  // console.log('Memory Initialized:', memory);
+// console.log('Memory Initialized:', memory);
 
-  // try {
-  //   // Store user message in chat history
-  //   await memory.chatHistory.addMessage(new HumanMessage(prompt));
+// try {
+//   // Store user message in chat history
+//   await memory.chatHistory.addMessage(new HumanMessage(prompt));
 
-  //   // Invoke model with the full conversation context
-  //   const res1 = await chain.invoke({ input: prompt });
-  //   console.log('Model Response:', res1);
+//   // Invoke model with the full conversation context
+//   const res1 = await chain.invoke({ input: prompt });
+//   console.log('Model Response:', res1);
 
-  //   const reply = res1?.response || 'No reply generated'; // Extract correct response
+//   const reply = res1?.response || 'No reply generated'; // Extract correct response
 
-  //   // Store AI response in chat history
-  //   await memory.chatHistory.addMessage(new AIMessage(reply));
+//   // Store AI response in chat history
+//   await memory.chatHistory.addMessage(new AIMessage(reply));
 
-  //   // Save response in the database
-  //   const responseData = {
-  //     prompt,
-  //     model: 'llama3-8b-8192',
-  //     reply: res1?.response || 'No reply generated',
-  //     total_time: res1?.usage?.total_time || 0,
-  //   };
+//   // Save response in the database
+//   const responseData = {
+//     prompt,
+//     model: 'llama3-8b-8192',
+//     reply: res1?.response || 'No reply generated',
+//     total_time: res1?.usage?.total_time || 0,
+//   };
 
-  //   let llamaSession = await Llama.findOne({ user: userId, sessionId });
+//   let llamaSession = await Llama.findOne({ user: userId, sessionId });
 
-  //   if (llamaSession) {
-  //     console.log('Existing Session Found:', llamaSession);
-  //     llamaSession?.responses?.push(responseData);
-  //     await llamaSession.save();
-  //     console.log('Updated Session:', llamaSession);
-  //   } else {
-  //     console.log('Creating New Session...');
-  //     llamaSession = await Llama.create({
-  //       user: userId,
-  //       sessionId,
-  //       responses: [responseData],
-  //     });
-  //     console.log('New Session Created:', llamaSession);
-  //     await UserModel.findByIdAndUpdate(userId, {
-  //       $push: { llamaAiSessions: llamaSession._id },
-  //     });
-  //   }
+//   if (llamaSession) {
+//     console.log('Existing Session Found:', llamaSession);
+//     llamaSession?.responses?.push(responseData);
+//     await llamaSession.save();
+//     console.log('Updated Session:', llamaSession);
+//   } else {
+//     console.log('Creating New Session...');
+//     llamaSession = await Llama.create({
+//       user: userId,
+//       sessionId,
+//       responses: [responseData],
+//     });
+//     console.log('New Session Created:', llamaSession);
+//     await UserModel.findByIdAndUpdate(userId, {
+//       $push: { llamaAiSessions: llamaSession._id },
+//     });
+//   }
 
-  //   // Send response to the frontend
-  //   sendResponse(res, {
-  //     statusCode: httpStatus.OK,
-  //     success: true,
-  //     message: 'Response processed successfully.',
-  //     data: {
-  //       prompt,
-  //       sessionId,
-  //       reply,
-  //     },
-  //   });
-  // } catch (error) {
-  //   console.error('Error in ConversationChain:', error);
-  //   sendResponse(res, {
-  //     statusCode: httpStatus.INTERNAL_SERVER_ERROR,
-  //     success: false,
-  //     message: 'Failed to get response',
-  //     error: error.message,
-  //   });
-  // }
+//   // Send response to the frontend
+//   sendResponse(res, {
+//     statusCode: httpStatus.OK,
+//     success: true,
+//     message: 'Response processed successfully.',
+//     data: {
+//       prompt,
+//       sessionId,
+//       reply,
+//     },
+//   });
+// } catch (error) {
+//   console.error('Error in ConversationChain:', error);
+//   sendResponse(res, {
+//     statusCode: httpStatus.INTERNAL_SERVER_ERROR,
+//     success: false,
+//     message: 'Failed to get response',
+//     error: error.message,
+//   });
+// }
 // });
 
 // const MAX_MEMORY_SIZE = 12; // Limits stored messages per session
@@ -464,18 +464,10 @@ import { LlamaAiService } from './groq.service.js';
 // });
 
 import zepPackage from '@getzep/zep-js';
-import { InMemoryChatMessageHistory } from '@langchain/core/chat_history';
-import { AIMessage, HumanMessage } from '@langchain/core/messages';
-import { ChatGroq } from '@langchain/groq';
 import axios from 'axios';
 import { randomUUID } from 'crypto';
-import { ConversationChain } from 'langchain/chains';
-import { BufferMemory } from 'langchain/memory';
 // import { Serper } from 'serper';
 import config from '../../../../config/index.js';
-import UserModel from '../auth/auth.model.js';
-import Llama from './groq.model.js';
-import { paymentController } from '../payment/payment.controller.js';
 
 const { ZepClient } = zepPackage;
 
@@ -613,16 +605,9 @@ const { ZepClient } = zepPackage;
 //   }
 // });
 
-
-
-
-
 // =========================================================
 //          With Serper Groq and langchain
 // ==========================================================
-
-
-
 
 // const sessionMemoryStore = {}; // Stores session memory for each user session
 
@@ -694,7 +679,7 @@ const { ZepClient } = zepPackage;
 //         snippet: r.snippet,
 //         position: index + 1,
 //       })) || [];
-//     console.log('Formatted Search Results:', formattedSearchResults); 
+//     console.log('Formatted Search Results:', formattedSearchResults);
 
 //     const enrichedPrompt = searchSummary
 //       ? `${prompt}\n\nAdditional Context: ${searchSummary}`
@@ -711,19 +696,19 @@ const { ZepClient } = zepPackage;
 
 //     try {
 //       const paymentResult = await paymentController.incrementPromptsUsed(userId);
-    
+
 //       if (!paymentResult.success) {
 //         return res.status(400).json({ success: false, message: paymentResult.message });
 //       }
 //     } catch (error) {
 //       console.error('Error in incrementPromptsUsed:', error);
-    
+
 //       // Send the full error message as a response
 //       return res.status(400).json({
 //         success: false,
 //         message: error.message || 'An error occurred while updating prompt usage.',
 //       });
-//     }  
+//     }
 
 //     // Store AI response in chat history
 //     await memory.chatHistory.addMessage(new AIMessage(reply));
@@ -779,249 +764,43 @@ const { ZepClient } = zepPackage;
 //   }
 // });
 
-
-
 // =========================================================
-//          Without Serper 
+//          Without Serper
 // ==========================================================
-
-const sessionMemoryStore = {}; // Stores session memory for each user session
 
 const GroqAiGetResponse = catchAsync(async (req, res) => {
   const prompt = req.body?.prompt;
   const userId = req.body?.user;
-  const sessionId = req.body?.sessionId || randomUUID(); // Unique session ID if not provided
-
-  if (!prompt) {
-    return sendResponse(res, {
-      statusCode: httpStatus.BAD_REQUEST,
-      success: false,
-      message: 'Validation Error',
-      errorMessages: [{ path: 'prompt', message: 'Prompt is required.' }],
-    });
-  }
-
-  const user = await UserModel.findById(userId);
-  if (!user) {
-    return sendResponse(res, {
-      statusCode: httpStatus.NOT_FOUND,
-      success: false,
-      message: 'User not found.',
-    });
-  }
-
-  // Initialize session memory for conversation history
-  let memory = sessionMemoryStore[sessionId];
-  if (!memory) {
-    memory = new BufferMemory({
-      returnMessages: true,
-      memoryKey: 'history',
-      chatHistory: new InMemoryChatMessageHistory(),
-    });
-    sessionMemoryStore[sessionId] = memory;
-  }
-
-  const model = new ChatGroq({
-    model: 'llama3-8b-8192',
-    temperature: 0.7,
-    apiKey: config.groq_api_key,
+  const sessionIdFromClient = req.body?.sessionId;
+  const result = await LlamaAiService.getAiResponsesGroqService(
+    prompt,
+    userId,
+    sessionIdFromClient,
+  );
+  sendResponse(res, {
+    statusCode: httpStatus.OK,
+    success: true,
+    message: 'Response processed successfully.',
+    data: result,
   });
-
-  const chain = new ConversationChain({ llm: model, memory });
-  console.log('Memory Initialized:', memory);
-
-  try {
-    // Store user message in chat history
-    await memory.chatHistory.addMessage(new HumanMessage(prompt));
-
-    // Invoke model
-    const res1 = await chain.invoke({ input: prompt });
-    console.log('Model Response:', res1);
-
-    const reply = res1?.response || 'No reply generated';
-
-    try {
-      const paymentResult = await paymentController.incrementPromptsUsed(userId);
-    
-      if (!paymentResult.success) {
-        return res.status(400).json({ success: false, message: paymentResult.message });
-      }
-    } catch (error) {
-      console.error('Error in incrementPromptsUsed:', error);
-    
-      // Send the full error message as a response
-      return res.status(400).json({
-        success: false,
-        message: error.message || 'An error occurred while updating prompt usage.',
-      });
-    }  
-
-    // Store AI response in chat history
-    await memory.chatHistory.addMessage(new AIMessage(reply));
-
-    // Save response in the database
-    const responseData = {
-      prompt,
-      model: 'llama3-8b-8192',
-      reply,
-      total_time: res1?.usage?.total_time || 0,
-    };
-
-    let llamaSession = await Llama.findOne({ user: userId, sessionId });
-
-    if (llamaSession) {
-      console.log('Existing Session Found:', llamaSession);
-      llamaSession?.responses?.push(responseData);
-      await llamaSession.save();
-      console.log('Updated Session:', llamaSession);
-    } else {
-      console.log('Creating New Session...');
-      llamaSession = await Llama.create({
-        user: userId,
-        sessionId,
-        responses: [responseData],
-      });
-      console.log('New Session Created:', llamaSession);
-      await UserModel.findByIdAndUpdate(userId, {
-        $push: { llamaAiSessions: llamaSession._id },
-      });
-    }
-
-    sendResponse(res, {
-      statusCode: httpStatus.OK,
-      success: true,
-      message: 'Response processed successfully.',
-      data: {
-        sessionId,
-        prompt,
-        reply,
-      },
-    });
-  } catch (error) {
-    console.error('Error in ConversationChain:', error);
-    sendResponse(res, {
-      statusCode: httpStatus.INTERNAL_SERVER_ERROR,
-      success: false,
-      message: 'Failed to get response',
-      error: error.message,
-    });
-  }
 });
 
-
-const fetchSearchResults = async query => {
-  try {
-    const response = await axios.post(
-      'https://google.serper.dev/search',
-      { q: query },
-      {
-        headers: {
-          'X-API-KEY': config.serper_api_key,
-          'Content-Type': 'application/json',
-        },
-      },
-    );
-    return response.data?.organic?.slice(0, 3) || []; // Limit to top 3 results
-  } catch (error) {
-    console.error('Serper API Error:', error.message);
-    return [];
-  }
-};
-
-const MAX_MEMORY_SIZE = 12; // Limits stored messages per session
-const AnonymousSessionMemoryStore = {}; // Stores session memory for each user session
 
 const GroqAiGetResponseAnonymously = catchAsync(async (req, res) => {
   const prompt = req.body?.prompt;
   const sessionId = req.body?.sessionId || randomUUID(); // Fixed session for anonymous users
 
-  if (!prompt) {
-    return sendResponse(res, {
-      statusCode: httpStatus.BAD_REQUEST,
-      success: false,
-      message: 'Validation Error',
-      errorMessages: [{ path: 'prompt', message: 'Prompt is required.' }],
-    });
-  }
+  const responseData = await LlamaAiService.GroqAiGetResponseAnonymousService(
+    prompt,
+    sessionId,
+  );
 
-  // Initialize memory if it doesn't exist
-  if (!AnonymousSessionMemoryStore[sessionId]) {
-    AnonymousSessionMemoryStore[sessionId] = new BufferMemory({
-      returnMessages: true,
-      memoryKey: 'history',
-      chatHistory: new InMemoryChatMessageHistory(), // Chat history storage
-    });
-  }
-  const memory = AnonymousSessionMemoryStore[sessionId];
-
-  // Retrieve previous chat history
-  const previousMessages = await memory.chatHistory.getMessages();
-
-  // Limit memory size to prevent excessive context
-  if (previousMessages.length > MAX_MEMORY_SIZE) {
-    memory.chatHistory.messages = previousMessages.slice(-MAX_MEMORY_SIZE);
-  }
-
-  // Fetch real-time search results from Serper
-  const searchResults = await fetchSearchResults(prompt);
-  const searchContext = searchResults
-    .map((result, index) => `${index + 1}. ${result.title}: ${result.link}`)
-    .join('\n');
-
-  // Prepare conversation context (previous memory + search results)
-  const enrichedPrompt = searchResults.length
-    ? `Previous Conversation:\n${previousMessages
-        .map(msg => `${msg._getType().toUpperCase()}: ${msg.text}`)
-        .join(
-          '\n',
-        )}\n\nReal-Time Search Info:\n${searchContext}\n\nUser Query: ${prompt}`
-    : `Previous Conversation:\n${previousMessages
-        .map(msg => `${msg._getType().toUpperCase()}: ${msg.text}`)
-        .join('\n')}\n\nUser Query: ${prompt}`;
-
-  // Initialize the Groq model with LangChain
-  const model = new ChatGroq({
-    model: 'llama3-8b-8192',
-    temperature: 0.7,
-    apiKey: config.groq_api_key,
+  sendResponse(res, {
+    statusCode: httpStatus.OK,
+    success: true,
+    message: 'Response processed successfully.',
+    data: responseData,
   });
-
-  const chain = new ConversationChain({ llm: model, memory });
-
-  try {
-    // Add the new user message
-    await memory.chatHistory.addMessage(new HumanMessage(prompt));
-
-    // Invoke AI model with full conversation context
-    const response = await chain.invoke({ input: enrichedPrompt });
-
-    const reply = response?.response || 'No reply generated';
-
-    // Store AI response in chat history
-    await memory.chatHistory.addMessage(new AIMessage(reply));
-
-    // Prepare response
-    const responseData = {
-      sessionId,
-      prompt,
-      reply,
-      search_results: searchResults, // Include search results in response
-    };
-
-    sendResponse(res, {
-      statusCode: httpStatus.OK,
-      success: true,
-      message: 'Response processed successfully.',
-      data: responseData,
-    });
-  } catch (error) {
-    console.error('Error in ConversationChain:', error);
-    sendResponse(res, {
-      statusCode: httpStatus.INTERNAL_SERVER_ERROR,
-      success: false,
-      message: 'AI model processing failed.',
-    });
-  }
 });
 
 const LlamaAiGetResponseFromDbByUserId = catchAsync(async (req, res) => {
