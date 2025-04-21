@@ -1,6 +1,7 @@
 import paginationHelpers from '../../helpers/paginationHelpers.js';
 import UserModel from '../auth/auth.model.js';
 import SubscriptionModel from '../payment/payment.model.js';
+import mongoose from 'mongoose';
 
 // ===========================================
 //                  All Users
@@ -97,8 +98,25 @@ const makeAdminService = async userId => {
   return result;
 };
 
-const deleteUserService = async id => {
-  const result = await UserModel.deleteOne({ _id: id });
+const deleteUserService = async objectId => {
+  if (!mongoose.Types.ObjectId.isValid(objectId)) {
+    throw new Error('Invalid user ID format');
+  }
+
+  const mongoId = new mongoose.Types.ObjectId(objectId); // <-- convert explicitly
+
+  const user = await UserModel.findOne({ _id: mongoId });
+  console.log('User found:', user);
+
+  if (!user) {
+    throw new Error('User not found');
+  }
+
+  if (user.role === 'admin') {
+    throw new Error('Cannot delete an admin user');
+  }
+
+  const result = await UserModel.deleteOne({ _id: mongoId });
   return result;
 };
 
@@ -172,7 +190,12 @@ const getUserStatisticsByMonthService = async () => {
 const getAllPaymentService = async (filters, paginationOptions) => {
   const { searchTerm } = filters;
 
-  const productsSearchAbleFields = ['price', 'plan_name', 'duration', 'expiresAt'];
+  const productsSearchAbleFields = [
+    'price',
+    'plan_name',
+    'duration',
+    'expiresAt',
+  ];
   const andConditions = [];
 
   // Add a default condition if andConditions is empty
@@ -240,5 +263,5 @@ export const AdminService = {
   deleteUserService,
   getAdminServices,
   getUserStatisticsByMonthService,
-  getAllPaymentService
+  getAllPaymentService,
 };

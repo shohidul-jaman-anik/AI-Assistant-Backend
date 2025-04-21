@@ -18,6 +18,9 @@ export default {
   confirm_reg_email: process.env.CONFIRM_REG_EMAIL,
   livekit_api_key: process.env.LIVEKIT_API_KEY,
   livekit_secret_key: process.env.LIVEKIT_SECRET_KEY,
+  cloud_storage_secret_key: process.env.CLOUD_STORAGE_SECRET_KEY,
+  cloud_storage_access_key: process.env.CLOUD_STORAGE_ACCESS_KEY,
+  cloud_storage_bucket: process.env.CLOUD_STORAGE_BUCKET,
   mailgun: {
     mailgun_domain: process.env.MAILGUN_DOMAIN,
     mailgun_key: process.env.MAILGUN_KEY,

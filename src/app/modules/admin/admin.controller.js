@@ -33,8 +33,9 @@ const makeAdmin = catchAsync(async (req, res) => {
 });
 
 const deleteUser = catchAsync(async (req, res) => {
-  const { id } = req.params;
-  const result = await AdminService.deleteUserService(id);
+  const objectId  = req.params?.objectId;
+  const result = await AdminService.deleteUserService(objectId);
+  
 
   if (!result.deletedCount) {
     return res.status(400).json({
@@ -47,7 +48,7 @@ const deleteUser = catchAsync(async (req, res) => {
     statusCode: httpStatus.OK,
     success: true,
     message: 'User Delete Successfully',
-    data: users,
+    data: result,
   });
 });
 

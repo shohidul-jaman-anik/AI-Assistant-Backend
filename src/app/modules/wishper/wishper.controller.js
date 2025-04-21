@@ -9,18 +9,17 @@ import FormData from 'form-data';
 import fs from 'fs';
 
 
-
 const WishperAiGetResponse = catchAsync(async (req, res) => {
-  const prompt = req.body?.prompt;
   const userId = req.body?.user;
   const sessionId = req.body?.sessionId || randomUUID();
 
-  if (!prompt) {
+  // Check for missing audio file in the form-data
+  const audioFilePath = req.file?.path;  // Use req.file instead of req.body?.audioFile
+  if (!audioFilePath) {
     return sendResponse(res, {
       statusCode: httpStatus.BAD_REQUEST,
       success: false,
-      message: 'Validation Error',
-      errorMessages: [{ path: 'prompt', message: 'Prompt is required.' }],
+      message: 'Audio file is missing.',
     });
   }
 
@@ -34,6 +33,7 @@ const WishperAiGetResponse = catchAsync(async (req, res) => {
     });
   }
 
+  // Preparing form data for the API call
   const formData = new FormData();
   formData.append('file', fs.createReadStream(audioFilePath));
   formData.append('model', 'whisper-large-v3'); // Groq supports whisper-compatible models
@@ -48,14 +48,14 @@ const WishperAiGetResponse = catchAsync(async (req, res) => {
           ...formData.getHeaders(),
           Authorization: `Bearer ${config.groq_api_key}`,
         },
-      },
+      }
     );
 
     sendResponse(res, {
       statusCode: httpStatus.OK,
       success: true,
       message: 'Response processed successfully.',
-      data: { prompt, sessionId, response },
+      data: { sessionId, response },
     });
   } catch (error) {
     console.error('Error in Gemini AI:', error);

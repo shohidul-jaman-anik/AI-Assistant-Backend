@@ -2,6 +2,11 @@ import httpStatus from 'http-status';
 import catchAsync from '../../../shared/catchAsync.js';
 import sendResponse from '../../../shared/sendResponse.js';
 import { LlamaAiService } from './groq.service.js';
+import zepPackage from '@getzep/zep-js';
+import { randomUUID } from 'crypto';
+// import { Serper } from 'serper';
+
+const { ZepClient } = zepPackage;
 
 // const groq = new Groq({ apiKey: config.groq_api_key });
 
@@ -463,13 +468,9 @@ import { LlamaAiService } from './groq.service.js';
 //   }
 // });
 
-import zepPackage from '@getzep/zep-js';
-import axios from 'axios';
-import { randomUUID } from 'crypto';
-// import { Serper } from 'serper';
-import config from '../../../../config/index.js';
 
-const { ZepClient } = zepPackage;
+
+
 
 // const sessionMemoryStore = {}; // Stores session memory for each user session
 // const searchWeb = async (query) => {
@@ -764,6 +765,8 @@ const { ZepClient } = zepPackage;
 //   }
 // });
 
+
+
 // =========================================================
 //          Without Serper
 // ==========================================================
@@ -784,7 +787,6 @@ const GroqAiGetResponse = catchAsync(async (req, res) => {
     data: result,
   });
 });
-
 
 const GroqAiGetResponseAnonymously = catchAsync(async (req, res) => {
   const prompt = req.body?.prompt;
