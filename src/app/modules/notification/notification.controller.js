@@ -120,6 +120,18 @@ const deleteNotificationById = catchAsync(async (req, res) => {
   });
 });
 
+// Controller for deleting notification
+const deleteAllNotification = catchAsync(async (req, res) => {
+  const result = await NotificationService.deleteAllNotificationService();
+
+  sendResponse(res, {
+    statusCode: httpStatus.OK,
+    success: true,
+    message: 'Delete All Notification Successfully',
+    data: result,
+  });
+});
+
 export const NotificationController = {
   sendNotification,
   getNotification,
@@ -127,4 +139,5 @@ export const NotificationController = {
   getNotificationById,
   updateNotificationById,
   deleteNotificationById,
+  deleteAllNotification,
 };

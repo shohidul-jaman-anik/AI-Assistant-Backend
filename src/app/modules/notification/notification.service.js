@@ -1,5 +1,6 @@
 import UserModel from '../auth/auth.model.js';
 import Notification from './notification.model.js';
+import mongoose from 'mongoose';
 
 const sendNotificationService = async data => {
   // 1. Create the Notification first
@@ -53,7 +54,37 @@ const deleteNotificationByIdService = async notificationId => {
   const result = await Notification.deleteOne({ _id: notificationId });
   return result;
 };
+const deleteAllNotificationService = async () => {
+  const session = await mongoose.startSession();
 
+  try {
+    // Start a transaction
+    session.startTransaction();
+
+    // Step 1: Delete all notifications from the Notification collection
+    await Notification.deleteMany({}, { session });
+
+    // Step 2: Remove all references to notifications from the User collection
+    await UserModel.updateMany(
+      {},
+      { $set: { notifications: [] } },
+      { session },
+    );
+
+    // Commit the transaction if everything goes fine
+    await session.commitTransaction();
+
+    console.log('All notifications deleted successfully.');
+  } catch (error) {
+    // If any error occurs, abort the transaction to roll back all changes
+    await session.abortTransaction();
+
+    console.error('Error occurred during the transaction:', error);
+  } finally {
+    // End the session
+    session.endSession();
+  }
+};
 export const NotificationService = {
   sendNotificationService,
   getNotificationService,
@@ -61,4 +92,5 @@ export const NotificationService = {
   getNotificationByIdService,
   updateNotificationByIdService,
   deleteNotificationByIdService,
+  deleteAllNotificationService,
 };

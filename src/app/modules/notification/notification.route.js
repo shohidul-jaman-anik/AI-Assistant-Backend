@@ -17,6 +17,10 @@ router
   .delete(NotificationController.deleteNotificationById);
 
 router
+  .route('/delete-all')
+  .delete(NotificationController.deleteAllNotification);
+
+router
   .route('/send-notification-all')
   .post(NotificationController.sendNotification);
 

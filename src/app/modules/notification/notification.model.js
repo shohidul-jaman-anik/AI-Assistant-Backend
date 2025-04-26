@@ -24,10 +24,15 @@ const notificationSchema = new mongoose.Schema(
       enum: ['Default', 'Request'],
       default: 'Default',
     },
+    // category: {
+    //   type: String,
+    //   enum: ['system', 'chat', 'promotion', 'transaction'],
+    //   default: 'system',
+    // },
     userId: {
       type: mongoose.Schema.Types.ObjectId,
       ref: 'User',
-    //   required: [true, 'User ID is required'],
+      //   required: [true, 'User ID is required'],
     },
   },
   {
