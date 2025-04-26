@@ -24,11 +24,20 @@ const notificationSchema = new mongoose.Schema(
       enum: ['Default', 'Request'],
       default: 'Default',
     },
-    // category: {
-    //   type: String,
-    //   enum: ['system', 'chat', 'promotion', 'transaction'],
-    //   default: 'system',
-    // },
+    category: {
+      type: String,
+      enum: [
+        'system',
+        'chat',
+        'promotion',
+        'transaction',
+        'Event',
+        'Support',
+        'Warning',
+        'Alert',
+      ],
+      default: 'system',
+    },
     userId: {
       type: mongoose.Schema.Types.ObjectId,
       ref: 'User',
