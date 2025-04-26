@@ -45,6 +45,12 @@ const UserSchema = new mongoose.Schema(
     llamaAiSessions: [
       { type: mongoose.Schema.Types.ObjectId, ref: 'Chat-History' },
     ],
+    notifications: [
+      {
+        type: mongoose.Schema.Types.ObjectId,
+        ref: 'Notification', // Reference to Notification model
+      },
+    ],
     confirmationToken: String,
     confirmationTokenExpires: Date,
     resetPasswordOTP: String,
@@ -55,7 +61,7 @@ const UserSchema = new mongoose.Schema(
   {
     timestamps: true,
     // collection: 'users', // 👈 force mongoose to use the correct collection name
-  }
+  },
 );
 
 UserSchema.methods.generateConfirmationToken = function () {

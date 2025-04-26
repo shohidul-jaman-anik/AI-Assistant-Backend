@@ -1,22 +1,25 @@
-const express = require('express');
+import express from 'express';
+import { NotificationController } from './notification.controller.js';
 const router = express.Router();
-const notificationController = require('./notification.controller')
+
+router.route('/user/:userId').post(NotificationController.sendNotificationById);
 
 router
-    .route('/user/:userId')
-    .get(notificationController.getNotificationById)
-    .post(notificationController.sendNotificationById)
-
+  .route('/get-notification/:userId')
+  .get(NotificationController.getNotificationById);
 
 router
-    .route('/:notificationId')
-    .put(notificationController.updateNotificationById)
-    .delete(notificationController.deleteNotificationById)
-
+  .route('/update/:notificationId')
+  .put(NotificationController.updateNotificationById);
 
 router
-    .route('/')
-    .get(notificationController.getNotification)
-    .post(notificationController.sendNotification)
+  .route('/delete/:notificationId')
+  .delete(NotificationController.deleteNotificationById);
 
-module.exports = router;
+router
+  .route('/send-notification-all')
+  .post(NotificationController.sendNotification);
+
+router.route('/get-all').get(NotificationController.getNotification);
+
+export const notificationRoutes = router;

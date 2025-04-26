@@ -32,3 +32,4 @@ router
 router.route('/delete-account/:id').delete(authController.deleteUserAccount); // use to delete account
 
 export const authRoutes = router;
+
