@@ -11,26 +11,136 @@ import UserModel from '../auth/auth.model.js';
 import { paymentController } from '../payment/payment.controller.js';
 import Llama from './groq.model.js';
 import { fetchSearchResults } from './groq.utilities.js';
+import { SystemMessage } from '@langchain/core/messages';
 
-const sessionMemoryStore = {}; // Stores session memory for each user session
 
-const getAiResponsesGroqService = async (
+// const sessionMemoryStore = {}; // Stores session memory for each user session
+
+// const getAiResponsesGroqService = async (
+//   prompt,
+//   userId,
+//   sessionIdFromClient,
+// ) => {
+//   const sessionId = sessionIdFromClient || randomUUID(); // Unique session ID if not provided
+
+//   if (!prompt) {
+//     throw ApiError(httpStatus.NOT_FOUND, 'Prompt is required.');
+//   }
+
+//   const user = await UserModel.findById(userId);
+//   if (!user) {
+//     throw ApiError(httpStatus.NOT_FOUND, 'User not found');
+//   }
+
+//   // Initialize session memory for conversation history
+//   let memory = sessionMemoryStore[sessionId];
+//   if (!memory) {
+//     memory = new BufferMemory({
+//       returnMessages: true,
+//       memoryKey: 'history',
+//       chatHistory: new InMemoryChatMessageHistory(),
+//     });
+//     sessionMemoryStore[sessionId] = memory;
+//   }
+
+//   const model = new ChatGroq({
+//     model: 'llama3-8b-8192',
+//     temperature: 0.7,
+//     apiKey: config.groq_api_key,
+//   });
+
+//   const chain = new ConversationChain({ llm: model, memory });
+//   console.log('Memory Initialized:', memory);
+
+//   try {
+//     // Store user message in chat history
+//     await memory.chatHistory.addMessage(new HumanMessage(prompt));
+
+//     // Invoke model
+//     const res1 = await chain.invoke({ input: prompt });
+//     console.log('Model Response:', res1);
+
+//     const reply = res1?.response || 'No reply generated';
+
+//     try {
+//       const paymentResult =
+//         await paymentController.incrementPromptsUsed(userId);
+
+//       if (!paymentResult.success) {
+//         return { success: false, message: paymentResult.message };
+//       }
+//     } catch (error) {
+//       console.error('Error in incrementPromptsUsed:', error);
+
+//       // Send the full error message as a response
+//       return {
+//         success: false,
+//         message:
+//           error.message || 'An error occurred while updating prompt usage.',
+//       };
+//     }
+
+//     // Store AI response in chat history
+//     await memory.chatHistory.addMessage(new AIMessage(reply));
+
+//     // Save response in the database
+//     const responseData = {
+//       prompt,
+//       model: 'llama3-8b-8192',
+//       reply,
+//       total_time: res1?.usage?.total_time || 0,
+//     };
+
+//     let llamaSession = await Llama.findOne({ user: userId, sessionId });
+
+//     if (llamaSession) {
+//       console.log('Existing Session Found:', llamaSession);
+//       llamaSession?.responses?.push(responseData);
+//       await llamaSession.save();
+//       console.log('Updated Session:', llamaSession);
+//     } else {
+//       console.log('Creating New Session...');
+//       llamaSession = await Llama.create({
+//         user: userId,
+//         sessionId,
+//         responses: [responseData],
+//       });
+//       console.log('New Session Created:', llamaSession);
+//       await UserModel.findByIdAndUpdate(userId, {
+//         $push: { llamaAiSessions: llamaSession._id },
+//       });
+//     }
+
+//     const data = {
+//       sessionId,
+//       prompt,
+//       reply,
+//     };
+//     return data;
+//   } catch (error) {
+//     return error;
+//   }
+// };
+
+const sessionMemoryStore = {}; // In-memory session store
+
+export const getAiResponsesGroqService = async (
   prompt,
   userId,
   sessionIdFromClient,
 ) => {
-  const sessionId = sessionIdFromClient || randomUUID(); // Unique session ID if not provided
+  const sessionId = sessionIdFromClient || randomUUID(); // Create new session if none provided
 
   if (!prompt) {
-    throw ApiError(httpStatus.NOT_FOUND, 'Prompt is required.');
+    throw new ApiError(httpStatus.BAD_REQUEST, 'Prompt is required.');
   }
 
   const user = await UserModel.findById(userId);
   if (!user) {
-    throw ApiError(httpStatus.NOT_FOUND, 'User not found');
+    throw new ApiError(httpStatus.NOT_FOUND, 'User not found');
   }
 
-  // Initialize session memory for conversation history
+  // Initialize or retrieve memory
   let memory = sessionMemoryStore[sessionId];
   if (!memory) {
     memory = new BufferMemory({
@@ -38,39 +148,45 @@ const getAiResponsesGroqService = async (
       memoryKey: 'history',
       chatHistory: new InMemoryChatMessageHistory(),
     });
+
+    // Optional: set a system message once at the beginning
+    await memory.chatHistory.addMessage(
+      new SystemMessage(
+        'You are a helpful AI assistant. Provide concise, professional, clear and deeply answers.',
+      ),
+    );
+
     sessionMemoryStore[sessionId] = memory;
   }
 
+  // Initialize Groq model
   const model = new ChatGroq({
-    model: 'llama3-8b-8192',
-    temperature: 0.7,
+    model: 'llama3-8b-8192', // You can upgrade to 'llama3-70b-8192' for better quality
+    temperature: 0.3, // More accurate, serious answers
     apiKey: config.groq_api_key,
   });
 
-  const chain = new ConversationChain({ llm: model, memory });
-  console.log('Memory Initialized:', memory);
+  const chain = new ConversationChain({
+    llm: model,
+    memory,
+  });
 
   try {
-    // Store user message in chat history
-    await memory.chatHistory.addMessage(new HumanMessage(prompt));
-
-    // Invoke model
+    // Only invoke the model — ConversationChain handles memory updates automatically
     const res1 = await chain.invoke({ input: prompt });
     console.log('Model Response:', res1);
 
     const reply = res1?.response || 'No reply generated';
 
+    // Handle prompt usage tracking
     try {
       const paymentResult =
         await paymentController.incrementPromptsUsed(userId);
-
       if (!paymentResult.success) {
         return { success: false, message: paymentResult.message };
       }
     } catch (error) {
       console.error('Error in incrementPromptsUsed:', error);
-
-      // Send the full error message as a response
       return {
         success: false,
         message:
@@ -78,10 +194,7 @@ const getAiResponsesGroqService = async (
       };
     }
 
-    // Store AI response in chat history
-    await memory.chatHistory.addMessage(new AIMessage(reply));
-
-    // Save response in the database
+    // Save response in database
     const responseData = {
       prompt,
       model: 'llama3-8b-8192',
@@ -93,7 +206,7 @@ const getAiResponsesGroqService = async (
 
     if (llamaSession) {
       console.log('Existing Session Found:', llamaSession);
-      llamaSession?.responses?.push(responseData);
+      llamaSession.responses.push(responseData);
       await llamaSession.save();
       console.log('Updated Session:', llamaSession);
     } else {
@@ -109,14 +222,14 @@ const getAiResponsesGroqService = async (
       });
     }
 
-    const data = {
+    return {
       sessionId,
       prompt,
       reply,
     };
-    return data;
   } catch (error) {
-    return error;
+    console.error('Error in getAiResponsesGroqService:', error);
+    throw new ApiError(httpStatus.INTERNAL_SERVER_ERROR, 'AI service failed.');
   }
 };
 

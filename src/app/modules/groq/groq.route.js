@@ -2,7 +2,7 @@ import express from 'express';
 import { LlamaAiController } from './groq.controller.js';
 const router = express.Router();
 
-router.route('/').post(LlamaAiController.GroqAiGetResponse);
+router.route('/get-response').post(LlamaAiController.GroqAiGetResponse);
 router
   .route('/get-response-anonymously')
   .post(LlamaAiController.GroqAiGetResponseAnonymously);
