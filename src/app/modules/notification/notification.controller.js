@@ -34,7 +34,7 @@ const getNotification = catchAsync(async (req, res) => {
   });
 });
 
-// Controller for sending notification
+// Controller for sending notification by id
 const sendNotificationById = catchAsync(async (req, res) => {
   const { userId } = req.params;
   const data = req.body;
@@ -55,7 +55,7 @@ const sendNotificationById = catchAsync(async (req, res) => {
   });
 });
 
-// Controller for getting notifications
+// Controller for getting notifications by id
 const getNotificationById = catchAsync(async (req, res) => {
   const { userId } = req.params;
 
@@ -74,7 +74,7 @@ const getNotificationById = catchAsync(async (req, res) => {
   });
 });
 
-// Controller for updating notification
+// Controller for updating notification by id
 const updateNotificationById = catchAsync(async (req, res) => {
   const { notificationId } = req.params;
   const data = req.body;
