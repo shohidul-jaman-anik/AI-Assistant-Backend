@@ -14,6 +14,7 @@ import { wishperAiRoutes } from '../modules/wishper/wishper.route.js';
 import { adminRoutes } from '../modules/admin/admin.route.js';
 import { llama4AiRoutes } from '../modules/Llama4/llama4.route.js';
 import { notificationRoutes } from '../modules/notification/notification.route.js';
+import { socialLoginRotes } from '../modules/social-login/social-login.route.js';
 
 const router = express.Router();
 
@@ -25,6 +26,10 @@ const moduleRoutes = [
   {
     path: '/auth',
     route: authRoutes,
+  },
+  {
+    path: '/auth-social',
+    route: socialLoginRotes,
   },
   {
     path: '/subscription',

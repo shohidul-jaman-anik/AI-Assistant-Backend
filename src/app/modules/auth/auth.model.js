@@ -4,6 +4,9 @@ import mongoose from 'mongoose';
 
 const UserSchema = new mongoose.Schema(
   {
+    provider: { type: String, required: true },
+    providerId: { type: String, required: true },
+    avatar: { type: String },
     email: {
       type: String,
       required: [true, 'Please provide a unique email'],

@@ -1,0 +1,174 @@
+import OAuth from 'oauth';
+import jwt from 'jsonwebtoken';
+import { findOrCreateUserModel } from '../../social-login.utils.js';
+import config from '../../../../../../config/index.js';
+
+// Ensure BASE_URL doesn't have a trailing slash
+const BASE_URL = process.env.BASE_URL.endsWith('/')
+    ? process.env.BASE_URL.slice(0, -1)
+    : process.env.BASE_URL;
+
+const CALLBACK_URL = `${BASE_URL}/auth-social/twitter/callback`;
+
+// Manual OAuth1.0a implementation with error handling
+const oauth = new OAuth.OAuth(
+    'https://api.twitter.com/oauth/request_token',
+    'https://api.twitter.com/oauth/access_token',
+    process.env.TWITTER_CONSUMER_KEY,
+    process.env.TWITTER_CONSUMER_SECRET,
+    '1.0A',
+    CALLBACK_URL,
+    'HMAC-SHA1',
+    null, // No body length
+    { // Include headers to be more compatible with Twitter's API
+        'Accept': '*/*',
+        'User-Agent': 'YourAppName',
+        'Connection': 'close',
+        'X-Target-URI': 'https://api.twitter.com',
+        'Content-Type': 'application/x-www-form-urlencoded'
+    }
+);
+
+// Store for request tokens
+const tokenStore = {};
+
+// Create a manual middleware for Twitter OAuth
+export const twitterAuth = {
+    // Initiate OAuth flow
+    authenticate: (req, res) => {
+        console.log('Twitter Auth - Starting OAuth flow');
+        console.log('Using consumer key:', process.env.TWITTER_CONSUMER_KEY);
+        console.log('Callback URL:', CALLBACK_URL);
+
+        // Add additional params required by Twitter
+        const extraParams = {};
+
+        oauth.getOAuthRequestToken(extraParams, (err, token, secret, results) => {
+            if (err) {
+                console.error('Twitter OAuth error:', err);
+                console.error('Error data:', err.data);
+
+                return res.status(500).json({
+                    status: false,
+                    message: 'Failed to get request token',
+                    errorMessages: [{
+                        path: '',
+                        message: err.message || 'Twitter OAuth initialization failed'
+                    }]
+                });
+            }
+
+            console.log('Twitter Auth - Got request token:', token);
+            console.log('Results:', results);
+
+            // Store the token secret for later
+            tokenStore[token] = secret;
+
+            // Set a timeout to clean up (optional)
+            setTimeout(() => delete tokenStore[token], 15 * 60 * 1000); // 15 minutes
+
+            // Redirect to Twitter
+            res.redirect(`https://api.twitter.com/oauth/authenticate?oauth_token=${token}`);
+        });
+    },
+
+    // Handle callback from Twitter
+    callback: (req, res) => {
+        const { oauth_token, oauth_verifier } = req.query;
+
+        if (!oauth_token || !oauth_verifier) {
+            return res.status(400).json({
+                status: false,
+                message: 'Missing oauth_token or oauth_verifier',
+                errorMessages: [{ path: '', message: 'Missing oauth_token or oauth_verifier' }]
+            });
+        }
+
+        const requestTokenSecret = tokenStore[oauth_token];
+
+        if (!requestTokenSecret) {
+            return res.status(400).json({
+                status: false,
+                message: 'Invalid or expired token',
+                errorMessages: [{ path: '', message: 'Invalid or expired token' }]
+            });
+        }
+
+        // Clean up the token from store
+        delete tokenStore[oauth_token];
+
+        // Exchange for access token
+        oauth.getOAuthAccessToken(
+            oauth_token,
+            requestTokenSecret,
+            oauth_verifier,
+            async (err, accessToken, accessTokenSecret) => {
+                if (err) {
+                    return res.status(500).json({
+                        status: false,
+                        message: 'Failed to get access token',
+                        errorMessages: [{ path: '', message: err.message }]
+                    });
+                }
+
+                // Get user info from Twitter
+                oauth.get(
+                    'https://api.twitter.com/1.1/account/verify_credentials.json?include_email=true',
+                    accessToken,
+                    accessTokenSecret,
+                    async (err, data) => {
+                        if (err) {
+                            return res.status(500).json({
+                                status: false,
+                                message: 'Failed to get user profile',
+                                errorMessages: [{ path: '', message: err.message }]
+                            });
+                        }
+
+                        try {
+                            const profile = JSON.parse(data);
+
+                            const twitterProfile = {
+                                id: profile.id_str,
+                                username: profile.screen_name,
+                                displayName: profile.name,
+                                emails: profile.email ? [{ value: profile.email }] : [],
+                                photos: profile.profile_image_url_https ?
+                                    [{ value: profile.profile_image_url_https }] : []
+                            };
+
+                            const user = await findOrCreateUserModel({
+                                ...twitterProfile,
+                                email: profile.email || null
+                            }, 'twitter');
+
+                            // Generate and send JWT token
+                            const token = jwt.sign(
+                                {
+                                    email: user.email,
+                                    role: user.role,
+                                    id: user._id
+                                },
+                                config.jwt_secret,
+                                { expiresIn: '7d' }
+                            );
+
+                            // return res.redirect(process.env.CLIENT_URL + '/auth/callback#token=' + token);
+                            return res.status(200).send({
+                                mgs: 'Login successful...!',
+                                email: user.email,
+                                token
+                            });
+                        } catch (error) {
+                            return res.status(500).json({
+                                status: false,
+                                message: 'Error processing user data',
+                                errorMessages: [{ path: '', message: error.message }]
+                            });
+                        }
+                    }
+                );
+            }
+        );
+    }
+};

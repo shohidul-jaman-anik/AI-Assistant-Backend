@@ -7,26 +7,26 @@ import mongoose from 'mongoose';
 import morgan from 'morgan';
 import toobusy from 'toobusy-js';
 // import config from './config';
-import colors from 'colors';
 import globalErrorHandler from './src/app/middlewares/globalErrorHandler/globalErrorHandler.js';
 import router from './src/app/routes/index.js';
 // import { logger } from './src/shared/logger';
-import config from './config/index.js';
-import { logger } from './src/shared/logger.js';
 import bodyParser from 'body-parser';
+import config from './config/index.js';
 import './src/app/middlewares/resetUsage/resetUsage.js';
-
-
-
+import { logger } from './src/shared/logger.js';
+import passport from 'passport';
+import passportConfig from './src/app/modules/social-login/config/passport.js';
 
 // Load environment variables
 dotenv.config();
 
 const app = express();
 
-
 // ✅ Use body-parser raw() FIRST for Stripe webhook before any JSON parsing
-app.use('/api/v1/subscription/webhook', express.raw({ type: 'application/json' }));
+app.use(
+  '/api/v1/subscription/webhook',
+  express.raw({ type: 'application/json' }),
+);
 
 // Middleware
 app.use(cors());
@@ -42,20 +42,21 @@ app.set('trust proxy', 'loopback');
 // Helmet middleware for security headers
 app.use(helmet());
 
-
-
 const corsConfig = {
-  origin: [
-    'https://ason-web.netlify.app',
-    'http://localhost:3000',
-  ],
+  origin: ['https://ason-web.netlify.app', 'http://localhost:3000'],
   credentials: true,
-  methods: ["GET", "POST", "DELETE", "PUT", "PATCH"],
-  allowedHeaders: ["Origin", "X-Requested-With", "Content-Type", "Accept", "Authorization"],
+  methods: ['GET', 'POST', 'DELETE', 'PUT', 'PATCH'],
+  allowedHeaders: [
+    'Origin',
+    'X-Requested-With',
+    'Content-Type',
+    'Accept',
+    'Authorization',
+  ],
   preflightContinue: false,
-  optionsSuccessStatus: 204
+  optionsSuccessStatus: 204,
 };
-app.use(cors(corsConfig))
+app.use(cors(corsConfig));
 
 // Additional Helmet security configurations
 app.use(
@@ -99,6 +100,15 @@ mongoose
     process.exit(1); // Exit the application on database connection error
   });
 
+// Initialize passport (no session)
+passportConfig(passport);
+app.use(passport.initialize());
+
+app.get('/api/user', (req, res) => {
+  res.setHeader('Access-Control-Allow-Credentials', 'true');
+  res.json(req.user || null);
+});
+
 // API routes
 app.use('/api/v1', router);
 
@@ -127,7 +137,7 @@ app.use((req, res) => {
 // Start server
 const port = config.port || 8080;
 app.listen(port, () => {
-  console.log(`App is running on port ${port}`.yellow.bold);
+  console.log(`App is running on port ${port}`);
 });
 
 export default app;
