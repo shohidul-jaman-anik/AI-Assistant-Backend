@@ -7,13 +7,14 @@ const notificationSchema = new mongoose.Schema(
       required: [true, 'Notification title is required'],
       trim: true,
     },
+    description: {
+      type: String,
+      required: [true, 'Notification title is required'],
+      trim: true,
+    },
     isRead: {
       type: Boolean,
       default: false,
-    },
-    time: {
-      type: Date,
-      default: Date.now,
     },
     link: {
       type: String,
@@ -26,17 +27,17 @@ const notificationSchema = new mongoose.Schema(
     },
     category: {
       type: String,
-      enum: [
-        'system',
-        'chat',
-        'promotion',
-        'transaction',
-        'Event',
-        'Support',
-        'Warning',
-        'Alert',
-      ],
-      default: 'system',
+      // enum: [
+      //   'system',
+      //   'chat',
+      //   'promotion',
+      //   'transaction',
+      //   'Event',
+      //   'Support',
+      //   'Warning',
+      //   'Alert',
+      // ],
+      // default: 'system',
     },
     userId: {
       type: mongoose.Schema.Types.ObjectId,
