@@ -9,7 +9,7 @@ const notificationSchema = new mongoose.Schema(
     },
     description: {
       type: String,
-      required: [true, 'Notification title is required'],
+      required: [true, 'Notification description is required'],
       trim: true,
     },
     isRead: {
@@ -22,8 +22,8 @@ const notificationSchema = new mongoose.Schema(
     },
     type: {
       type: String,
-      enum: ['Default', 'Request'],
-      default: 'Default',
+      enum: ['default', 'request'],
+      default: 'default',
     },
     category: {
       type: String,
