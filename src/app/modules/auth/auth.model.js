@@ -4,8 +4,8 @@ import mongoose from 'mongoose';
 
 const UserSchema = new mongoose.Schema(
   {
-    provider: { type: String, required: true },
-    providerId: { type: String, required: true },
+    provider: { type: String },
+    providerId: { type: String },
     avatar: { type: String },
     email: {
       type: String,

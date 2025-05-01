@@ -57,13 +57,6 @@ const deleteSupportReq = catchAsync(async (req, res) => {
   const { id } = req.params;
   const result = await supportService.deleteSupportReqService(id);
 
-  // if (!result.deletedCount) {
-  //   return res.status(400).json({
-  //     status: 'fail',
-  //     error: "Could't delete the Support Request",
-  //   });
-  // }
-
   sendResponse(res, {
     statusCode: httpStatus.OK,
     success: true,
