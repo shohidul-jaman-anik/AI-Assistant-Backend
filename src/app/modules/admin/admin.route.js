@@ -3,7 +3,6 @@ import { AdminController } from './admin.controller.js';
 import { authController } from '../auth/auth.controller.js';
 const router = express.Router();
 
-router.route('/make-seller/:id').put(AdminController.makeAdmin);
 router.route('/update-user-role/:id').put(AdminController.updateUserRole);
 
 router.route('/delete-user/:objectId').delete(authController.verifyAdmin, AdminController.deleteUser);

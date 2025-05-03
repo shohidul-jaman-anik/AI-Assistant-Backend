@@ -775,11 +775,13 @@ const GroqAiGetResponse = catchAsync(async (req, res) => {
   const prompt = req.body?.prompt;
   const userId = req.body?.user;
   const sessionIdFromClient = req.body?.sessionId;
+  console.log('✅ Request received at /groq:', req.body); // log incoming request
   const result = await LlamaAiService.getAiResponsesGroqService(
     prompt,
     userId,
     sessionIdFromClient,
   );
+  console.log('✅ Service result:', result); // log result
   sendResponse(res, {
     statusCode: httpStatus.OK,
     success: true,
@@ -809,7 +811,7 @@ const LlamaAiGetResponseFromDbByUserId = catchAsync(async (req, res) => {
   const id = req.params?.userId;
   console.log(id, 'session');
 
-  const responseData = await LlamaAiService.getAiResponsesByUserId(id);
+  const responseData = await LlamaAiService.getAiResponsesByUserIdService(id);
 
   sendResponse(res, {
     statusCode: httpStatus.OK,

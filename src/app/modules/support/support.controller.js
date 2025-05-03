@@ -18,7 +18,7 @@ const reqForSupport = catchAsync(async (req, res) => {
 });
 
 const getAllSupportReq = catchAsync(async (req, res) => {
-  const result = await supportService.getAllSupportServiceById();
+  const result = await supportService.getAllSupportService();
 
   sendResponse(res, {
     statusCode: httpStatus.OK,

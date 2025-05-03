@@ -2,7 +2,13 @@ import UserModel from '../auth/auth.model.js';
 import Support from './support.model.js';
 
 const reqForSupportService = async (userId, data) => {
-  const result = await Support.create(data);
+  // const user = await UserModel.findOne({ _id: new mongoose.Types.ObjectId(userId) });
+  // console.log(user, 'userrr');
+  // if (!user) {
+  //   throw new ApiError(httpStatus.NOT_FOUND, 'User not found');
+  // }
+
+  const result = await Support.create(data );
 
   await UserModel.findOneAndUpdate(
     { _id: userId },
@@ -12,14 +18,14 @@ const reqForSupportService = async (userId, data) => {
   return result;
 };
 
-const getAllSupportServiceById = async id => {
+const getAllSupportService = async ()=> {
   const result = await Support.find({});
   // console.log(result, 'resulttttttt');
   return result;
 };
 
 const getSupportServiceById = async id => {
-  const result = await Support.findOne({ _id: id })
+  const result = await Support.findOne({ _id: id });
   return result;
 };
 
@@ -48,7 +54,7 @@ const bulkDeleteSupportReqService = async ids => {
 
 export const supportService = {
   reqForSupportService,
-  getAllSupportServiceById,
+  getAllSupportService,
   getSupportServiceById,
   updateSupportReqService,
   deleteSupportReqService,

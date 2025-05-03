@@ -312,7 +312,7 @@ const GroqAiGetResponseAnonymousService = async (
   return responseData;
 };
 
-const getAiResponsesByUserId = async userId => {
+const getAiResponsesByUserIdService = async userId => {
   const sessionData = await UserModel.findOne({
     _id: userId,
   })
@@ -450,7 +450,7 @@ const deleteAllAiSessionsService = async userId => {
 export const LlamaAiService = {
   getAiResponsesGroqService,
   GroqAiGetResponseAnonymousService,
-  getAiResponsesByUserId,
+  getAiResponsesByUserIdService,
   getAiResponsesBySession,
   deleteOneLlamaAiSession,
   deleteAllAiSessionsService,

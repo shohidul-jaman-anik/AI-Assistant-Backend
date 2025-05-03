@@ -18,19 +18,7 @@ const getAllBuyer = catchAsync(async (req, res) => {
   });
 });
 
-const makeAdmin = catchAsync(async (req, res) => {
-  const { id } = req.params;
-  const filter = { _id: id };
 
-  const result = AdminService.makeAdminService(filter);
-
-  sendResponse(res, {
-    statusCode: httpStatus.OK,
-    success: true,
-    message: 'Create admin successfully',
-    data: result,
-  });
-});
 
 const deleteUser = catchAsync(async (req, res) => {
   const objectId  = req.params?.objectId;
@@ -134,7 +122,6 @@ const getAllPayment = catchAsync(async (req, res) => {
 });
 
 export const AdminController = {
-  makeAdmin,
   getAllBuyer,
   deleteUser,
   getAllUsers,

@@ -1,21 +1,17 @@
-import zepPackage from '@getzep/zep-js';
 import { InMemoryChatMessageHistory } from '@langchain/core/chat_history';
 import { AIMessage, HumanMessage } from '@langchain/core/messages';
 import { ChatGroq } from '@langchain/groq';
-import axios from 'axios';
 import { randomUUID } from 'crypto';
 import { ConversationChain } from 'langchain/chains';
 import { BufferMemory } from 'langchain/memory';
 // import { Serper } from 'serper';
+import httpStatus from 'http-status';
 import config from '../../../../config/index.js';
-import { paymentController } from '../payment/payment.controller.js';
-import UserModel from '../auth/auth.model.js';
-import Llama from '../groq/groq.model.js';
 import catchAsync from '../../../shared/catchAsync.js';
 import sendResponse from '../../../shared/sendResponse.js';
-import httpStatus from 'http-status';
-
-
+import UserModel from '../auth/auth.model.js';
+import Llama from '../groq/groq.model.js';
+import { paymentController } from '../payment/payment.controller.js';
 
 const sessionMemoryStore = {}; // Stores session memory for each user session
 
@@ -54,7 +50,8 @@ const QwenAiGetResponse = catchAsync(async (req, res) => {
   }
 
   const model = new ChatGroq({
-    model: 'qwen-2.5-coder-32b',
+    // model: 'qwen-2.5-coder-32b',
+    model: 'qwen-qwq-32b',
     temperature: 0.7,
     apiKey: config.groq_api_key,
   });
@@ -73,20 +70,24 @@ const QwenAiGetResponse = catchAsync(async (req, res) => {
     const reply = res1?.response || 'No reply generated';
 
     try {
-      const paymentResult = await paymentController.incrementPromptsUsed(userId);
-    
+      const paymentResult =
+        await paymentController.incrementPromptsUsed(userId);
+
       if (!paymentResult.success) {
-        return res.status(400).json({ success: false, message: paymentResult.message });
+        return res
+          .status(400)
+          .json({ success: false, message: paymentResult.message });
       }
     } catch (error) {
       console.error('Error in incrementPromptsUsed:', error);
-    
+
       // Send the full error message as a response
       return res.status(400).json({
         success: false,
-        message: error.message || 'An error occurred while updating prompt usage.',
+        message:
+          error.message || 'An error occurred while updating prompt usage.',
       });
-    }  
+    }
 
     // Store AI response in chat history
     await memory.chatHistory.addMessage(new AIMessage(reply));
@@ -94,7 +95,8 @@ const QwenAiGetResponse = catchAsync(async (req, res) => {
     // Save response in the database
     const responseData = {
       prompt,
-      model: 'qwen-2.5-coder-32b',
+      // model: 'qwen-2.5-coder-32b',
+      model: 'qwen-qwq-32b',
       reply,
       total_time: res1?.usage?.total_time || 0,
     };
@@ -139,7 +141,6 @@ const QwenAiGetResponse = catchAsync(async (req, res) => {
     });
   }
 });
-
 
 const QwenQWQSessionMemoryStore = {}; // Stores session memory for each user session
 
@@ -197,20 +198,24 @@ const QwenQWQAiGetResponse = catchAsync(async (req, res) => {
     const reply = res1?.response || 'No reply generated';
 
     try {
-      const paymentResult = await paymentController.incrementPromptsUsed(userId);
-    
+      const paymentResult =
+        await paymentController.incrementPromptsUsed(userId);
+
       if (!paymentResult.success) {
-        return res.status(400).json({ success: false, message: paymentResult.message });
+        return res
+          .status(400)
+          .json({ success: false, message: paymentResult.message });
       }
     } catch (error) {
       console.error('Error in incrementPromptsUsed:', error);
-    
+
       // Send the full error message as a response
       return res.status(400).json({
         success: false,
-        message: error.message || 'An error occurred while updating prompt usage.',
+        message:
+          error.message || 'An error occurred while updating prompt usage.',
       });
-    }  
+    }
 
     // Store AI response in chat history
     await memory.chatHistory.addMessage(new AIMessage(reply));
@@ -268,5 +273,3 @@ export const QwenAiController = {
   QwenAiGetResponse,
   QwenQWQAiGetResponse,
 };
-
-

@@ -63,7 +63,6 @@ const UserSchema = new mongoose.Schema(
   },
   {
     timestamps: true,
-    // collection: 'users', // 👈 force mongoose to use the correct collection name
   },
 );
 
