@@ -6,15 +6,16 @@ import httpStatus from 'http-status';
 import Mailgun from 'mailgun.js';
 import mongoose from 'mongoose';
 import config from '../../../../config/index.js';
+import ApiError from '../../../errors/ApiError.js';
+import sendResponse from '../../../shared/sendResponse.js';
 import pick from '../../middlewares/other/pick.js';
 import { sendMailWithMailGun } from '../../middlewares/sendEmail/sendMailWithMailGun.js';
 import UserModel from './auth.model.js';
-import { getAllUsersService } from './auth.service.js';
+import { authService } from './auth.service.js';
 import {
   deleteUserOtpTemplate,
   forgetPassOtpTemplate,
   generateOTP,
-  registrationOtpTemplate,
 } from './auth.utils.js';
 
 const mailgun = new Mailgun(formData);
@@ -68,140 +69,41 @@ const verifyAdmin = async (req, res, next) => {
 };
 
 const register = async (req, res, next) => {
-  const session = await mongoose.startSession();
-  session.startTransaction();
-
-  try {
-    const { password, confirmPassword, email } = req.body;
-
-    const existingEmail = await UserModel.findOne({ email }).session(session);
-    if (existingEmail) {
-      await session.abortTransaction();
-      session.endSession();
-      return res
-        .status(httpStatus.CONFLICT)
-        .send({ error: 'Email already exists!' });
-    }
-
-    if (password) {
-      const hashedPassword = await bcrypt.hash(password, 10);
-
-      const user = await UserModel.create(
-        [
-          {
-            email,
-            password: hashedPassword,
-          },
-        ],
-        { session },
-      );
-
-      const token = user[0].generateConfirmationToken();
-      await user[0].save({ session, validateBeforeSave: false });
-
-      const mailData = await registrationOtpTemplate(email, token);
-
-      // Sending email and handling success or failure
-      await sendMailWithMailGun(mailData);
-
-      // Commit transaction if everything succeeds
-      await session.commitTransaction();
-      session.endSession();
-
-      return res.status(httpStatus.CREATED).json({
-        status: httpStatus.CREATED,
-        message: 'Please verify your E-mail.',
-      });
-    }
-  } catch (error) {
-    // Roll back transaction on error
-    await session.abortTransaction();
-    session.endSession();
-    console.error(error);
-    return res.status(500).json({
-      status: 'Fail',
-      message: "Couldn't register successfully",
-      error: error.message,
-    });
-  }
+  const result = await authService.registerService(req);
+  sendResponse(res, {
+    statusCode: httpStatus.OK,
+    success: true,
+    message: 'Register Successfully',
+    data: result,
+  });
 };
 
 const confirmEmail = async (req, res) => {
-  try {
-    const { token } = req.params;
-    console.log(token, 'tokennnnnnn');
-
-    const user = await UserModel.findOne({ confirmationToken: token });
-
-    if (!user) {
-      return res.status(403).json({
-        status: 'fail',
-        error: 'Invalid token',
-      });
-    }
-
-    const expired = new Date() > new Date(user.confirmationTokenExpires);
-
-    if (expired) {
-      return res.status(401).json({
-        status: 'fail',
-        error: 'Token expired',
-      });
-    }
-
-    user.role = 'user';
-    user.confirmationToken = undefined;
-    user.confirmationTokenExpires = undefined;
-
-    await user.save({ validateBeforeSave: false });
-
-    res.status(302).redirect('https://www.asonai.com');
-  } catch (error) {
-    console.log(error);
-    res.status(500).json({
-      status: 'fail',
-      error,
+  const { token } = req.params;
+  const result = await authService.confirmEmailService(token);
+  if (result instanceof ApiError) {
+    // If an ApiError is returned, handle it as an error response
+    return sendResponse(res, {
+      statusCode: result.statusCode,
+      success: false,
+      message: result.message,
     });
   }
+
+  // If no error, redirect to the URL
+  res.status(302).redirect('https://www.asonai.com');
 };
 
 const login = async (req, res, next) => {
   // console.log(req.body, 'data login');
   const { email, password } = req.body;
-
-  try {
-    const user = await UserModel.findOne({ email });
-
-    if (!user) {
-      return res.status(404).send({ error: 'Email not found' });
-    }
-    if (user.role === 'unauthorized') {
-      return res.status(404).send({ error: 'Please verify your mail' });
-    }
-
-    const passwordCheck = await bcrypt.compare(password, user.password);
-
-    if (!passwordCheck) {
-      return res.status(400).send({ error: "Password doesn't match" });
-    }
-
-    const token = jwt.sign(
-      {
-        email: user.email,
-        role: user.role,
-      },
-      config.jwt_secret,
-      { expiresIn: '7d' },
-    );
-
-    return res.status(200).send({
-      mgs: 'Login successful...!',
-      email: user.email,
-      token,
-    });
-  } catch (error) {
-    return res.status(500).send(error);
-  }
+  const result = await authService.loginService(email, password);
+  sendResponse(res, {
+    statusCode: httpStatus.OK,
+    success: true,
+    message: 'Login Successfully',
+    data: result,
+  });
 };
 
 const forgetPassword = async (req, res) => {
@@ -357,7 +259,10 @@ const getAllUsers = async (req, res, next) => {
 
     const filters = pick(req.query, ['searchTerm']);
 
-    const users = await getAllUsersService(filters, paginationOptions);
+    const users = await authService.getAllUsersService(
+      filters,
+      paginationOptions,
+    );
     res.status(200).json({
       status: 'Success',
       message: 'Users find Successfully',
@@ -541,42 +446,23 @@ const changePassword = async (req, res, next) => {
   }
 };
 
-async function updateUser(req, res) {
-  try {
-    const userId = req.params?.userId;
-    if (!userId) {
-      return res.status(400).send({ error: 'User ID is required.' });
-    }
-    const user = UserModel.findOne({ _id: userId });
-
-    if (!user) {
-      return res
-        .status(httpStatus.NOT_FOUND)
-        .send({ error: 'User not found.' });
-    }
-
-    const { email, password, ...body } = req.body; // Exclude email and password from the update
-
-    if (Object.keys(body).length === 0) {
-      return res.status(400).send({ error: 'No valid fields to update.' });
-    }
-
-    // Update the data
-    const result = await UserModel.updateOne({ _id: userId }, body);
-    console.log(result, 'result');
-
-    if (result.modifiedCount === 1) {
-      return res.status(200).send({ message: 'Record Updated...!' });
-    } else {
-      return res
-        .status(404)
-        .send({ error: 'User Not Found or No Changes Made...!' });
-    }
-  } catch (error) {
-    console.error('Error updating user:', error);
-    return res.status(500).send({ error: 'Internal Server Error.' });
+const updateUser = async (req, res) => {
+  const userId = req.params?.userId;
+  const data = req.body;
+  const result = await authService.updateUserService(userId, data);
+  if (result.modifiedCount == !1) {
+    return new ApiError(
+      httpStatus.NOT_FOUND,
+      'User not found or no changes made',
+    );
   }
-}
+  sendResponse(res, {
+    statusCode: httpStatus.OK,
+    success: true,
+    message: 'Update Successfully',
+    data: result,
+  });
+};
 
 const mg = mailgun.client({
   username: 'api',
