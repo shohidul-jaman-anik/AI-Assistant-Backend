@@ -196,9 +196,6 @@ const esTransport = new ElasticsearchTransport({
   }),
 });
 
-esTransport.on('error', err => {
-  console.error('❌ Elasticsearch Transport Error:', err);
-});
 
 // Base format
 const baseFormat = combine(label({ label: 'ASON' }), timestamp(), json());
@@ -252,6 +249,3 @@ export const httpLogStream = {
     logger.info(message.trim());
   },
 };
-
-// Manually trigger a test log on startup
-logger.info('🚀 ASON-Core-Service logger initialized');

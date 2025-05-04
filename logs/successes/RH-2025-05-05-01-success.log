@@ -1,1 +1,13 @@
 {"label":"ASON","level":"info","message":"🚀 ASON-Core-Service logger initialized","timestamp":"2025-05-04T19:39:38.071Z"}
+{"label":"ASON","level":"info","message":"✅ Database connection successfully","timestamp":"2025-05-04T19:39:41.363Z"}
+{"label":"ASON","level":"info","message":"🚀 ASON-Core-Service logger initialized","timestamp":"2025-05-04T19:49:14.095Z"}
+{"label":"ASON","level":"info","message":"✅ Database connection successfully","timestamp":"2025-05-04T19:49:17.432Z"}
+{"label":"ASON","level":"info","message":"🚀 ASON-Core-Service logger initialized","timestamp":"2025-05-04T19:49:47.077Z"}
+{"label":"ASON","level":"info","message":"✅ Database connection successfully","timestamp":"2025-05-04T19:49:50.271Z"}
+{"label":"ASON","level":"info","message":"::1 - - [04/May/2025:19:49:50 +0000] \"POST /api/v1/auth/login HTTP/1.1\" 503 16 \"-\" \"PostmanRuntime/7.43.4\"","timestamp":"2025-05-04T19:49:50.557Z"}
+{"label":"ASON","level":"info","message":"::1 - - [04/May/2025:19:49:54 +0000] \"POST /api/v1/auth/login HTTP/1.1\" 200 300 \"-\" \"PostmanRuntime/7.43.4\"","timestamp":"2025-05-04T19:49:54.037Z"}
+{"label":"ASON","level":"info","message":"🚀 ASON-Core-Service logger initialized","timestamp":"2025-05-04T19:50:00.219Z"}
+{"label":"ASON","level":"info","message":"✅ Database connection successfully","timestamp":"2025-05-04T19:53:06.912Z"}
+{"label":"ASON","level":"info","message":"::1 - - [04/May/2025:19:53:07 +0000] \"POST /api/v1/auth/login HTTP/1.1\" 200 300 \"-\" \"PostmanRuntime/7.43.4\"","timestamp":"2025-05-04T19:53:07.444Z"}
+{"label":"ASON","level":"info","message":"✅ Database connection successfully","timestamp":"2025-05-04T19:53:40.830Z"}
+{"label":"ASON","level":"info","message":"✅ Database connection successfully","timestamp":"2025-05-04T19:53:55.524Z"}
