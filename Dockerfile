@@ -19,7 +19,8 @@ WORKDIR /root/ason-backend
 COPY package*.json ./
 
 # Install dependencies
-RUN npm install --production
+RUN npm install --omit=dev --legacy-peer-deps
+
 
 # Copy the rest of the application code to the working directory
 COPY . .
@@ -28,7 +29,7 @@ COPY . .
 COPY .env .env
 
 # Expose the port that the app runs on
-EXPOSE 5000
+EXPOSE 5100
 
 # Command to run your app
 CMD ["nodemon", "index.js"]

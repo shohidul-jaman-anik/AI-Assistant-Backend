@@ -1,0 +1,15 @@
+{
+    "keep": {
+        "days": true,
+        "amount": 14
+    },
+    "auditLog": "C:\\Fiverr\\ASON\\ASON Backends\\ASON-Core-Service\\logs\\successes\\.9ac34fc2435190e4ceedc4c2030a9a8b02b256ed-audit.json",
+    "files": [
+        {
+            "date": 1746387578059,
+            "name": "C:\\Fiverr\\ASON\\ASON Backends\\ASON-Core-Service\\logs\\successes\\RH-2025-05-05-01-success.log",
+            "hash": "8821933559b7376593bc603e08bec37d754988d34acd2d93f99cc8ec6b16e0e3"
+        }
+    ],
+    "hashType": "sha256"
+}

@@ -11,11 +11,11 @@ import globalErrorHandler from './src/app/middlewares/globalErrorHandler/globalE
 import router from './src/app/routes/index.js';
 // import { logger } from './src/shared/logger';
 import bodyParser from 'body-parser';
+import passport from 'passport';
 import config from './config/index.js';
 import './src/app/middlewares/resetUsage/resetUsage.js';
-import { logger } from './src/shared/logger.js';
-import passport from 'passport';
 import passportConfig from './src/app/modules/social-login/config/passport.js';
+import { httpLogStream, logger } from './src/shared/logger.js';
 
 // Load environment variables
 dotenv.config();
@@ -28,6 +28,9 @@ app.use(
   express.raw({ type: 'application/json' }),
 );
 
+// Morgan HTTP request logging using winston
+app.use(morgan('combined', { stream: httpLogStream }));
+
 // Middleware
 app.use(cors());
 app.use(express.json());
@@ -35,6 +38,7 @@ app.use(morgan('tiny'));
 app.use(express.urlencoded({ extended: true }));
 app.use(bodyParser.urlencoded({ extended: true }));
 app.disable('x-powered-by');
+
 
 // Enable trust proxy (For Rate-Limit)
 app.set('trust proxy', 'loopback');
@@ -94,9 +98,9 @@ app.use((req, res, next) => {
 // MongoDB connection
 mongoose
   .connect(config.database_local)
-  .then(() => logger.info('Database connection successfully'))
+  .then(() => logger.info('✅ Database connection successfully'))
   .catch(err => {
-    logger.error('Error connecting to the database:', err);
+    logger.error('❌ Error connecting to the database:', err);
     process.exit(1); // Exit the application on database connection error
   });
 

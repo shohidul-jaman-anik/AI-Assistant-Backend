@@ -1,6 +1,6 @@
+import mongoose from 'mongoose';
 import UserModel from '../auth/auth.model.js';
 import Notification from './notification.model.js';
-import mongoose from 'mongoose';
 
 const sendNotificationService = async data => {
   // 1. Create the Notification first

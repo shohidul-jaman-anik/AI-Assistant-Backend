@@ -1,14 +1,14 @@
 import { ZodError } from 'zod';
-import ApiError from '../../../errors/ApiError.js';
 import config from '../../../../config/index.js';
+import ApiError from '../../../errors/ApiError.js';
 import handleCastError from '../../../errors/handleCastError.js';
 import handleValidationError from '../../../errors/handleValidationError.js';
-import  handleZodError  from '../../../errors/handleZodError.js';
+import handleZodError from '../../../errors/handleZodError.js';
 import { errorlogger } from '../../../shared/logger.js';
 
 const globalErrorHandler = (error, req, res, next) => {
   if (config.env === 'development') {
-    console.log('🟢 globalErrorHandler ~', error);
+    logger.info('🟢 globalErrorHandler ~', error);
   } else {
     errorlogger.error('🔴 globalErrorHandler ~', error);
   }

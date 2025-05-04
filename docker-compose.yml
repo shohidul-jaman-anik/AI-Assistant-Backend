@@ -13,15 +13,15 @@ volumes:
 services:
   node-app:
     build: .
-    container_name: ason-backend
+    container_name: ason-core-service
     environment:
       NODE_ENV: production
-      PORT: 5000
+      PORT: 5100
       REDIS_HOST: redis
       REDIS_PORT: 6379
       MONGO_URI: mongodb://mongo:27017/InsoAi
     ports:
-      - '5000:5000'
+      - '5101:5100'
     networks:
       - elk-stack
     depends_on:
@@ -55,19 +55,6 @@ services:
       ELASTICSEARCH_URL: http://elasticsearch:9200
     ports:
       - '5601:5601'
-    depends_on:
-      - elasticsearch
-    networks:
-      - elk-stack
-
-  grafana:
-    image: grafana/grafana:latest
-    container_name: grafana
-    environment:
-      GF_SECURITY_ADMIN_USER: admin
-      GF_SECURITY_ADMIN_PASSWORD: admin
-    ports:
-      - '3000:3000'
     depends_on:
       - elasticsearch
     networks:

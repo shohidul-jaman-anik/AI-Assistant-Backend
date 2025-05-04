@@ -25,7 +25,7 @@ const sendNotification = catchAsync(async (req, res) => {
 // Controller for getting notifications
 const getNotification = catchAsync(async (req, res) => {
   const result = await NotificationService.getNotificationService();
-
+ 
   sendResponse(res, {
     statusCode: httpStatus.OK,
     success: true,
