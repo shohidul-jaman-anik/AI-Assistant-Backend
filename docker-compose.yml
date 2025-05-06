@@ -1,18 +1,5 @@
 version: '3.9'
 
-networks:
-  ason-network:
-    driver: bridge
-    ipam:
-      config:
-        - subnet: 172.1.1.0/24
-
-volumes:
-  mongodb_data:
-  postgres_data:
-  redis_data:
-  rabbitmq_data:
-
 services:
   ason:
     build: .
@@ -147,4 +134,20 @@ services:
       - ason-network
     depends_on:
       - postgresql
+
+
+
+
+networks:
+  ason-network:
+    driver: bridge
+    ipam:
+      config:
+        - subnet: 172.1.1.0/24
+
+volumes:
+  mongodb_data:
+  postgres_data:
+  redis_data:
+  rabbitmq_data:
 
