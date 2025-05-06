@@ -1,33 +1,33 @@
 version: '3.9'
 
 networks:
-  elk-stack:
+  ason-network:
     driver: bridge
     ipam:
       config:
         - subnet: 172.1.1.0/24
 
 volumes:
-  mongo_data:
+  mongodb_data:
 
 services:
-  node-app:
+  ason:
     build: .
-    container_name: ason-core-service
-    environment:
-      NODE_ENV: production
-      PORT: 5100
-      REDIS_HOST: redis
-      REDIS_PORT: 6379
-      MONGO_URI: mongodb://mongo:27017/InsoAi
+    container_name: ason
+    env_file:
+      - .env
     ports:
-      - '5101:5100'
+      - '5100:5100'
+    volumes:
+      - ../ASON-CORE-SERVICE:/app/ason-core-service
     networks:
-      - elk-stack
+      - ason-network
     depends_on:
-      - elasticsearch
+      - mongodb
       - redis
-      - mongo
+      - elasticsearch
+      - kibana
+      - rabbitmq
 
   elasticsearch:
     image: elasticsearch:7.9.2
@@ -40,7 +40,7 @@ services:
       - '9200:9200'
       - '9300:9300'
     networks:
-      - elk-stack
+      - ason-network
     healthcheck:
       test: ['CMD', 'curl', '-f', 'http://localhost:9200']
       interval: 30s
@@ -58,7 +58,7 @@ services:
     depends_on:
       - elasticsearch
     networks:
-      - elk-stack
+      - ason-network
 
   redis:
     image: redis:latest
@@ -67,7 +67,7 @@ services:
     ports:
       - '6379:6379'
     networks:
-      - elk-stack
+      - ason-network
 
   rabbitmq:
     image: rabbitmq:3-management
@@ -79,14 +79,30 @@ services:
       - '5672:5672'
       - '15672:15672'
     networks:
-      - elk-stack
+      - ason-network
 
-  mongo:
+  mongodb:
     image: mongo:latest
-    container_name: mongo
-    volumes:
-      - mongo_data:/data/db
+    container_name: mongodb
     ports:
       - '27017:27017'
     networks:
-      - elk-stack
+      - ason-network
+    volumes:
+      - mongodb_data:/data/db
+  
+  mongodb-express:
+    image: mongo-express:latest
+    container_name: mongodb-express
+    environment:
+      ME_CONFIG_MONGODB_SERVER: mongodb
+      ME_CONFIG_MONGODB_PORT: 27017
+      ME_CONFIG_BASICAUTH_USERNAME: admin
+      ME_CONFIG_BASICAUTH_PASSWORD: password
+    ports:
+      - '8081:8081'
+    networks:
+      - ason-network
+    depends_on:
+      - mongodb
+

@@ -1,0 +1,25 @@
+{
+    "keep": {
+        "days": true,
+        "amount": 14
+    },
+    "auditLog": "/app/ason-core-service/logs/successes/.645884a38c4aaeb10c786089d191545b462fc75a-audit.json",
+    "files": [
+        {
+            "date": 1746541162395,
+            "name": "/app/ason-core-service/logs/successes/RH-2025-05-06-14-success.log",
+            "hash": "29319fd0ea9ae756ccd2e5a6dcb2008ada87af399bf0ad5593ad3bdcc9be3691"
+        },
+        {
+            "date": 1746554804415,
+            "name": "/app/ason-core-service/logs/successes/RH-2025-05-06-18-success.log",
+            "hash": "3ebb96efe346edea7000b19403c6337684ee0a92752633681b005f651bc47b55"
+        },
+        {
+            "date": 1746559708664,
+            "name": "/app/ason-core-service/logs/successes/RH-2025-05-06-19-success.log",
+            "hash": "a26e100cfb6ed774aa9a291e7330718ef6696a42c6a7e0811be5756f9676a08f"
+        }
+    ],
+    "hashType": "sha256"
+}

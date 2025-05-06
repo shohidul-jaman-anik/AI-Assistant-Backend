@@ -1,3 +1,4 @@
+
 # Use the official Node.js image as a base
 # FROM node:18-alpine
 
@@ -13,14 +14,13 @@ RUN apt-get update && apt-get install -y \
     && apt-get clean
 
 # Set the working directory inside the container
-WORKDIR /root/ason-backend
+WORKDIR /app/ason-core-service
 
 # Copy package.json and package-lock.json files
 COPY package*.json ./
 
 # Install dependencies
-RUN npm install --omit=dev --legacy-peer-deps
-
+RUN npm install --legacy-peer-deps
 
 # Copy the rest of the application code to the working directory
 COPY . .

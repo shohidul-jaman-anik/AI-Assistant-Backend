@@ -39,7 +39,6 @@ app.use(express.urlencoded({ extended: true }));
 app.use(bodyParser.urlencoded({ extended: true }));
 app.disable('x-powered-by');
 
-
 // Enable trust proxy (For Rate-Limit)
 app.set('trust proxy', 'loopback');
 

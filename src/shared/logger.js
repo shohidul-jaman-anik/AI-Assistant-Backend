@@ -174,6 +174,7 @@ const { combine, timestamp, label, json } = format;
 // Elasticsearch Client
 const esClient = new Client({
   node: 'http://elasticsearch:9200', // MUST match docker container name
+  compatibility: true,
 });
 
 // Check connection
@@ -195,7 +196,6 @@ const esTransport = new ElasticsearchTransport({
     fields: logData.meta || {},
   }),
 });
-
 
 // Base format
 const baseFormat = combine(label({ label: 'ASON' }), timestamp(), json());
