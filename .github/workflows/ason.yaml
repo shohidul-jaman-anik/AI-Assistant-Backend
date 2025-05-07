@@ -12,6 +12,8 @@ jobs:
       - run: echo "Building and testing ASON..."
       - name: Checkout code
         uses: actions/checkout@v4
+      - name: Ruan a one line script
+        run: echo "Hello, world!"
       - name: List Files
         run: ls ${{GITHUB_WORKSPACE}}
       - name: Print Github context
