@@ -34,6 +34,26 @@
             "date": 1746569534243,
             "name": "/app/ason-core-service/logs/errors/RH-2025-05-06-22-error.log",
             "hash": "ba8feefba00a5a39d99db9d010d7053fb0fea240c71aec4299d4819879f96ac1"
+        },
+        {
+            "date": 1746608675157,
+            "name": "/app/ason-core-service/logs/errors/RH-2025-05-07-09-error.log",
+            "hash": "7f3b82cfc2db971c85e491db48eb12ebcfb37d4d95c1714aae6938e377a1df1d"
+        },
+        {
+            "date": 1746615108566,
+            "name": "/app/ason-core-service/logs/errors/RH-2025-05-07-10-error.log",
+            "hash": "feb39d2b13ad9eb74d46146b57b82f758b8655a53e37f568fdc6195438a88f89"
+        },
+        {
+            "date": 1746615762126,
+            "name": "/app/ason-core-service/logs/errors/RH-2025-05-07-11-error.log",
+            "hash": "56d5a793f8382bdb55701bf998741e406cbbf778ec8dd73b54da7cc6f4166c6b"
+        },
+        {
+            "date": 1746623778661,
+            "name": "/app/ason-core-service/logs/errors/RH-2025-05-07-13-error.log",
+            "hash": "f08fe765268dfdd258c23a8956dce14457b94ba8426be13ba30e979b9a497788"
         }
     ],
     "hashType": "sha256"

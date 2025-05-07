@@ -136,14 +136,11 @@ services:
       - postgresql
 
 
-
+ 
 
 networks:
   ason-network:
     driver: bridge
-    ipam:
-      config:
-        - subnet: 172.1.1.0/24
 
 volumes:
   mongodb_data:
