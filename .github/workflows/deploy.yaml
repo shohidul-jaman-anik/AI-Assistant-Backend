@@ -21,18 +21,16 @@ jobs:
         run: |
           ssh -o StrictHostKeyChecking=no ${{ secrets.VPS_USER }}@${{ secrets.VPS_HOST }} << EOF
             echo "🔍 Git status before pull:"
+            set -x
             sudo git -C /root/ASON-Backend status
-
             echo "🔁 Current commit:"
             sudo git -C /root/ASON-Backend rev-parse HEAD
-
             echo "📥 Pulling latest code..."
+            set -x
             sudo git -C /root/ASON-Backend checkout main
             sudo git -C /root/ASON-Backend pull origin main
-
             echo "🚀 Restarting PM2 app with updated environment..."
+            set -x
             sudo pm2 restart AsonBackend 
-
             echo "Deployment ran at: $(date)" | sudo tee -a /root/deploy.log
-
           EOF
