@@ -19,11 +19,9 @@ jobs:
 
       - name: Deploy to VPS
         run: |
-          ssh -o StrictHostKeyChecking=no ${{ secrets.VPS_USER }}@${{ secrets.VPS_HOST }} << 'EOF'
-            sudo -i
-            cd /root/ASON-Backend
-            git pull origin main
-            npm install
-            pm2 restart AsonBackend || npm run start
+          ssh -o StrictHostKeyChecking=no ${{ secrets.VPS_USER }}@${{ secrets.VPS_HOST }} << EOF
+            sudo git -C /root/ASON-Backend pull origin main
+            sudo npm --prefix /root/ASON-Backend install
+            sudo pm2 restart AsonBackend || sudo npm --prefix /root/ASON-Backend start
           EOF
 
