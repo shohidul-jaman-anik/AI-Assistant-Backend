@@ -20,8 +20,22 @@ jobs:
       - name: Deploy to VPS
         run: |
           ssh -o StrictHostKeyChecking=no ${{ secrets.VPS_USER }}@${{ secrets.VPS_HOST }} << EOF
+            echo "🔍 Git status before pull:"
+            sudo git -C /root/ASON-Backend status
+
+            echo "🔁 Current commit:"
+            sudo git -C /root/ASON-Backend rev-parse HEAD
+
+            echo "📥 Pulling latest code..."
+            sudo git -C /root/ASON-Backend checkout main
             sudo git -C /root/ASON-Backend pull origin main
+
+            echo "🔁 New commit:"
+            sudo git -C /root/ASON-Backend rev-parse HEAD
+
+            echo "📦 Installing dependencies..."
             sudo npm --prefix /root/ASON-Backend install
+
+            echo "🚀 Restarting service with PM2..."
             sudo pm2 restart AsonBackend || sudo npm --prefix /root/ASON-Backend start
           EOF
-
