@@ -30,14 +30,8 @@ jobs:
             sudo git -C /root/ASON-Backend checkout main
             sudo git -C /root/ASON-Backend pull origin main
 
-            echo "🔁 New commit:"
-            sudo git -C /root/ASON-Backend rev-parse HEAD
-
-            echo "📦 Installing dependencies..."
-            sudo npm --prefix /root/ASON-Backend install
-
-            echo "🚀 Restarting service with PM2..."
-            sudo pm2 restart AsonBackend || sudo npm --prefix /root/ASON-Backend start
+            echo "🚀 Restarting PM2 app with updated environment..."
+            sudo pm2 restart AsonBackend 
 
             echo "Deployment ran at: $(date)" | sudo tee -a /root/deploy.log
 
