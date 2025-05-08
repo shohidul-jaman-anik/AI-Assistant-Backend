@@ -24,6 +24,6 @@ router
   .route('/send-notification-all')
   .post(NotificationController.sendNotification);
 
-router.route('/get-all').get(NotificationController.getNotification);
+// router.route('/get-all').get(NotificationController.getNotification);
 
 export const notificationRoutes = router;
