@@ -39,5 +39,6 @@ jobs:
             echo "🚀 Restarting service with PM2..."
             sudo pm2 restart AsonBackend || sudo npm --prefix /root/ASON-Backend start
 
-            echo "📅 Deployment ran at: \$(date)" >> /root/deploy.log
+            echo "Deployment ran at: $(date)" | sudo tee -a /root/deploy.log
+
           EOF
