@@ -1,0 +1,45 @@
+name: Deploy to VPS
+
+on:
+  push:
+    branches:
+      - main
+
+jobs:
+  deploy:
+    runs-on: ubuntu-latest
+
+    steps:
+      - name: Setup SSH key
+        run: |
+          mkdir -p ~/.ssh
+          echo "${{ secrets.VPS_SSH_KEY }}" > ~/.ssh/inso.pem
+          chmod 600 ~/.ssh/inso.pem
+
+      - name: SSH and deploy
+        run: |
+          ssh -i ~/.ssh/inso.pem -o StrictHostKeyChecking=no ubuntu@174.136.129.139 << 'EOF'
+            echo "🔐 Switching to root..."
+            sudo -i << 'INNER'
+              echo "📍 Root user: \$(whoami)"
+              echo "📁 Going to /root/ASON-Backend"
+              cd /root/ASON-Backend || exit 1
+
+              echo "🔁 Git status before pull:"
+              git status
+
+              echo "📥 Pulling latest code from main branch..."
+              git pull origin main || echo "⚠️ Git pull failed"
+
+              echo "🚀 Restarting PM2 app..."
+              pm2 restart AsonBackend || echo "⚠️ PM2 restart failed"
+
+              echo "✅ Deployment completed at: \$(date)"
+            INNER
+          EOF
+
+      - name: Clean up SSH key
+        run: rm -rf ~/.ssh
+
+
+# end
