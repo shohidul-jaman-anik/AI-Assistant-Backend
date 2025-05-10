@@ -1,4 +1,4 @@
-import bcrypt from 'bcrypt';
+import bcrypt from 'bcryptjs';
 import httpStatus from 'http-status';
 import jwt from 'jsonwebtoken';
 import mongoose from 'mongoose';

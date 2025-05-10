@@ -59,6 +59,11 @@
             "date": 1746637474828,
             "name": "/app/ason-core-service/logs/successes/RH-2025-05-07-17-success.log",
             "hash": "62a347bad8e1d925a77a36d2d6bf843a2bbd3d285c746c8ad26a6602b0a73645"
+        },
+        {
+            "date": 1746801753065,
+            "name": "/app/ason-core-service/logs/successes/RH-2025-05-09-14-success.log",
+            "hash": "724dc56600f5e1cdc0f8892567c63625fbd1716f6a237942c57e6e9fd05b2bfd"
         }
     ],
     "hashType": "sha256"

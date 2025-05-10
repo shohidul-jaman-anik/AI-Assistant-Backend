@@ -1,84 +1,66 @@
+import http from 'http';
 import mongoose from 'mongoose';
-import dotenv from 'dotenv';
-import colors from 'colors';
-import app from './index';
+import app from './app'; // Make sure this exists and exports an Express app
 import config from './config';
+import { errorlogger, logger } from './shared/logger';
+import { RedisClient, subscribeToEvents } from './shared/redis';
 
+process.on('uncaughtException', error => {
+  errorlogger.error('Uncaught Exception detected:', error);
+  process.exit(1);
+});
 
-// database connection
+let server;
+
+// Database connection
 mongoose
   .connect(config.database_local, {
     useNewUrlParser: true,
     useUnifiedTopology: true,
   })
-  .then(() => console.log('Database connection successfully'.red.bold))
+  .then(() => console.log('Database connection successfully'))
   .catch(err => {
     console.log('Error connecting to the database:', err);
     process.exit(1); // Exit the application on database connection error
   });
 
-// Create an HTTP server and attach the Express app to it
-const server = require('http').createServer(app);
+async function main() {
+  try {
+    await RedisClient.connect().then(() => {
+      subscribeToEvents();
+    });
 
-// server
-const port = config.port || 8080;
+    // This line is redundant if already connected above, but keeping as per your original
+    await mongoose.connect(config.database_local);
 
-// Attach Socket.io to the server
-const io = require('socket.io')(server, {
-  cors: {
-    origin: 'http://localhost:3000',
-  },
-});
+    server = http.createServer(app).listen(config.port, () => {
+      logger.info(`Application listening on port ${config.port}`);
+    });
 
-// Socket.io logic
-let activeUsers = [];
+    logger.info('Database is Connected Successfully');
+  } catch (error) {
+    errorlogger.error(`Failed to connect Database: ${error}`);
+  }
 
-io.on('connection', socket => {
-  // add new User
-  socket.on('new-user-add', newUserEmail => {
-    // if user is not added previously
-    if (!activeUsers.some(user => user.userEmail === newUserEmail)) {
-      const newUser = {
-        userEmail: newUserEmail,
-        socketId: socket.id,
-        lastOnline: Date.now(), // Add the current timestamp
-      };
-      activeUsers.push(newUser);
-      console.log('New User Connected', activeUsers);
-    }
-    // send all active users to new user
-    io.emit('get-users', activeUsers);
-  });
+  process.on('unhandledRejection', error => {
+    errorlogger.error('Unhandled Rejection detected:', error);
 
-  socket.on('disconnect', () => {
-    // update lastOnline timestamp for the disconnected user
-    const disconnectedUser = activeUsers.find(
-      user => user.socketId === socket.id,
-    );
-    if (disconnectedUser) {
-      disconnectedUser.lastOnline = Date.now();
-    }
-
-    // remove user from active users
-    activeUsers = activeUsers.filter(user => user.socketId !== socket.id);
-    console.log('User Disconnected', activeUsers);
-
-    // send all active users to all users
-    io.emit('get-users', activeUsers);
-  });
-
-  // send message to a specific user
-  socket.on('send-message', data => {
-    const { receiverEmail } = data;
-    const user = activeUsers.find(user => user.userEmail === receiverEmail);
-    console.log('Sending from socket to :', receiverEmail);
-    console.log('Data: ', data);
-    if (user) {
-      io.to(user.socketId).emit('recieve-message', data);
+    if (server) {
+      server.close(() => {
+        errorlogger.error(error);
+        process.exit(1);
+      });
+    } else {
+      process.exit(1);
     }
   });
-});
+}
 
-server.listen(port, () => {
-  console.log(`App is running on port ${port}`.yellow.bold);
+main();
+
+process.on('SIGTERM', () => {
+  logger.info('Signal Termination is received');
+  if (server) {
+    server.close();
+  }
 });
