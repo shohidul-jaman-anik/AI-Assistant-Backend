@@ -10,6 +10,9 @@ jobs:
     runs-on: ubuntu-latest
 
     steps:
+      - name: Checkout repo (optional, in case you need it)
+        uses: actions/checkout@v3
+
       - name: Setup SSH key
         run: |
           mkdir -p ~/.ssh
@@ -17,29 +20,29 @@ jobs:
           chmod 600 ~/.ssh/inso.pem
 
       - name: SSH and deploy
+        env:
+          GIT_SSH_COMMAND: "ssh -i ~/.ssh/inso.pem -o StrictHostKeyChecking=no"
         run: |
           ssh -i ~/.ssh/inso.pem -o StrictHostKeyChecking=no ubuntu@174.136.129.139 << 'EOF'
             echo "🔐 Switching to root..."
-            sudo -i << 'INNER'
-              echo "📍 Root user: \$(whoami)"
-              echo "📁 Going to /root/ASON-Backend"
+            sudo -i bash << 'EOC'
+              echo "📍 Root user: $(whoami)"
               cd /root/ASON-Backend || exit 1
 
               echo "🔁 Git status before pull:"
               git status
 
               echo "📥 Pulling latest code from main branch..."
-              git pull origin main || echo "⚠️ Git pull failed"
+              GIT_SSH_COMMAND="ssh -i ~/.ssh/inso.pem -o StrictHostKeyChecking=no" git pull origin main || echo "⚠️ Git pull failed"
 
               echo "🚀 Restarting PM2 app..."
               pm2 restart AsonBackend || echo "⚠️ PM2 restart failed"
 
-              echo "✅ Deployment completed at: \$(date)"
-            INNER
+              echo "✅ Deployment completed at: $(date)"
+            EOC
           EOF
 
       - name: Clean up SSH key
         run: rm -rf ~/.ssh
 
-
-# end
+# 
