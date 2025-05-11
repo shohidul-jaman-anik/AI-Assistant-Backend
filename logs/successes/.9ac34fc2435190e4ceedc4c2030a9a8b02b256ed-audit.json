@@ -29,6 +29,16 @@
             "date": 1746890740327,
             "name": "C:\\Fiverr\\ASON\\ASON Backends\\ASON-Core-Service\\logs\\successes\\RH-2025-05-10-21-success.log",
             "hash": "1e61ea738107da196b7d947f68b14c310b60de923bbc4dd796ad1959e2348e77"
+        },
+        {
+            "date": 1746962831638,
+            "name": "C:\\Fiverr\\ASON\\ASON Backends\\ASON-Core-Service\\logs\\successes\\RH-2025-05-11-17-success.log",
+            "hash": "e8ed633bc627b93d66420634ddd3679068287af28f67b50666292610c836ef2b"
+        },
+        {
+            "date": 1746986891867,
+            "name": "C:\\Fiverr\\ASON\\ASON Backends\\ASON-Core-Service\\logs\\successes\\RH-2025-05-12-00-success.log",
+            "hash": "84696a9540467ed4da07a7dc73fe9954dfd9e8ca547b150a248f76b7240586fc"
         }
     ],
     "hashType": "sha256"

@@ -79,6 +79,13 @@ UserSchema.methods.generateConfirmationToken = function () {
   return token;
 };
 
+UserSchema.statics.isUserExist = async function (id) {
+  if (!mongoose.Types.ObjectId.isValid(id)) return false;
+
+  const user = await this.findById(id).select('_id').lean();
+  return !!user;
+};
+
 const UserModel = mongoose.model('User', UserSchema);
 
 export default UserModel;

@@ -69,6 +69,21 @@
             "date": 1746891965133,
             "name": "/app/ason-core-service/logs/successes/RH-2025-05-10-15-success.log",
             "hash": "74103b0e5427121126e5395780fb154ad27ab489b539434649a853352c4691e2"
+        },
+        {
+            "date": 1746969437780,
+            "name": "/app/ason-core-service/logs/successes/RH-2025-05-11-13-success.log",
+            "hash": "df34dfe5313aed170bbeec36981b9033f2ba49664770f695921f9b039674ade4"
+        },
+        {
+            "date": 1746982975435,
+            "name": "/app/ason-core-service/logs/successes/RH-2025-05-11-17-success.log",
+            "hash": "f34d4ff8e64d0e83307698fd3e1de662328c58c42c12ddd3a27d2ca62d465336"
+        },
+        {
+            "date": 1746986850560,
+            "name": "/app/ason-core-service/logs/successes/RH-2025-05-11-18-success.log",
+            "hash": "7b6a5929179cd376ede63f53179c2afc8d46f65df4dae1d727fa1fe694905396"
         }
     ],
     "hashType": "sha256"

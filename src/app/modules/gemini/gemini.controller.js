@@ -10,9 +10,10 @@ import UserModel from '../auth/auth.model.js';
 import Llama from '../groq/groq.model.js';
 // import { ConversationChain } from 'langchain/chains';
 import { BufferMemory } from 'langchain/memory';
+import ApiError from '../../../errors/ApiError.js';
 
 const client = new GoogleGenerativeAI(config.gemini_secret_key);
-const model = client.getGenerativeModel({ model: "gemini-1.5-flash" });
+const model = client.getGenerativeModel({ model: 'gemini-1.5-flash' });
 
 const sessionMemoryStore = {};
 
@@ -30,16 +31,9 @@ const GeminiAiGetResponse = catchAsync(async (req, res) => {
     });
   }
 
-
-  const user = await UserModel.findById(userId);
- 
-
+  const user = await UserModel.isUserExist(userId);
   if (!user) {
-    return sendResponse(res, {
-      statusCode: httpStatus.NOT_FOUND,
-      success: false,
-      message: 'User not found.',
-    });
+    throw new ApiError(httpStatus.NOT_FOUND, 'User not found');
   }
 
   let memory = sessionMemoryStore[sessionId];
@@ -58,7 +52,8 @@ const GeminiAiGetResponse = catchAsync(async (req, res) => {
     // Call Gemini AI to generate a response
     const result = await model.generateContent(prompt);
     const reply =
-      result?.response?.candidates?.[0]?.content?.parts?.[0]?.text || 'No reply generated';
+      result?.response?.candidates?.[0]?.content?.parts?.[0]?.text ||
+      'No reply generated';
 
     await memory.chatHistory.addMessage(new AIMessage(reply));
 
@@ -101,9 +96,6 @@ const GeminiAiGetResponse = catchAsync(async (req, res) => {
     });
   }
 });
-
-
-
 
 export const GeminiAiController = {
   GeminiAiGetResponse,

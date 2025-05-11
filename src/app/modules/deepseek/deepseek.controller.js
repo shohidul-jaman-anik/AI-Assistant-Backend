@@ -8,6 +8,7 @@ import sendResponse from '../../../shared/sendResponse.js';
 import UserModel from '../auth/auth.model.js';
 import Llama from '../groq/groq.model.js';
 import { BufferMemory } from 'langchain/memory';
+import ApiError from "../../../errors/ApiError.js";
 
 const groq = new Groq(); // Initialize the Groq SDK
 
@@ -24,13 +25,9 @@ const DeepseekAiGetResponse = catchAsync(async (req, res) => {
     });
   }
 
-  const user = await UserModel.findById(userId);
+  const user = await UserModel.isUserExist(userId);
   if (!user) {
-    return sendResponse(res, {
-      statusCode: httpStatus.NOT_FOUND,
-      success: false,
-      message: "User not found.",
-    });
+    throw new ApiError(httpStatus.NOT_FOUND, 'User not found');
   }
 
   let memory = sessionMemoryStore[sessionId];

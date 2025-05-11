@@ -11,6 +11,7 @@ import sendResponse from '../../../shared/sendResponse.js';
 import UserModel from '../auth/auth.model.js';
 import Llama from '../groq/groq.model.js';
 import { paymentController } from '../payment/payment.controller.js';
+import ApiError from '../../../errors/ApiError.js';
 
 
 const sessionMemoryStore = {}; // Stores session memory for each user session
@@ -29,13 +30,9 @@ const Llama4AiGetResponse = catchAsync(async (req, res) => {
     });
   }
 
-  const user = await UserModel.findById(userId);
+  const user = await UserModel.isUserExist(userId);
   if (!user) {
-    return sendResponse(res, {
-      statusCode: httpStatus.NOT_FOUND,
-      success: false,
-      message: 'User not found.',
-    });
+    throw new ApiError(httpStatus.NOT_FOUND, 'User not found');
   }
 
   // Initialize session memory for conversation history

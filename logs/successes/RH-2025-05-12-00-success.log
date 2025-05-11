@@ -1,0 +1,25 @@
+{"label":"ASON","level":"info","message":"✅ Database connection successfully","timestamp":"2025-05-11T18:08:27.607Z"}
+{"label":"ASON","level":"info","message":"::1 - - [11/May/2025:18:08:28 +0000] \"POST /api/v1/support/req-support/67c0594d9daa4415cebf6687 HTTP/1.1\" 500 100 \"-\" \"PostmanRuntime/7.43.4\"","timestamp":"2025-05-11T18:08:28.363Z"}
+{"label":"ASON","level":"info","message":"::1 - - [11/May/2025:18:08:29 +0000] \"POST /api/v1/support/req-support/67c0594d9daa4415cebf6687 HTTP/1.1\" 500 100 \"-\" \"PostmanRuntime/7.43.4\"","timestamp":"2025-05-11T18:08:29.762Z"}
+{"label":"ASON","level":"info","message":"::1 - - [11/May/2025:18:08:39 +0000] \"POST /api/v1/support/req-support/67c0594d9daa4415cebf6687 HTTP/1.1\" 500 100 \"-\" \"PostmanRuntime/7.43.4\"","timestamp":"2025-05-11T18:08:39.519Z"}
+{"label":"ASON","level":"info","message":"::1 - - [11/May/2025:18:08:40 +0000] \"POST /api/v1/support/req-support/67c0594d9daa4415cebf6687 HTTP/1.1\" 500 100 \"-\" \"PostmanRuntime/7.43.4\"","timestamp":"2025-05-11T18:08:40.424Z"}
+{"label":"ASON","level":"info","message":"::1 - - [11/May/2025:18:08:41 +0000] \"POST /api/v1/support/req-support/67c0594d9daa4415cebf6687 HTTP/1.1\" 500 100 \"-\" \"PostmanRuntime/7.43.4\"","timestamp":"2025-05-11T18:08:41.161Z"}
+{"label":"ASON","level":"info","message":"::1 - - [11/May/2025:18:08:42 +0000] \"POST /api/v1/support/req-support/67c0594d9daa4415cebf6687 HTTP/1.1\" 500 100 \"-\" \"PostmanRuntime/7.43.4\"","timestamp":"2025-05-11T18:08:42.144Z"}
+{"label":"ASON","level":"info","message":"✅ Database connection successfully","timestamp":"2025-05-11T18:09:12.457Z"}
+{"label":"ASON","level":"info","message":"✅ Database connection successfully","timestamp":"2025-05-11T18:09:50.064Z"}
+{"label":"ASON","level":"info","message":"::1 - - [11/May/2025:18:09:52 +0000] \"POST /api/v1/groq/get-response HTTP/1.1\" 500 118 \"-\" \"PostmanRuntime/7.43.4\"","timestamp":"2025-05-11T18:09:52.722Z"}
+{"label":"ASON","level":"info","message":"::1 - - [11/May/2025:18:10:09 +0000] \"POST /api/v1/groq/get-response HTTP/1.1\" 503 16 \"-\" \"PostmanRuntime/7.43.4\"","timestamp":"2025-05-11T18:10:09.663Z"}
+{"label":"ASON","level":"info","message":"✅ Database connection successfully","timestamp":"2025-05-11T18:10:11.372Z"}
+{"label":"ASON","level":"info","message":"::1 - - [11/May/2025:18:10:11 +0000] \"POST /api/v1/groq/get-response HTTP/1.1\" 404 100 \"-\" \"PostmanRuntime/7.43.4\"","timestamp":"2025-05-11T18:10:11.425Z"}
+{"label":"ASON","level":"info","message":"::1 - - [11/May/2025:18:10:34 +0000] \"POST /api/v1/groq/get-response HTTP/1.1\" 200 177 \"-\" \"PostmanRuntime/7.43.4\"","timestamp":"2025-05-11T18:10:34.491Z"}
+{"label":"ASON","level":"info","message":"::1 - - [11/May/2025:18:10:51 +0000] \"POST /api/v1/groq/get-response HTTP/1.1\" 200 3539 \"-\" \"PostmanRuntime/7.43.4\"","timestamp":"2025-05-11T18:10:51.033Z"}
+{"label":"ASON","level":"info","message":"✅ Database connection successfully","timestamp":"2025-05-11T18:11:06.815Z"}
+{"label":"ASON","level":"info","message":"✅ Database connection successfully","timestamp":"2025-05-11T18:11:42.687Z"}
+{"label":"ASON","level":"info","message":"✅ Database connection successfully","timestamp":"2025-05-11T18:11:50.621Z"}
+{"label":"ASON","level":"info","message":"::1 - - [11/May/2025:18:11:52 +0000] \"POST /api/v1/llama4/get-response HTTP/1.1\" 404 100 \"-\" \"PostmanRuntime/7.43.4\"","timestamp":"2025-05-11T18:11:52.108Z"}
+{"label":"ASON","level":"info","message":"::1 - - [11/May/2025:18:11:53 +0000] \"POST /api/v1/llama4/get-response HTTP/1.1\" 404 100 \"-\" \"PostmanRuntime/7.43.4\"","timestamp":"2025-05-11T18:11:53.516Z"}
+{"label":"ASON","level":"info","message":"::1 - - [11/May/2025:18:11:54 +0000] \"POST /api/v1/llama4/get-response HTTP/1.1\" 404 100 \"-\" \"PostmanRuntime/7.43.4\"","timestamp":"2025-05-11T18:11:54.396Z"}
+{"label":"ASON","level":"info","message":"::1 - - [11/May/2025:18:11:55 +0000] \"POST /api/v1/llama4/get-response HTTP/1.1\" 404 100 \"-\" \"PostmanRuntime/7.43.4\"","timestamp":"2025-05-11T18:11:55.280Z"}
+{"label":"ASON","level":"info","message":"::1 - - [11/May/2025:18:12:09 +0000] \"POST /api/v1/llama4/get-response HTTP/1.1\" 200 4996 \"-\" \"PostmanRuntime/7.43.4\"","timestamp":"2025-05-11T18:12:09.935Z"}
+{"label":"ASON","level":"info","message":"✅ Database connection successfully","timestamp":"2025-05-11T18:12:37.304Z"}
+{"label":"ASON","level":"info","message":"✅ Database connection successfully","timestamp":"2025-05-11T18:12:46.808Z"}

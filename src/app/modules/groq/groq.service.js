@@ -1,5 +1,9 @@
 import { InMemoryChatMessageHistory } from '@langchain/core/chat_history';
-import { AIMessage, HumanMessage } from '@langchain/core/messages';
+import {
+  AIMessage,
+  HumanMessage,
+  SystemMessage,
+} from '@langchain/core/messages';
 import { ChatGroq } from '@langchain/groq';
 import { randomUUID } from 'crypto';
 import httpStatus from 'http-status';
@@ -7,12 +11,11 @@ import { ConversationChain } from 'langchain/chains';
 import { BufferMemory } from 'langchain/memory';
 import mongoose from 'mongoose';
 import config from '../../../../config/index.js';
+import ApiError from '../../../errors/ApiError.js';
 import UserModel from '../auth/auth.model.js';
 import { paymentController } from '../payment/payment.controller.js';
 import Llama from './groq.model.js';
 import { fetchSearchResults } from './groq.utilities.js';
-import { SystemMessage } from '@langchain/core/messages';
-
 
 // const sessionMemoryStore = {}; // Stores session memory for each user session
 
@@ -135,7 +138,7 @@ export const getAiResponsesGroqService = async (
     throw new ApiError(httpStatus.BAD_REQUEST, 'Prompt is required.');
   }
 
-  const user = await UserModel.findById(userId);
+  const user = await UserModel.isUserExist(userId);
   if (!user) {
     throw new ApiError(httpStatus.NOT_FOUND, 'User not found');
   }
