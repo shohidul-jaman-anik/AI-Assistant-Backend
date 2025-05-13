@@ -59,7 +59,7 @@ export const twitterAuth = {
             }
 
             console.log('Twitter Auth - Got request token:', token);
-            console.log('Results:', results);
+            console.log('Results:',  results);
 
             // Store the token secret for later
             tokenStore[token] = secret;

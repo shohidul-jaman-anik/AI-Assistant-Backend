@@ -1,0 +1,866 @@
+{
+  level: 'error',
+  message: '🔴 globalErrorHandler ~ Social auth failed: E11000 duplicate key error collection: ASON.users index: email_1 dup key: { email: "anikh499@gmail.com" }',
+  stack: 'Error: Social auth failed: E11000 duplicate key error collection: ASON.users index: email_1 dup key: { email: "anikh499@gmail.com" }\n' +
+    '    at findOrCreateUserModel (file:///C:/Fiverr/ASON/ASON%20Backends/ASON-Core-Service/src/app/modules/social-login/social-login.utils.js:35:15)\n' +
+    '    at process.processTicksAndRejections (node:internal/process/task_queues:95:5)\n' +
+    '    at async Strategy._verify (file:///C:/Fiverr/ASON/ASON%20Backends/ASON-Core-Service/src/app/modules/social-login/config/strategies/facebook.js:14:20)',
+  label: 'ASON Core Service',
+  timestamp: '2025-05-13T16:01:57.840Z'
+}
+{
+  name: 'FacebookTokenError',
+  message: '🔴 globalErrorHandler ~ This authorization code has been used.',
+  type: 'OAuthException',
+  code: 100,
+  subcode: 36009,
+  traceID: 'AN-FoOYc33H579h9toYG0k9',
+  status: 500,
+  level: 'error',
+  stack: 'FacebookTokenError: This authorization code has been used.\n' +
+    '    at Strategy.parseErrorResponse (C:\\Fiverr\\ASON\\ASON Backends\\ASON-Core-Service\\node_modules\\passport-facebook\\lib\\strategy.js:198:12)\n' +
+    '    at OAuth2Strategy._createOAuthError (C:\\Fiverr\\ASON\\ASON Backends\\ASON-Core-Service\\node_modules\\passport-oauth2\\lib\\strategy.js:420:16)\n' +
+    '    at C:\\Fiverr\\ASON\\ASON Backends\\ASON-Core-Service\\node_modules\\passport-oauth2\\lib\\strategy.js:177:45\n' +
+    '    at C:\\Fiverr\\ASON\\ASON Backends\\ASON-Core-Service\\node_modules\\passport-oauth2\\node_modules\\oauth\\lib\\oauth2.js:196:18\n' +
+    '    at passBackControl (C:\\Fiverr\\ASON\\ASON Backends\\ASON-Core-Service\\node_modules\\passport-oauth2\\node_modules\\oauth\\lib\\oauth2.js:132:9)\n' +
+    '    at IncomingMessage.<anonymous> (C:\\Fiverr\\ASON\\ASON Backends\\ASON-Core-Service\\node_modules\\passport-oauth2\\node_modules\\oauth\\lib\\oauth2.js:157:7)\n' +
+    '    at IncomingMessage.emit (node:events:527:35)\n' +
+    '    at endReadableNT (node:internal/streams/readable:1409:12)\n' +
+    '    at process.processTicksAndRejections (node:internal/process/task_queues:82:21)',
+  label: 'ASON Core Service',
+  timestamp: '2025-05-13T16:01:59.642Z'
+}
+{
+  name: 'FacebookTokenError',
+  message: '🔴 globalErrorHandler ~ This authorization code has been used.',
+  type: 'OAuthException',
+  code: 100,
+  subcode: 36009,
+  traceID: 'A6WWRFG1HFICJLk-y66nHNK',
+  status: 500,
+  level: 'error',
+  stack: 'FacebookTokenError: This authorization code has been used.\n' +
+    '    at Strategy.parseErrorResponse (C:\\Fiverr\\ASON\\ASON Backends\\ASON-Core-Service\\node_modules\\passport-facebook\\lib\\strategy.js:198:12)\n' +
+    '    at OAuth2Strategy._createOAuthError (C:\\Fiverr\\ASON\\ASON Backends\\ASON-Core-Service\\node_modules\\passport-oauth2\\lib\\strategy.js:420:16)\n' +
+    '    at C:\\Fiverr\\ASON\\ASON Backends\\ASON-Core-Service\\node_modules\\passport-oauth2\\lib\\strategy.js:177:45\n' +
+    '    at C:\\Fiverr\\ASON\\ASON Backends\\ASON-Core-Service\\node_modules\\passport-oauth2\\node_modules\\oauth\\lib\\oauth2.js:196:18\n' +
+    '    at passBackControl (C:\\Fiverr\\ASON\\ASON Backends\\ASON-Core-Service\\node_modules\\passport-oauth2\\node_modules\\oauth\\lib\\oauth2.js:132:9)\n' +
+    '    at IncomingMessage.<anonymous> (C:\\Fiverr\\ASON\\ASON Backends\\ASON-Core-Service\\node_modules\\passport-oauth2\\node_modules\\oauth\\lib\\oauth2.js:157:7)\n' +
+    '    at IncomingMessage.emit (node:events:527:35)\n' +
+    '    at endReadableNT (node:internal/streams/readable:1409:12)\n' +
+    '    at process.processTicksAndRejections (node:internal/process/task_queues:82:21)',
+  label: 'ASON Core Service',
+  timestamp: '2025-05-13T16:02:00.580Z'
+}
+{
+  name: 'FacebookTokenError',
+  message: '🔴 globalErrorHandler ~ This authorization code has been used.',
+  type: 'OAuthException',
+  code: 100,
+  subcode: 36009,
+  traceID: 'AWG_vaxa68H8JA3duy8Jw5d',
+  status: 500,
+  level: 'error',
+  stack: 'FacebookTokenError: This authorization code has been used.\n' +
+    '    at Strategy.parseErrorResponse (C:\\Fiverr\\ASON\\ASON Backends\\ASON-Core-Service\\node_modules\\passport-facebook\\lib\\strategy.js:198:12)\n' +
+    '    at OAuth2Strategy._createOAuthError (C:\\Fiverr\\ASON\\ASON Backends\\ASON-Core-Service\\node_modules\\passport-oauth2\\lib\\strategy.js:420:16)\n' +
+    '    at C:\\Fiverr\\ASON\\ASON Backends\\ASON-Core-Service\\node_modules\\passport-oauth2\\lib\\strategy.js:177:45\n' +
+    '    at C:\\Fiverr\\ASON\\ASON Backends\\ASON-Core-Service\\node_modules\\passport-oauth2\\node_modules\\oauth\\lib\\oauth2.js:196:18\n' +
+    '    at passBackControl (C:\\Fiverr\\ASON\\ASON Backends\\ASON-Core-Service\\node_modules\\passport-oauth2\\node_modules\\oauth\\lib\\oauth2.js:132:9)\n' +
+    '    at IncomingMessage.<anonymous> (C:\\Fiverr\\ASON\\ASON Backends\\ASON-Core-Service\\node_modules\\passport-oauth2\\node_modules\\oauth\\lib\\oauth2.js:157:7)\n' +
+    '    at IncomingMessage.emit (node:events:527:35)\n' +
+    '    at endReadableNT (node:internal/streams/readable:1409:12)\n' +
+    '    at process.processTicksAndRejections (node:internal/process/task_queues:82:21)',
+  label: 'ASON Core Service',
+  timestamp: '2025-05-13T16:02:05.544Z'
+}
+{
+  name: 'FacebookTokenError',
+  message: '🔴 globalErrorHandler ~ This authorization code has been used.',
+  type: 'OAuthException',
+  code: 100,
+  subcode: 36009,
+  traceID: 'ADX03Ay_PAAeIFDoEBtUQqO',
+  status: 500,
+  level: 'error',
+  stack: 'FacebookTokenError: This authorization code has been used.\n' +
+    '    at Strategy.parseErrorResponse (C:\\Fiverr\\ASON\\ASON Backends\\ASON-Core-Service\\node_modules\\passport-facebook\\lib\\strategy.js:198:12)\n' +
+    '    at OAuth2Strategy._createOAuthError (C:\\Fiverr\\ASON\\ASON Backends\\ASON-Core-Service\\node_modules\\passport-oauth2\\lib\\strategy.js:420:16)\n' +
+    '    at C:\\Fiverr\\ASON\\ASON Backends\\ASON-Core-Service\\node_modules\\passport-oauth2\\lib\\strategy.js:177:45\n' +
+    '    at C:\\Fiverr\\ASON\\ASON Backends\\ASON-Core-Service\\node_modules\\passport-oauth2\\node_modules\\oauth\\lib\\oauth2.js:196:18\n' +
+    '    at passBackControl (C:\\Fiverr\\ASON\\ASON Backends\\ASON-Core-Service\\node_modules\\passport-oauth2\\node_modules\\oauth\\lib\\oauth2.js:132:9)\n' +
+    '    at IncomingMessage.<anonymous> (C:\\Fiverr\\ASON\\ASON Backends\\ASON-Core-Service\\node_modules\\passport-oauth2\\node_modules\\oauth\\lib\\oauth2.js:157:7)\n' +
+    '    at IncomingMessage.emit (node:events:527:35)\n' +
+    '    at endReadableNT (node:internal/streams/readable:1409:12)\n' +
+    '    at process.processTicksAndRejections (node:internal/process/task_queues:82:21)',
+  label: 'ASON Core Service',
+  timestamp: '2025-05-13T16:02:06.555Z'
+}
+{
+  name: 'FacebookTokenError',
+  message: '🔴 globalErrorHandler ~ This authorization code has been used.',
+  type: 'OAuthException',
+  code: 100,
+  subcode: 36009,
+  traceID: 'AxgJ7LBKVSdknWhLNbhGC3N',
+  status: 500,
+  level: 'error',
+  stack: 'FacebookTokenError: This authorization code has been used.\n' +
+    '    at Strategy.parseErrorResponse (C:\\Fiverr\\ASON\\ASON Backends\\ASON-Core-Service\\node_modules\\passport-facebook\\lib\\strategy.js:198:12)\n' +
+    '    at OAuth2Strategy._createOAuthError (C:\\Fiverr\\ASON\\ASON Backends\\ASON-Core-Service\\node_modules\\passport-oauth2\\lib\\strategy.js:420:16)\n' +
+    '    at C:\\Fiverr\\ASON\\ASON Backends\\ASON-Core-Service\\node_modules\\passport-oauth2\\lib\\strategy.js:177:45\n' +
+    '    at C:\\Fiverr\\ASON\\ASON Backends\\ASON-Core-Service\\node_modules\\passport-oauth2\\node_modules\\oauth\\lib\\oauth2.js:196:18\n' +
+    '    at passBackControl (C:\\Fiverr\\ASON\\ASON Backends\\ASON-Core-Service\\node_modules\\passport-oauth2\\node_modules\\oauth\\lib\\oauth2.js:132:9)\n' +
+    '    at IncomingMessage.<anonymous> (C:\\Fiverr\\ASON\\ASON Backends\\ASON-Core-Service\\node_modules\\passport-oauth2\\node_modules\\oauth\\lib\\oauth2.js:157:7)\n' +
+    '    at IncomingMessage.emit (node:events:527:35)\n' +
+    '    at endReadableNT (node:internal/streams/readable:1409:12)\n' +
+    '    at process.processTicksAndRejections (node:internal/process/task_queues:82:21)',
+  label: 'ASON Core Service',
+  timestamp: '2025-05-13T16:02:25.744Z'
+}
+{
+  name: 'FacebookTokenError',
+  message: '🔴 globalErrorHandler ~ This authorization code has been used.',
+  type: 'OAuthException',
+  code: 100,
+  subcode: 36009,
+  traceID: 'AuDKPQEKzCbxNAinbx9G4Jf',
+  status: 500,
+  level: 'error',
+  stack: 'FacebookTokenError: This authorization code has been used.\n' +
+    '    at Strategy.parseErrorResponse (C:\\Fiverr\\ASON\\ASON Backends\\ASON-Core-Service\\node_modules\\passport-facebook\\lib\\strategy.js:198:12)\n' +
+    '    at OAuth2Strategy._createOAuthError (C:\\Fiverr\\ASON\\ASON Backends\\ASON-Core-Service\\node_modules\\passport-oauth2\\lib\\strategy.js:420:16)\n' +
+    '    at C:\\Fiverr\\ASON\\ASON Backends\\ASON-Core-Service\\node_modules\\passport-oauth2\\lib\\strategy.js:177:45\n' +
+    '    at C:\\Fiverr\\ASON\\ASON Backends\\ASON-Core-Service\\node_modules\\passport-oauth2\\node_modules\\oauth\\lib\\oauth2.js:196:18\n' +
+    '    at passBackControl (C:\\Fiverr\\ASON\\ASON Backends\\ASON-Core-Service\\node_modules\\passport-oauth2\\node_modules\\oauth\\lib\\oauth2.js:132:9)\n' +
+    '    at IncomingMessage.<anonymous> (C:\\Fiverr\\ASON\\ASON Backends\\ASON-Core-Service\\node_modules\\passport-oauth2\\node_modules\\oauth\\lib\\oauth2.js:157:7)\n' +
+    '    at IncomingMessage.emit (node:events:527:35)\n' +
+    '    at endReadableNT (node:internal/streams/readable:1409:12)\n' +
+    '    at process.processTicksAndRejections (node:internal/process/task_queues:82:21)',
+  label: 'ASON Core Service',
+  timestamp: '2025-05-13T16:02:26.739Z'
+}
+{
+  name: 'FacebookTokenError',
+  message: '🔴 globalErrorHandler ~ This authorization code has been used.',
+  type: 'OAuthException',
+  code: 100,
+  subcode: 36009,
+  traceID: 'AU8Poq_ubAC-IJJFx6OaEKh',
+  status: 500,
+  level: 'error',
+  stack: 'FacebookTokenError: This authorization code has been used.\n' +
+    '    at Strategy.parseErrorResponse (C:\\Fiverr\\ASON\\ASON Backends\\ASON-Core-Service\\node_modules\\passport-facebook\\lib\\strategy.js:198:12)\n' +
+    '    at OAuth2Strategy._createOAuthError (C:\\Fiverr\\ASON\\ASON Backends\\ASON-Core-Service\\node_modules\\passport-oauth2\\lib\\strategy.js:420:16)\n' +
+    '    at C:\\Fiverr\\ASON\\ASON Backends\\ASON-Core-Service\\node_modules\\passport-oauth2\\lib\\strategy.js:177:45\n' +
+    '    at C:\\Fiverr\\ASON\\ASON Backends\\ASON-Core-Service\\node_modules\\passport-oauth2\\node_modules\\oauth\\lib\\oauth2.js:196:18\n' +
+    '    at passBackControl (C:\\Fiverr\\ASON\\ASON Backends\\ASON-Core-Service\\node_modules\\passport-oauth2\\node_modules\\oauth\\lib\\oauth2.js:132:9)\n' +
+    '    at IncomingMessage.<anonymous> (C:\\Fiverr\\ASON\\ASON Backends\\ASON-Core-Service\\node_modules\\passport-oauth2\\node_modules\\oauth\\lib\\oauth2.js:157:7)\n' +
+    '    at IncomingMessage.emit (node:events:527:35)\n' +
+    '    at endReadableNT (node:internal/streams/readable:1409:12)\n' +
+    '    at process.processTicksAndRejections (node:internal/process/task_queues:82:21)',
+  label: 'ASON Core Service',
+  timestamp: '2025-05-13T16:02:31.720Z'
+}
+{
+  name: 'FacebookTokenError',
+  message: '🔴 globalErrorHandler ~ This authorization code has been used.',
+  type: 'OAuthException',
+  code: 100,
+  subcode: 36009,
+  traceID: 'AJ4q5O0SyjJMPsfeLCXLgSg',
+  status: 500,
+  level: 'error',
+  stack: 'FacebookTokenError: This authorization code has been used.\n' +
+    '    at Strategy.parseErrorResponse (C:\\Fiverr\\ASON\\ASON Backends\\ASON-Core-Service\\node_modules\\passport-facebook\\lib\\strategy.js:198:12)\n' +
+    '    at OAuth2Strategy._createOAuthError (C:\\Fiverr\\ASON\\ASON Backends\\ASON-Core-Service\\node_modules\\passport-oauth2\\lib\\strategy.js:420:16)\n' +
+    '    at C:\\Fiverr\\ASON\\ASON Backends\\ASON-Core-Service\\node_modules\\passport-oauth2\\lib\\strategy.js:177:45\n' +
+    '    at C:\\Fiverr\\ASON\\ASON Backends\\ASON-Core-Service\\node_modules\\passport-oauth2\\node_modules\\oauth\\lib\\oauth2.js:196:18\n' +
+    '    at passBackControl (C:\\Fiverr\\ASON\\ASON Backends\\ASON-Core-Service\\node_modules\\passport-oauth2\\node_modules\\oauth\\lib\\oauth2.js:132:9)\n' +
+    '    at IncomingMessage.<anonymous> (C:\\Fiverr\\ASON\\ASON Backends\\ASON-Core-Service\\node_modules\\passport-oauth2\\node_modules\\oauth\\lib\\oauth2.js:157:7)\n' +
+    '    at IncomingMessage.emit (node:events:527:35)\n' +
+    '    at endReadableNT (node:internal/streams/readable:1409:12)\n' +
+    '    at process.processTicksAndRejections (node:internal/process/task_queues:82:21)',
+  label: 'ASON Core Service',
+  timestamp: '2025-05-13T16:02:32.680Z'
+}
+{
+  name: 'FacebookTokenError',
+  message: '🔴 globalErrorHandler ~ This authorization code has been used.',
+  type: 'OAuthException',
+  code: 100,
+  subcode: 36009,
+  traceID: 'A4n5YUdgI2yJex6dgbP-WB3',
+  status: 500,
+  level: 'error',
+  stack: 'FacebookTokenError: This authorization code has been used.\n' +
+    '    at Strategy.parseErrorResponse (C:\\Fiverr\\ASON\\ASON Backends\\ASON-Core-Service\\node_modules\\passport-facebook\\lib\\strategy.js:198:12)\n' +
+    '    at OAuth2Strategy._createOAuthError (C:\\Fiverr\\ASON\\ASON Backends\\ASON-Core-Service\\node_modules\\passport-oauth2\\lib\\strategy.js:420:16)\n' +
+    '    at C:\\Fiverr\\ASON\\ASON Backends\\ASON-Core-Service\\node_modules\\passport-oauth2\\lib\\strategy.js:177:45\n' +
+    '    at C:\\Fiverr\\ASON\\ASON Backends\\ASON-Core-Service\\node_modules\\passport-oauth2\\node_modules\\oauth\\lib\\oauth2.js:196:18\n' +
+    '    at passBackControl (C:\\Fiverr\\ASON\\ASON Backends\\ASON-Core-Service\\node_modules\\passport-oauth2\\node_modules\\oauth\\lib\\oauth2.js:132:9)\n' +
+    '    at IncomingMessage.<anonymous> (C:\\Fiverr\\ASON\\ASON Backends\\ASON-Core-Service\\node_modules\\passport-oauth2\\node_modules\\oauth\\lib\\oauth2.js:157:7)\n' +
+    '    at IncomingMessage.emit (node:events:527:35)\n' +
+    '    at endReadableNT (node:internal/streams/readable:1409:12)\n' +
+    '    at process.processTicksAndRejections (node:internal/process/task_queues:82:21)',
+  label: 'ASON Core Service',
+  timestamp: '2025-05-13T16:05:31.708Z'
+}
+{
+  name: 'FacebookTokenError',
+  message: '🔴 globalErrorHandler ~ This authorization code has been used.',
+  type: 'OAuthException',
+  code: 100,
+  subcode: 36009,
+  traceID: 'A9nPt95XEKB_r_-cO_-_1w_',
+  status: 500,
+  level: 'error',
+  stack: 'FacebookTokenError: This authorization code has been used.\n' +
+    '    at Strategy.parseErrorResponse (C:\\Fiverr\\ASON\\ASON Backends\\ASON-Core-Service\\node_modules\\passport-facebook\\lib\\strategy.js:198:12)\n' +
+    '    at OAuth2Strategy._createOAuthError (C:\\Fiverr\\ASON\\ASON Backends\\ASON-Core-Service\\node_modules\\passport-oauth2\\lib\\strategy.js:420:16)\n' +
+    '    at C:\\Fiverr\\ASON\\ASON Backends\\ASON-Core-Service\\node_modules\\passport-oauth2\\lib\\strategy.js:177:45\n' +
+    '    at C:\\Fiverr\\ASON\\ASON Backends\\ASON-Core-Service\\node_modules\\passport-oauth2\\node_modules\\oauth\\lib\\oauth2.js:196:18\n' +
+    '    at passBackControl (C:\\Fiverr\\ASON\\ASON Backends\\ASON-Core-Service\\node_modules\\passport-oauth2\\node_modules\\oauth\\lib\\oauth2.js:132:9)\n' +
+    '    at IncomingMessage.<anonymous> (C:\\Fiverr\\ASON\\ASON Backends\\ASON-Core-Service\\node_modules\\passport-oauth2\\node_modules\\oauth\\lib\\oauth2.js:157:7)\n' +
+    '    at IncomingMessage.emit (node:events:527:35)\n' +
+    '    at endReadableNT (node:internal/streams/readable:1409:12)\n' +
+    '    at process.processTicksAndRejections (node:internal/process/task_queues:82:21)',
+  label: 'ASON Core Service',
+  timestamp: '2025-05-13T16:05:32.786Z'
+}
+{
+  name: 'FacebookTokenError',
+  message: '🔴 globalErrorHandler ~ This authorization code has been used.',
+  type: 'OAuthException',
+  code: 100,
+  subcode: 36009,
+  traceID: 'A0nFAS_dVTHHb3En6nWy6Iy',
+  status: 500,
+  level: 'error',
+  stack: 'FacebookTokenError: This authorization code has been used.\n' +
+    '    at Strategy.parseErrorResponse (C:\\Fiverr\\ASON\\ASON Backends\\ASON-Core-Service\\node_modules\\passport-facebook\\lib\\strategy.js:198:12)\n' +
+    '    at OAuth2Strategy._createOAuthError (C:\\Fiverr\\ASON\\ASON Backends\\ASON-Core-Service\\node_modules\\passport-oauth2\\lib\\strategy.js:420:16)\n' +
+    '    at C:\\Fiverr\\ASON\\ASON Backends\\ASON-Core-Service\\node_modules\\passport-oauth2\\lib\\strategy.js:177:45\n' +
+    '    at C:\\Fiverr\\ASON\\ASON Backends\\ASON-Core-Service\\node_modules\\passport-oauth2\\node_modules\\oauth\\lib\\oauth2.js:196:18\n' +
+    '    at passBackControl (C:\\Fiverr\\ASON\\ASON Backends\\ASON-Core-Service\\node_modules\\passport-oauth2\\node_modules\\oauth\\lib\\oauth2.js:132:9)\n' +
+    '    at IncomingMessage.<anonymous> (C:\\Fiverr\\ASON\\ASON Backends\\ASON-Core-Service\\node_modules\\passport-oauth2\\node_modules\\oauth\\lib\\oauth2.js:157:7)\n' +
+    '    at IncomingMessage.emit (node:events:527:35)\n' +
+    '    at endReadableNT (node:internal/streams/readable:1409:12)\n' +
+    '    at process.processTicksAndRejections (node:internal/process/task_queues:82:21)',
+  label: 'ASON Core Service',
+  timestamp: '2025-05-13T16:05:37.673Z'
+}
+{
+  name: 'FacebookTokenError',
+  message: '🔴 globalErrorHandler ~ This authorization code has been used.',
+  type: 'OAuthException',
+  code: 100,
+  subcode: 36009,
+  traceID: 'AOdLeMDpDOhWSJEG-AJ8D58',
+  status: 500,
+  level: 'error',
+  stack: 'FacebookTokenError: This authorization code has been used.\n' +
+    '    at Strategy.parseErrorResponse (C:\\Fiverr\\ASON\\ASON Backends\\ASON-Core-Service\\node_modules\\passport-facebook\\lib\\strategy.js:198:12)\n' +
+    '    at OAuth2Strategy._createOAuthError (C:\\Fiverr\\ASON\\ASON Backends\\ASON-Core-Service\\node_modules\\passport-oauth2\\lib\\strategy.js:420:16)\n' +
+    '    at C:\\Fiverr\\ASON\\ASON Backends\\ASON-Core-Service\\node_modules\\passport-oauth2\\lib\\strategy.js:177:45\n' +
+    '    at C:\\Fiverr\\ASON\\ASON Backends\\ASON-Core-Service\\node_modules\\passport-oauth2\\node_modules\\oauth\\lib\\oauth2.js:196:18\n' +
+    '    at passBackControl (C:\\Fiverr\\ASON\\ASON Backends\\ASON-Core-Service\\node_modules\\passport-oauth2\\node_modules\\oauth\\lib\\oauth2.js:132:9)\n' +
+    '    at IncomingMessage.<anonymous> (C:\\Fiverr\\ASON\\ASON Backends\\ASON-Core-Service\\node_modules\\passport-oauth2\\node_modules\\oauth\\lib\\oauth2.js:157:7)\n' +
+    '    at IncomingMessage.emit (node:events:527:35)\n' +
+    '    at endReadableNT (node:internal/streams/readable:1409:12)\n' +
+    '    at process.processTicksAndRejections (node:internal/process/task_queues:82:21)',
+  label: 'ASON Core Service',
+  timestamp: '2025-05-13T16:05:38.649Z'
+}
+{
+  level: 'error',
+  message: '🔴 globalErrorHandler ~ Failed to obtain access token',
+  stack: 'Error: Failed to obtain access token\n' +
+    '    at C:\\Fiverr\\ASON\\ASON Backends\\ASON-Core-Service\\node_modules\\passport-oauth2\\lib\\strategy.js:178:49\n' +
+    '    at C:\\Fiverr\\ASON\\ASON Backends\\ASON-Core-Service\\node_modules\\passport-oauth2\\node_modules\\oauth\\lib\\oauth2.js:214:7\n' +
+    '    at passBackControl (C:\\Fiverr\\ASON\\ASON Backends\\ASON-Core-Service\\node_modules\\passport-oauth2\\node_modules\\oauth\\lib\\oauth2.js:134:9)\n' +
+    '    at IncomingMessage.<anonymous> (C:\\Fiverr\\ASON\\ASON Backends\\ASON-Core-Service\\node_modules\\passport-oauth2\\node_modules\\oauth\\lib\\oauth2.js:157:7)\n' +
+    '    at IncomingMessage.emit (node:events:527:35)\n' +
+    '    at endReadableNT (node:internal/streams/readable:1409:12)\n' +
+    '    at process.processTicksAndRejections (node:internal/process/task_queues:82:21)',
+  label: 'ASON Core Service',
+  timestamp: '2025-05-13T16:09:59.980Z'
+}
+{
+  level: 'error',
+  message: '🔴 globalErrorHandler ~ Failed to obtain access token',
+  stack: 'Error: Failed to obtain access token\n' +
+    '    at C:\\Fiverr\\ASON\\ASON Backends\\ASON-Core-Service\\node_modules\\passport-oauth2\\lib\\strategy.js:178:49\n' +
+    '    at C:\\Fiverr\\ASON\\ASON Backends\\ASON-Core-Service\\node_modules\\passport-oauth2\\node_modules\\oauth\\lib\\oauth2.js:214:7\n' +
+    '    at passBackControl (C:\\Fiverr\\ASON\\ASON Backends\\ASON-Core-Service\\node_modules\\passport-oauth2\\node_modules\\oauth\\lib\\oauth2.js:134:9)\n' +
+    '    at IncomingMessage.<anonymous> (C:\\Fiverr\\ASON\\ASON Backends\\ASON-Core-Service\\node_modules\\passport-oauth2\\node_modules\\oauth\\lib\\oauth2.js:157:7)\n' +
+    '    at IncomingMessage.emit (node:events:527:35)\n' +
+    '    at endReadableNT (node:internal/streams/readable:1409:12)\n' +
+    '    at process.processTicksAndRejections (node:internal/process/task_queues:82:21)',
+  label: 'ASON Core Service',
+  timestamp: '2025-05-13T16:10:00.991Z'
+}
+{
+  level: 'error',
+  message: '🔴 globalErrorHandler ~ Failed to obtain access token',
+  stack: 'Error: Failed to obtain access token\n' +
+    '    at C:\\Fiverr\\ASON\\ASON Backends\\ASON-Core-Service\\node_modules\\passport-oauth2\\lib\\strategy.js:178:49\n' +
+    '    at C:\\Fiverr\\ASON\\ASON Backends\\ASON-Core-Service\\node_modules\\passport-oauth2\\node_modules\\oauth\\lib\\oauth2.js:214:7\n' +
+    '    at passBackControl (C:\\Fiverr\\ASON\\ASON Backends\\ASON-Core-Service\\node_modules\\passport-oauth2\\node_modules\\oauth\\lib\\oauth2.js:134:9)\n' +
+    '    at IncomingMessage.<anonymous> (C:\\Fiverr\\ASON\\ASON Backends\\ASON-Core-Service\\node_modules\\passport-oauth2\\node_modules\\oauth\\lib\\oauth2.js:157:7)\n' +
+    '    at IncomingMessage.emit (node:events:527:35)\n' +
+    '    at endReadableNT (node:internal/streams/readable:1409:12)\n' +
+    '    at process.processTicksAndRejections (node:internal/process/task_queues:82:21)',
+  label: 'ASON Core Service',
+  timestamp: '2025-05-13T16:10:06.762Z'
+}
+{
+  level: 'error',
+  message: '🔴 globalErrorHandler ~ Failed to obtain access token',
+  stack: 'Error: Failed to obtain access token\n' +
+    '    at C:\\Fiverr\\ASON\\ASON Backends\\ASON-Core-Service\\node_modules\\passport-oauth2\\lib\\strategy.js:178:49\n' +
+    '    at C:\\Fiverr\\ASON\\ASON Backends\\ASON-Core-Service\\node_modules\\passport-oauth2\\node_modules\\oauth\\lib\\oauth2.js:214:7\n' +
+    '    at passBackControl (C:\\Fiverr\\ASON\\ASON Backends\\ASON-Core-Service\\node_modules\\passport-oauth2\\node_modules\\oauth\\lib\\oauth2.js:134:9)\n' +
+    '    at IncomingMessage.<anonymous> (C:\\Fiverr\\ASON\\ASON Backends\\ASON-Core-Service\\node_modules\\passport-oauth2\\node_modules\\oauth\\lib\\oauth2.js:157:7)\n' +
+    '    at IncomingMessage.emit (node:events:527:35)\n' +
+    '    at endReadableNT (node:internal/streams/readable:1409:12)\n' +
+    '    at process.processTicksAndRejections (node:internal/process/task_queues:82:21)',
+  label: 'ASON Core Service',
+  timestamp: '2025-05-13T16:10:08.593Z'
+}
+{
+  level: 'error',
+  message: '🔴 globalErrorHandler ~ Failed to obtain access token',
+  stack: 'Error: Failed to obtain access token\n' +
+    '    at C:\\Fiverr\\ASON\\ASON Backends\\ASON-Core-Service\\node_modules\\passport-oauth2\\lib\\strategy.js:178:49\n' +
+    '    at C:\\Fiverr\\ASON\\ASON Backends\\ASON-Core-Service\\node_modules\\passport-oauth2\\node_modules\\oauth\\lib\\oauth2.js:214:7\n' +
+    '    at passBackControl (C:\\Fiverr\\ASON\\ASON Backends\\ASON-Core-Service\\node_modules\\passport-oauth2\\node_modules\\oauth\\lib\\oauth2.js:134:9)\n' +
+    '    at IncomingMessage.<anonymous> (C:\\Fiverr\\ASON\\ASON Backends\\ASON-Core-Service\\node_modules\\passport-oauth2\\node_modules\\oauth\\lib\\oauth2.js:157:7)\n' +
+    '    at IncomingMessage.emit (node:events:527:35)\n' +
+    '    at endReadableNT (node:internal/streams/readable:1409:12)\n' +
+    '    at process.processTicksAndRejections (node:internal/process/task_queues:82:21)',
+  label: 'ASON Core Service',
+  timestamp: '2025-05-13T16:10:38.530Z'
+}
+{
+  level: 'error',
+  message: '🔴 globalErrorHandler ~ Failed to obtain access token',
+  stack: 'Error: Failed to obtain access token\n' +
+    '    at C:\\Fiverr\\ASON\\ASON Backends\\ASON-Core-Service\\node_modules\\passport-oauth2\\lib\\strategy.js:178:49\n' +
+    '    at C:\\Fiverr\\ASON\\ASON Backends\\ASON-Core-Service\\node_modules\\passport-oauth2\\node_modules\\oauth\\lib\\oauth2.js:214:7\n' +
+    '    at passBackControl (C:\\Fiverr\\ASON\\ASON Backends\\ASON-Core-Service\\node_modules\\passport-oauth2\\node_modules\\oauth\\lib\\oauth2.js:134:9)\n' +
+    '    at IncomingMessage.<anonymous> (C:\\Fiverr\\ASON\\ASON Backends\\ASON-Core-Service\\node_modules\\passport-oauth2\\node_modules\\oauth\\lib\\oauth2.js:157:7)\n' +
+    '    at IncomingMessage.emit (node:events:527:35)\n' +
+    '    at endReadableNT (node:internal/streams/readable:1409:12)\n' +
+    '    at process.processTicksAndRejections (node:internal/process/task_queues:82:21)',
+  label: 'ASON Core Service',
+  timestamp: '2025-05-13T16:10:39.695Z'
+}
+{
+  level: 'error',
+  message: '🔴 globalErrorHandler ~ Failed to obtain access token',
+  stack: 'Error: Failed to obtain access token\n' +
+    '    at C:\\Fiverr\\ASON\\ASON Backends\\ASON-Core-Service\\node_modules\\passport-oauth2\\lib\\strategy.js:178:49\n' +
+    '    at C:\\Fiverr\\ASON\\ASON Backends\\ASON-Core-Service\\node_modules\\passport-oauth2\\node_modules\\oauth\\lib\\oauth2.js:214:7\n' +
+    '    at passBackControl (C:\\Fiverr\\ASON\\ASON Backends\\ASON-Core-Service\\node_modules\\passport-oauth2\\node_modules\\oauth\\lib\\oauth2.js:134:9)\n' +
+    '    at IncomingMessage.<anonymous> (C:\\Fiverr\\ASON\\ASON Backends\\ASON-Core-Service\\node_modules\\passport-oauth2\\node_modules\\oauth\\lib\\oauth2.js:157:7)\n' +
+    '    at IncomingMessage.emit (node:events:527:35)\n' +
+    '    at endReadableNT (node:internal/streams/readable:1409:12)\n' +
+    '    at process.processTicksAndRejections (node:internal/process/task_queues:82:21)',
+  label: 'ASON Core Service',
+  timestamp: '2025-05-13T16:10:41.590Z'
+}
+{
+  level: 'error',
+  message: '🔴 globalErrorHandler ~ Failed to obtain access token',
+  stack: 'Error: Failed to obtain access token\n' +
+    '    at C:\\Fiverr\\ASON\\ASON Backends\\ASON-Core-Service\\node_modules\\passport-oauth2\\lib\\strategy.js:178:49\n' +
+    '    at C:\\Fiverr\\ASON\\ASON Backends\\ASON-Core-Service\\node_modules\\passport-oauth2\\node_modules\\oauth\\lib\\oauth2.js:214:7\n' +
+    '    at passBackControl (C:\\Fiverr\\ASON\\ASON Backends\\ASON-Core-Service\\node_modules\\passport-oauth2\\node_modules\\oauth\\lib\\oauth2.js:134:9)\n' +
+    '    at IncomingMessage.<anonymous> (C:\\Fiverr\\ASON\\ASON Backends\\ASON-Core-Service\\node_modules\\passport-oauth2\\node_modules\\oauth\\lib\\oauth2.js:157:7)\n' +
+    '    at IncomingMessage.emit (node:events:527:35)\n' +
+    '    at endReadableNT (node:internal/streams/readable:1409:12)\n' +
+    '    at process.processTicksAndRejections (node:internal/process/task_queues:82:21)',
+  label: 'ASON Core Service',
+  timestamp: '2025-05-13T16:10:45.601Z'
+}
+{
+  level: 'error',
+  message: '🔴 globalErrorHandler ~ Failed to obtain access token',
+  stack: 'Error: Failed to obtain access token\n' +
+    '    at C:\\Fiverr\\ASON\\ASON Backends\\ASON-Core-Service\\node_modules\\passport-oauth2\\lib\\strategy.js:178:49\n' +
+    '    at C:\\Fiverr\\ASON\\ASON Backends\\ASON-Core-Service\\node_modules\\passport-oauth2\\node_modules\\oauth\\lib\\oauth2.js:214:7\n' +
+    '    at passBackControl (C:\\Fiverr\\ASON\\ASON Backends\\ASON-Core-Service\\node_modules\\passport-oauth2\\node_modules\\oauth\\lib\\oauth2.js:134:9)\n' +
+    '    at IncomingMessage.<anonymous> (C:\\Fiverr\\ASON\\ASON Backends\\ASON-Core-Service\\node_modules\\passport-oauth2\\node_modules\\oauth\\lib\\oauth2.js:157:7)\n' +
+    '    at IncomingMessage.emit (node:events:527:35)\n' +
+    '    at endReadableNT (node:internal/streams/readable:1409:12)\n' +
+    '    at process.processTicksAndRejections (node:internal/process/task_queues:82:21)',
+  label: 'ASON Core Service',
+  timestamp: '2025-05-13T16:10:46.591Z'
+}
+{
+  name: 'InternalOAuthError',
+  message: '🔴 globalErrorHandler ~ Failed to fetch the user profile.',
+  oauthError: {
+    statusCode: 401,
+    data: '{"message": "401: Unauthorized", "code": 0}'
+  },
+  level: 'error',
+  stack: 'InternalOAuthError: Failed to fetch the user profile.\n' +
+    '    at C:\\Fiverr\\ASON\\ASON Backends\\ASON-Core-Service\\node_modules\\passport-discord\\lib\\strategy.js:77:25\n' +
+    '    at passBackControl (C:\\Fiverr\\ASON\\ASON Backends\\ASON-Core-Service\\node_modules\\passport-oauth2\\node_modules\\oauth\\lib\\oauth2.js:132:9)\n' +
+    '    at IncomingMessage.<anonymous> (C:\\Fiverr\\ASON\\ASON Backends\\ASON-Core-Service\\node_modules\\passport-oauth2\\node_modules\\oauth\\lib\\oauth2.js:157:7)\n' +
+    '    at IncomingMessage.emit (node:events:527:35)\n' +
+    '    at endReadableNT (node:internal/streams/readable:1409:12)\n' +
+    '    at process.processTicksAndRejections (node:internal/process/task_queues:82:21)',
+  label: 'ASON Core Service',
+  timestamp: '2025-05-13T16:33:37.594Z'
+}
+{
+  name: 'TokenError',
+  message: '🔴 globalErrorHandler ~ Invalid "code" in request.',
+  code: 'invalid_grant',
+  uri: undefined,
+  status: 500,
+  level: 'error',
+  stack: 'TokenError: Invalid "code" in request.\n' +
+    '    at OAuth2Strategy.parseErrorResponse (C:\\Fiverr\\ASON\\ASON Backends\\ASON-Core-Service\\node_modules\\passport-oauth2\\lib\\strategy.js:373:12)\n' +
+    '    at OAuth2Strategy._createOAuthError (C:\\Fiverr\\ASON\\ASON Backends\\ASON-Core-Service\\node_modules\\passport-oauth2\\lib\\strategy.js:420:16)\n' +
+    '    at C:\\Fiverr\\ASON\\ASON Backends\\ASON-Core-Service\\node_modules\\passport-oauth2\\lib\\strategy.js:177:45\n' +
+    '    at C:\\Fiverr\\ASON\\ASON Backends\\ASON-Core-Service\\node_modules\\passport-oauth2\\node_modules\\oauth\\lib\\oauth2.js:196:18\n' +
+    '    at passBackControl (C:\\Fiverr\\ASON\\ASON Backends\\ASON-Core-Service\\node_modules\\passport-oauth2\\node_modules\\oauth\\lib\\oauth2.js:132:9)\n' +
+    '    at IncomingMessage.<anonymous> (C:\\Fiverr\\ASON\\ASON Backends\\ASON-Core-Service\\node_modules\\passport-oauth2\\node_modules\\oauth\\lib\\oauth2.js:157:7)\n' +
+    '    at IncomingMessage.emit (node:events:527:35)\n' +
+    '    at endReadableNT (node:internal/streams/readable:1409:12)\n' +
+    '    at process.processTicksAndRejections (node:internal/process/task_queues:82:21)',
+  label: 'ASON Core Service',
+  timestamp: '2025-05-13T16:33:39.271Z'
+}
+{
+  name: 'TokenError',
+  message: '🔴 globalErrorHandler ~ Invalid "code" in request.',
+  code: 'invalid_grant',
+  uri: undefined,
+  status: 500,
+  level: 'error',
+  stack: 'TokenError: Invalid "code" in request.\n' +
+    '    at OAuth2Strategy.parseErrorResponse (C:\\Fiverr\\ASON\\ASON Backends\\ASON-Core-Service\\node_modules\\passport-oauth2\\lib\\strategy.js:373:12)\n' +
+    '    at OAuth2Strategy._createOAuthError (C:\\Fiverr\\ASON\\ASON Backends\\ASON-Core-Service\\node_modules\\passport-oauth2\\lib\\strategy.js:420:16)\n' +
+    '    at C:\\Fiverr\\ASON\\ASON Backends\\ASON-Core-Service\\node_modules\\passport-oauth2\\lib\\strategy.js:177:45\n' +
+    '    at C:\\Fiverr\\ASON\\ASON Backends\\ASON-Core-Service\\node_modules\\passport-oauth2\\node_modules\\oauth\\lib\\oauth2.js:196:18\n' +
+    '    at passBackControl (C:\\Fiverr\\ASON\\ASON Backends\\ASON-Core-Service\\node_modules\\passport-oauth2\\node_modules\\oauth\\lib\\oauth2.js:132:9)\n' +
+    '    at IncomingMessage.<anonymous> (C:\\Fiverr\\ASON\\ASON Backends\\ASON-Core-Service\\node_modules\\passport-oauth2\\node_modules\\oauth\\lib\\oauth2.js:157:7)\n' +
+    '    at IncomingMessage.emit (node:events:527:35)\n' +
+    '    at endReadableNT (node:internal/streams/readable:1409:12)\n' +
+    '    at process.processTicksAndRejections (node:internal/process/task_queues:82:21)',
+  label: 'ASON Core Service',
+  timestamp: '2025-05-13T16:33:40.284Z'
+}
+{
+  name: 'TokenError',
+  message: '🔴 globalErrorHandler ~ Invalid "code" in request.',
+  code: 'invalid_grant',
+  uri: undefined,
+  status: 500,
+  level: 'error',
+  stack: 'TokenError: Invalid "code" in request.\n' +
+    '    at OAuth2Strategy.parseErrorResponse (C:\\Fiverr\\ASON\\ASON Backends\\ASON-Core-Service\\node_modules\\passport-oauth2\\lib\\strategy.js:373:12)\n' +
+    '    at OAuth2Strategy._createOAuthError (C:\\Fiverr\\ASON\\ASON Backends\\ASON-Core-Service\\node_modules\\passport-oauth2\\lib\\strategy.js:420:16)\n' +
+    '    at C:\\Fiverr\\ASON\\ASON Backends\\ASON-Core-Service\\node_modules\\passport-oauth2\\lib\\strategy.js:177:45\n' +
+    '    at C:\\Fiverr\\ASON\\ASON Backends\\ASON-Core-Service\\node_modules\\passport-oauth2\\node_modules\\oauth\\lib\\oauth2.js:196:18\n' +
+    '    at passBackControl (C:\\Fiverr\\ASON\\ASON Backends\\ASON-Core-Service\\node_modules\\passport-oauth2\\node_modules\\oauth\\lib\\oauth2.js:132:9)\n' +
+    '    at IncomingMessage.<anonymous> (C:\\Fiverr\\ASON\\ASON Backends\\ASON-Core-Service\\node_modules\\passport-oauth2\\node_modules\\oauth\\lib\\oauth2.js:157:7)\n' +
+    '    at IncomingMessage.emit (node:events:527:35)\n' +
+    '    at endReadableNT (node:internal/streams/readable:1409:12)\n' +
+    '    at process.processTicksAndRejections (node:internal/process/task_queues:82:21)',
+  label: 'ASON Core Service',
+  timestamp: '2025-05-13T16:33:45.251Z'
+}
+{
+  name: 'TokenError',
+  message: '🔴 globalErrorHandler ~ Invalid "code" in request.',
+  code: 'invalid_grant',
+  uri: undefined,
+  status: 500,
+  level: 'error',
+  stack: 'TokenError: Invalid "code" in request.\n' +
+    '    at OAuth2Strategy.parseErrorResponse (C:\\Fiverr\\ASON\\ASON Backends\\ASON-Core-Service\\node_modules\\passport-oauth2\\lib\\strategy.js:373:12)\n' +
+    '    at OAuth2Strategy._createOAuthError (C:\\Fiverr\\ASON\\ASON Backends\\ASON-Core-Service\\node_modules\\passport-oauth2\\lib\\strategy.js:420:16)\n' +
+    '    at C:\\Fiverr\\ASON\\ASON Backends\\ASON-Core-Service\\node_modules\\passport-oauth2\\lib\\strategy.js:177:45\n' +
+    '    at C:\\Fiverr\\ASON\\ASON Backends\\ASON-Core-Service\\node_modules\\passport-oauth2\\node_modules\\oauth\\lib\\oauth2.js:196:18\n' +
+    '    at passBackControl (C:\\Fiverr\\ASON\\ASON Backends\\ASON-Core-Service\\node_modules\\passport-oauth2\\node_modules\\oauth\\lib\\oauth2.js:132:9)\n' +
+    '    at IncomingMessage.<anonymous> (C:\\Fiverr\\ASON\\ASON Backends\\ASON-Core-Service\\node_modules\\passport-oauth2\\node_modules\\oauth\\lib\\oauth2.js:157:7)\n' +
+    '    at IncomingMessage.emit (node:events:527:35)\n' +
+    '    at endReadableNT (node:internal/streams/readable:1409:12)\n' +
+    '    at process.processTicksAndRejections (node:internal/process/task_queues:82:21)',
+  label: 'ASON Core Service',
+  timestamp: '2025-05-13T16:33:46.270Z'
+}
+{
+  name: 'InternalOAuthError',
+  message: '🔴 globalErrorHandler ~ Failed to fetch the user profile.',
+  oauthError: {
+    statusCode: 401,
+    data: '{"message": "401: Unauthorized", "code": 0}'
+  },
+  level: 'error',
+  stack: 'InternalOAuthError: Failed to fetch the user profile.\n' +
+    '    at C:\\Fiverr\\ASON\\ASON Backends\\ASON-Core-Service\\node_modules\\passport-discord\\lib\\strategy.js:77:25\n' +
+    '    at passBackControl (C:\\Fiverr\\ASON\\ASON Backends\\ASON-Core-Service\\node_modules\\passport-oauth2\\node_modules\\oauth\\lib\\oauth2.js:132:9)\n' +
+    '    at IncomingMessage.<anonymous> (C:\\Fiverr\\ASON\\ASON Backends\\ASON-Core-Service\\node_modules\\passport-oauth2\\node_modules\\oauth\\lib\\oauth2.js:157:7)\n' +
+    '    at IncomingMessage.emit (node:events:527:35)\n' +
+    '    at endReadableNT (node:internal/streams/readable:1409:12)\n' +
+    '    at process.processTicksAndRejections (node:internal/process/task_queues:82:21)',
+  label: 'ASON Core Service',
+  timestamp: '2025-05-13T16:34:11.726Z'
+}
+{
+  name: 'TokenError',
+  message: '🔴 globalErrorHandler ~ Invalid "code" in request.',
+  code: 'invalid_grant',
+  uri: undefined,
+  status: 500,
+  level: 'error',
+  stack: 'TokenError: Invalid "code" in request.\n' +
+    '    at OAuth2Strategy.parseErrorResponse (C:\\Fiverr\\ASON\\ASON Backends\\ASON-Core-Service\\node_modules\\passport-oauth2\\lib\\strategy.js:373:12)\n' +
+    '    at OAuth2Strategy._createOAuthError (C:\\Fiverr\\ASON\\ASON Backends\\ASON-Core-Service\\node_modules\\passport-oauth2\\lib\\strategy.js:420:16)\n' +
+    '    at C:\\Fiverr\\ASON\\ASON Backends\\ASON-Core-Service\\node_modules\\passport-oauth2\\lib\\strategy.js:177:45\n' +
+    '    at C:\\Fiverr\\ASON\\ASON Backends\\ASON-Core-Service\\node_modules\\passport-oauth2\\node_modules\\oauth\\lib\\oauth2.js:196:18\n' +
+    '    at passBackControl (C:\\Fiverr\\ASON\\ASON Backends\\ASON-Core-Service\\node_modules\\passport-oauth2\\node_modules\\oauth\\lib\\oauth2.js:132:9)\n' +
+    '    at IncomingMessage.<anonymous> (C:\\Fiverr\\ASON\\ASON Backends\\ASON-Core-Service\\node_modules\\passport-oauth2\\node_modules\\oauth\\lib\\oauth2.js:157:7)\n' +
+    '    at IncomingMessage.emit (node:events:527:35)\n' +
+    '    at endReadableNT (node:internal/streams/readable:1409:12)\n' +
+    '    at process.processTicksAndRejections (node:internal/process/task_queues:82:21)',
+  label: 'ASON Core Service',
+  timestamp: '2025-05-13T16:34:13.438Z'
+}
+{
+  name: 'TokenError',
+  message: '🔴 globalErrorHandler ~ Invalid "code" in request.',
+  code: 'invalid_grant',
+  uri: undefined,
+  status: 500,
+  level: 'error',
+  stack: 'TokenError: Invalid "code" in request.\n' +
+    '    at OAuth2Strategy.parseErrorResponse (C:\\Fiverr\\ASON\\ASON Backends\\ASON-Core-Service\\node_modules\\passport-oauth2\\lib\\strategy.js:373:12)\n' +
+    '    at OAuth2Strategy._createOAuthError (C:\\Fiverr\\ASON\\ASON Backends\\ASON-Core-Service\\node_modules\\passport-oauth2\\lib\\strategy.js:420:16)\n' +
+    '    at C:\\Fiverr\\ASON\\ASON Backends\\ASON-Core-Service\\node_modules\\passport-oauth2\\lib\\strategy.js:177:45\n' +
+    '    at C:\\Fiverr\\ASON\\ASON Backends\\ASON-Core-Service\\node_modules\\passport-oauth2\\node_modules\\oauth\\lib\\oauth2.js:196:18\n' +
+    '    at passBackControl (C:\\Fiverr\\ASON\\ASON Backends\\ASON-Core-Service\\node_modules\\passport-oauth2\\node_modules\\oauth\\lib\\oauth2.js:132:9)\n' +
+    '    at IncomingMessage.<anonymous> (C:\\Fiverr\\ASON\\ASON Backends\\ASON-Core-Service\\node_modules\\passport-oauth2\\node_modules\\oauth\\lib\\oauth2.js:157:7)\n' +
+    '    at IncomingMessage.emit (node:events:527:35)\n' +
+    '    at endReadableNT (node:internal/streams/readable:1409:12)\n' +
+    '    at process.processTicksAndRejections (node:internal/process/task_queues:82:21)',
+  label: 'ASON Core Service',
+  timestamp: '2025-05-13T16:34:14.421Z'
+}
+{
+  name: 'TokenError',
+  message: '🔴 globalErrorHandler ~ Invalid "code" in request.',
+  code: 'invalid_grant',
+  uri: undefined,
+  status: 500,
+  level: 'error',
+  stack: 'TokenError: Invalid "code" in request.\n' +
+    '    at OAuth2Strategy.parseErrorResponse (C:\\Fiverr\\ASON\\ASON Backends\\ASON-Core-Service\\node_modules\\passport-oauth2\\lib\\strategy.js:373:12)\n' +
+    '    at OAuth2Strategy._createOAuthError (C:\\Fiverr\\ASON\\ASON Backends\\ASON-Core-Service\\node_modules\\passport-oauth2\\lib\\strategy.js:420:16)\n' +
+    '    at C:\\Fiverr\\ASON\\ASON Backends\\ASON-Core-Service\\node_modules\\passport-oauth2\\lib\\strategy.js:177:45\n' +
+    '    at C:\\Fiverr\\ASON\\ASON Backends\\ASON-Core-Service\\node_modules\\passport-oauth2\\node_modules\\oauth\\lib\\oauth2.js:196:18\n' +
+    '    at passBackControl (C:\\Fiverr\\ASON\\ASON Backends\\ASON-Core-Service\\node_modules\\passport-oauth2\\node_modules\\oauth\\lib\\oauth2.js:132:9)\n' +
+    '    at IncomingMessage.<anonymous> (C:\\Fiverr\\ASON\\ASON Backends\\ASON-Core-Service\\node_modules\\passport-oauth2\\node_modules\\oauth\\lib\\oauth2.js:157:7)\n' +
+    '    at IncomingMessage.emit (node:events:527:35)\n' +
+    '    at endReadableNT (node:internal/streams/readable:1409:12)\n' +
+    '    at process.processTicksAndRejections (node:internal/process/task_queues:82:21)',
+  label: 'ASON Core Service',
+  timestamp: '2025-05-13T16:34:19.598Z'
+}
+{
+  name: 'TokenError',
+  message: '🔴 globalErrorHandler ~ Invalid "code" in request.',
+  code: 'invalid_grant',
+  uri: undefined,
+  status: 500,
+  level: 'error',
+  stack: 'TokenError: Invalid "code" in request.\n' +
+    '    at OAuth2Strategy.parseErrorResponse (C:\\Fiverr\\ASON\\ASON Backends\\ASON-Core-Service\\node_modules\\passport-oauth2\\lib\\strategy.js:373:12)\n' +
+    '    at OAuth2Strategy._createOAuthError (C:\\Fiverr\\ASON\\ASON Backends\\ASON-Core-Service\\node_modules\\passport-oauth2\\lib\\strategy.js:420:16)\n' +
+    '    at C:\\Fiverr\\ASON\\ASON Backends\\ASON-Core-Service\\node_modules\\passport-oauth2\\lib\\strategy.js:177:45\n' +
+    '    at C:\\Fiverr\\ASON\\ASON Backends\\ASON-Core-Service\\node_modules\\passport-oauth2\\node_modules\\oauth\\lib\\oauth2.js:196:18\n' +
+    '    at passBackControl (C:\\Fiverr\\ASON\\ASON Backends\\ASON-Core-Service\\node_modules\\passport-oauth2\\node_modules\\oauth\\lib\\oauth2.js:132:9)\n' +
+    '    at IncomingMessage.<anonymous> (C:\\Fiverr\\ASON\\ASON Backends\\ASON-Core-Service\\node_modules\\passport-oauth2\\node_modules\\oauth\\lib\\oauth2.js:157:7)\n' +
+    '    at IncomingMessage.emit (node:events:527:35)\n' +
+    '    at endReadableNT (node:internal/streams/readable:1409:12)\n' +
+    '    at process.processTicksAndRejections (node:internal/process/task_queues:82:21)',
+  label: 'ASON Core Service',
+  timestamp: '2025-05-13T16:34:21.623Z'
+}
+{
+  name: 'InternalOAuthError',
+  message: '🔴 globalErrorHandler ~ Failed to fetch the user profile.',
+  oauthError: {
+    statusCode: 401,
+    data: '{"message": "401: Unauthorized", "code": 0}'
+  },
+  level: 'error',
+  stack: 'InternalOAuthError: Failed to fetch the user profile.\n' +
+    '    at C:\\Fiverr\\ASON\\ASON Backends\\ASON-Core-Service\\node_modules\\passport-discord\\lib\\strategy.js:77:25\n' +
+    '    at passBackControl (C:\\Fiverr\\ASON\\ASON Backends\\ASON-Core-Service\\node_modules\\passport-oauth2\\node_modules\\oauth\\lib\\oauth2.js:132:9)\n' +
+    '    at IncomingMessage.<anonymous> (C:\\Fiverr\\ASON\\ASON Backends\\ASON-Core-Service\\node_modules\\passport-oauth2\\node_modules\\oauth\\lib\\oauth2.js:157:7)\n' +
+    '    at IncomingMessage.emit (node:events:527:35)\n' +
+    '    at endReadableNT (node:internal/streams/readable:1409:12)\n' +
+    '    at process.processTicksAndRejections (node:internal/process/task_queues:82:21)',
+  label: 'ASON Core Service',
+  timestamp: '2025-05-13T16:36:02.876Z'
+}
+{
+  name: 'TokenError',
+  message: '🔴 globalErrorHandler ~ Invalid "code" in request.',
+  code: 'invalid_grant',
+  uri: undefined,
+  status: 500,
+  level: 'error',
+  stack: 'TokenError: Invalid "code" in request.\n' +
+    '    at OAuth2Strategy.parseErrorResponse (C:\\Fiverr\\ASON\\ASON Backends\\ASON-Core-Service\\node_modules\\passport-oauth2\\lib\\strategy.js:373:12)\n' +
+    '    at OAuth2Strategy._createOAuthError (C:\\Fiverr\\ASON\\ASON Backends\\ASON-Core-Service\\node_modules\\passport-oauth2\\lib\\strategy.js:420:16)\n' +
+    '    at C:\\Fiverr\\ASON\\ASON Backends\\ASON-Core-Service\\node_modules\\passport-oauth2\\lib\\strategy.js:177:45\n' +
+    '    at C:\\Fiverr\\ASON\\ASON Backends\\ASON-Core-Service\\node_modules\\passport-oauth2\\node_modules\\oauth\\lib\\oauth2.js:196:18\n' +
+    '    at passBackControl (C:\\Fiverr\\ASON\\ASON Backends\\ASON-Core-Service\\node_modules\\passport-oauth2\\node_modules\\oauth\\lib\\oauth2.js:132:9)\n' +
+    '    at IncomingMessage.<anonymous> (C:\\Fiverr\\ASON\\ASON Backends\\ASON-Core-Service\\node_modules\\passport-oauth2\\node_modules\\oauth\\lib\\oauth2.js:157:7)\n' +
+    '    at IncomingMessage.emit (node:events:527:35)\n' +
+    '    at endReadableNT (node:internal/streams/readable:1409:12)\n' +
+    '    at process.processTicksAndRejections (node:internal/process/task_queues:82:21)',
+  label: 'ASON Core Service',
+  timestamp: '2025-05-13T16:36:04.615Z'
+}
+{
+  name: 'TokenError',
+  message: '🔴 globalErrorHandler ~ Invalid "code" in request.',
+  code: 'invalid_grant',
+  uri: undefined,
+  status: 500,
+  level: 'error',
+  stack: 'TokenError: Invalid "code" in request.\n' +
+    '    at OAuth2Strategy.parseErrorResponse (C:\\Fiverr\\ASON\\ASON Backends\\ASON-Core-Service\\node_modules\\passport-oauth2\\lib\\strategy.js:373:12)\n' +
+    '    at OAuth2Strategy._createOAuthError (C:\\Fiverr\\ASON\\ASON Backends\\ASON-Core-Service\\node_modules\\passport-oauth2\\lib\\strategy.js:420:16)\n' +
+    '    at C:\\Fiverr\\ASON\\ASON Backends\\ASON-Core-Service\\node_modules\\passport-oauth2\\lib\\strategy.js:177:45\n' +
+    '    at C:\\Fiverr\\ASON\\ASON Backends\\ASON-Core-Service\\node_modules\\passport-oauth2\\node_modules\\oauth\\lib\\oauth2.js:196:18\n' +
+    '    at passBackControl (C:\\Fiverr\\ASON\\ASON Backends\\ASON-Core-Service\\node_modules\\passport-oauth2\\node_modules\\oauth\\lib\\oauth2.js:132:9)\n' +
+    '    at IncomingMessage.<anonymous> (C:\\Fiverr\\ASON\\ASON Backends\\ASON-Core-Service\\node_modules\\passport-oauth2\\node_modules\\oauth\\lib\\oauth2.js:157:7)\n' +
+    '    at IncomingMessage.emit (node:events:527:35)\n' +
+    '    at endReadableNT (node:internal/streams/readable:1409:12)\n' +
+    '    at process.processTicksAndRejections (node:internal/process/task_queues:82:21)',
+  label: 'ASON Core Service',
+  timestamp: '2025-05-13T16:36:05.618Z'
+}
+{
+  name: 'InternalOAuthError',
+  message: '🔴 globalErrorHandler ~ Failed to fetch the user profile.',
+  oauthError: {
+    statusCode: 401,
+    data: '{"message": "401: Unauthorized", "code": 0}'
+  },
+  level: 'error',
+  stack: 'InternalOAuthError: Failed to fetch the user profile.\n' +
+    '    at C:\\Fiverr\\ASON\\ASON Backends\\ASON-Core-Service\\node_modules\\passport-discord\\lib\\strategy.js:77:25\n' +
+    '    at passBackControl (C:\\Fiverr\\ASON\\ASON Backends\\ASON-Core-Service\\node_modules\\passport-oauth2\\node_modules\\oauth\\lib\\oauth2.js:132:9)\n' +
+    '    at IncomingMessage.<anonymous> (C:\\Fiverr\\ASON\\ASON Backends\\ASON-Core-Service\\node_modules\\passport-oauth2\\node_modules\\oauth\\lib\\oauth2.js:157:7)\n' +
+    '    at IncomingMessage.emit (node:events:527:35)\n' +
+    '    at endReadableNT (node:internal/streams/readable:1409:12)\n' +
+    '    at process.processTicksAndRejections (node:internal/process/task_queues:82:21)',
+  label: 'ASON Core Service',
+  timestamp: '2025-05-13T16:36:31.031Z'
+}
+{
+  name: 'TokenError',
+  message: '🔴 globalErrorHandler ~ Invalid "code" in request.',
+  code: 'invalid_grant',
+  uri: undefined,
+  status: 500,
+  level: 'error',
+  stack: 'TokenError: Invalid "code" in request.\n' +
+    '    at OAuth2Strategy.parseErrorResponse (C:\\Fiverr\\ASON\\ASON Backends\\ASON-Core-Service\\node_modules\\passport-oauth2\\lib\\strategy.js:373:12)\n' +
+    '    at OAuth2Strategy._createOAuthError (C:\\Fiverr\\ASON\\ASON Backends\\ASON-Core-Service\\node_modules\\passport-oauth2\\lib\\strategy.js:420:16)\n' +
+    '    at C:\\Fiverr\\ASON\\ASON Backends\\ASON-Core-Service\\node_modules\\passport-oauth2\\lib\\strategy.js:177:45\n' +
+    '    at C:\\Fiverr\\ASON\\ASON Backends\\ASON-Core-Service\\node_modules\\passport-oauth2\\node_modules\\oauth\\lib\\oauth2.js:196:18\n' +
+    '    at passBackControl (C:\\Fiverr\\ASON\\ASON Backends\\ASON-Core-Service\\node_modules\\passport-oauth2\\node_modules\\oauth\\lib\\oauth2.js:132:9)\n' +
+    '    at IncomingMessage.<anonymous> (C:\\Fiverr\\ASON\\ASON Backends\\ASON-Core-Service\\node_modules\\passport-oauth2\\node_modules\\oauth\\lib\\oauth2.js:157:7)\n' +
+    '    at IncomingMessage.emit (node:events:527:35)\n' +
+    '    at endReadableNT (node:internal/streams/readable:1409:12)\n' +
+    '    at process.processTicksAndRejections (node:internal/process/task_queues:82:21)',
+  label: 'ASON Core Service',
+  timestamp: '2025-05-13T16:36:32.729Z'
+}
+{
+  name: 'TokenError',
+  message: '🔴 globalErrorHandler ~ Invalid "code" in request.',
+  code: 'invalid_grant',
+  uri: undefined,
+  status: 500,
+  level: 'error',
+  stack: 'TokenError: Invalid "code" in request.\n' +
+    '    at OAuth2Strategy.parseErrorResponse (C:\\Fiverr\\ASON\\ASON Backends\\ASON-Core-Service\\node_modules\\passport-oauth2\\lib\\strategy.js:373:12)\n' +
+    '    at OAuth2Strategy._createOAuthError (C:\\Fiverr\\ASON\\ASON Backends\\ASON-Core-Service\\node_modules\\passport-oauth2\\lib\\strategy.js:420:16)\n' +
+    '    at C:\\Fiverr\\ASON\\ASON Backends\\ASON-Core-Service\\node_modules\\passport-oauth2\\lib\\strategy.js:177:45\n' +
+    '    at C:\\Fiverr\\ASON\\ASON Backends\\ASON-Core-Service\\node_modules\\passport-oauth2\\node_modules\\oauth\\lib\\oauth2.js:196:18\n' +
+    '    at passBackControl (C:\\Fiverr\\ASON\\ASON Backends\\ASON-Core-Service\\node_modules\\passport-oauth2\\node_modules\\oauth\\lib\\oauth2.js:132:9)\n' +
+    '    at IncomingMessage.<anonymous> (C:\\Fiverr\\ASON\\ASON Backends\\ASON-Core-Service\\node_modules\\passport-oauth2\\node_modules\\oauth\\lib\\oauth2.js:157:7)\n' +
+    '    at IncomingMessage.emit (node:events:527:35)\n' +
+    '    at endReadableNT (node:internal/streams/readable:1409:12)\n' +
+    '    at process.processTicksAndRejections (node:internal/process/task_queues:82:21)',
+  label: 'ASON Core Service',
+  timestamp: '2025-05-13T16:36:33.746Z'
+}
+{
+  name: 'TokenError',
+  message: '🔴 globalErrorHandler ~ Invalid "code" in request.',
+  code: 'invalid_grant',
+  uri: undefined,
+  status: 500,
+  level: 'error',
+  stack: 'TokenError: Invalid "code" in request.\n' +
+    '    at OAuth2Strategy.parseErrorResponse (C:\\Fiverr\\ASON\\ASON Backends\\ASON-Core-Service\\node_modules\\passport-oauth2\\lib\\strategy.js:373:12)\n' +
+    '    at OAuth2Strategy._createOAuthError (C:\\Fiverr\\ASON\\ASON Backends\\ASON-Core-Service\\node_modules\\passport-oauth2\\lib\\strategy.js:420:16)\n' +
+    '    at C:\\Fiverr\\ASON\\ASON Backends\\ASON-Core-Service\\node_modules\\passport-oauth2\\lib\\strategy.js:177:45\n' +
+    '    at C:\\Fiverr\\ASON\\ASON Backends\\ASON-Core-Service\\node_modules\\passport-oauth2\\node_modules\\oauth\\lib\\oauth2.js:196:18\n' +
+    '    at passBackControl (C:\\Fiverr\\ASON\\ASON Backends\\ASON-Core-Service\\node_modules\\passport-oauth2\\node_modules\\oauth\\lib\\oauth2.js:132:9)\n' +
+    '    at IncomingMessage.<anonymous> (C:\\Fiverr\\ASON\\ASON Backends\\ASON-Core-Service\\node_modules\\passport-oauth2\\node_modules\\oauth\\lib\\oauth2.js:157:7)\n' +
+    '    at IncomingMessage.emit (node:events:527:35)\n' +
+    '    at endReadableNT (node:internal/streams/readable:1409:12)\n' +
+    '    at process.processTicksAndRejections (node:internal/process/task_queues:82:21)',
+  label: 'ASON Core Service',
+  timestamp: '2025-05-13T16:36:38.687Z'
+}
+{
+  name: 'TokenError',
+  message: '🔴 globalErrorHandler ~ Invalid "code" in request.',
+  code: 'invalid_grant',
+  uri: undefined,
+  status: 500,
+  level: 'error',
+  stack: 'TokenError: Invalid "code" in request.\n' +
+    '    at OAuth2Strategy.parseErrorResponse (C:\\Fiverr\\ASON\\ASON Backends\\ASON-Core-Service\\node_modules\\passport-oauth2\\lib\\strategy.js:373:12)\n' +
+    '    at OAuth2Strategy._createOAuthError (C:\\Fiverr\\ASON\\ASON Backends\\ASON-Core-Service\\node_modules\\passport-oauth2\\lib\\strategy.js:420:16)\n' +
+    '    at C:\\Fiverr\\ASON\\ASON Backends\\ASON-Core-Service\\node_modules\\passport-oauth2\\lib\\strategy.js:177:45\n' +
+    '    at C:\\Fiverr\\ASON\\ASON Backends\\ASON-Core-Service\\node_modules\\passport-oauth2\\node_modules\\oauth\\lib\\oauth2.js:196:18\n' +
+    '    at passBackControl (C:\\Fiverr\\ASON\\ASON Backends\\ASON-Core-Service\\node_modules\\passport-oauth2\\node_modules\\oauth\\lib\\oauth2.js:132:9)\n' +
+    '    at IncomingMessage.<anonymous> (C:\\Fiverr\\ASON\\ASON Backends\\ASON-Core-Service\\node_modules\\passport-oauth2\\node_modules\\oauth\\lib\\oauth2.js:157:7)\n' +
+    '    at IncomingMessage.emit (node:events:527:35)\n' +
+    '    at endReadableNT (node:internal/streams/readable:1409:12)\n' +
+    '    at process.processTicksAndRejections (node:internal/process/task_queues:82:21)',
+  label: 'ASON Core Service',
+  timestamp: '2025-05-13T16:36:39.684Z'
+}
+{
+  name: 'InternalOAuthError',
+  message: '🔴 globalErrorHandler ~ Failed to fetch the user profile.',
+  oauthError: {
+    statusCode: 401,
+    data: '{"message": "401: Unauthorized", "code": 0}'
+  },
+  level: 'error',
+  stack: 'InternalOAuthError: Failed to fetch the user profile.\n' +
+    '    at C:\\Fiverr\\ASON\\ASON Backends\\ASON-Core-Service\\node_modules\\passport-discord\\lib\\strategy.js:77:25\n' +
+    '    at passBackControl (C:\\Fiverr\\ASON\\ASON Backends\\ASON-Core-Service\\node_modules\\passport-oauth2\\node_modules\\oauth\\lib\\oauth2.js:132:9)\n' +
+    '    at IncomingMessage.<anonymous> (C:\\Fiverr\\ASON\\ASON Backends\\ASON-Core-Service\\node_modules\\passport-oauth2\\node_modules\\oauth\\lib\\oauth2.js:157:7)\n' +
+    '    at IncomingMessage.emit (node:events:527:35)\n' +
+    '    at endReadableNT (node:internal/streams/readable:1409:12)\n' +
+    '    at process.processTicksAndRejections (node:internal/process/task_queues:82:21)',
+  label: 'ASON Core Service',
+  timestamp: '2025-05-13T16:38:36.174Z'
+}
+{
+  name: 'TokenError',
+  message: '🔴 globalErrorHandler ~ Invalid "code" in request.',
+  code: 'invalid_grant',
+  uri: undefined,
+  status: 500,
+  level: 'error',
+  stack: 'TokenError: Invalid "code" in request.\n' +
+    '    at OAuth2Strategy.parseErrorResponse (C:\\Fiverr\\ASON\\ASON Backends\\ASON-Core-Service\\node_modules\\passport-oauth2\\lib\\strategy.js:373:12)\n' +
+    '    at OAuth2Strategy._createOAuthError (C:\\Fiverr\\ASON\\ASON Backends\\ASON-Core-Service\\node_modules\\passport-oauth2\\lib\\strategy.js:420:16)\n' +
+    '    at C:\\Fiverr\\ASON\\ASON Backends\\ASON-Core-Service\\node_modules\\passport-oauth2\\lib\\strategy.js:177:45\n' +
+    '    at C:\\Fiverr\\ASON\\ASON Backends\\ASON-Core-Service\\node_modules\\passport-oauth2\\node_modules\\oauth\\lib\\oauth2.js:196:18\n' +
+    '    at passBackControl (C:\\Fiverr\\ASON\\ASON Backends\\ASON-Core-Service\\node_modules\\passport-oauth2\\node_modules\\oauth\\lib\\oauth2.js:132:9)\n' +
+    '    at IncomingMessage.<anonymous> (C:\\Fiverr\\ASON\\ASON Backends\\ASON-Core-Service\\node_modules\\passport-oauth2\\node_modules\\oauth\\lib\\oauth2.js:157:7)\n' +
+    '    at IncomingMessage.emit (node:events:527:35)\n' +
+    '    at endReadableNT (node:internal/streams/readable:1409:12)\n' +
+    '    at process.processTicksAndRejections (node:internal/process/task_queues:82:21)',
+  label: 'ASON Core Service',
+  timestamp: '2025-05-13T16:38:37.897Z'
+}
+{
+  name: 'TokenError',
+  message: '🔴 globalErrorHandler ~ Invalid "code" in request.',
+  code: 'invalid_grant',
+  uri: undefined,
+  status: 500,
+  level: 'error',
+  stack: 'TokenError: Invalid "code" in request.\n' +
+    '    at OAuth2Strategy.parseErrorResponse (C:\\Fiverr\\ASON\\ASON Backends\\ASON-Core-Service\\node_modules\\passport-oauth2\\lib\\strategy.js:373:12)\n' +
+    '    at OAuth2Strategy._createOAuthError (C:\\Fiverr\\ASON\\ASON Backends\\ASON-Core-Service\\node_modules\\passport-oauth2\\lib\\strategy.js:420:16)\n' +
+    '    at C:\\Fiverr\\ASON\\ASON Backends\\ASON-Core-Service\\node_modules\\passport-oauth2\\lib\\strategy.js:177:45\n' +
+    '    at C:\\Fiverr\\ASON\\ASON Backends\\ASON-Core-Service\\node_modules\\passport-oauth2\\node_modules\\oauth\\lib\\oauth2.js:196:18\n' +
+    '    at passBackControl (C:\\Fiverr\\ASON\\ASON Backends\\ASON-Core-Service\\node_modules\\passport-oauth2\\node_modules\\oauth\\lib\\oauth2.js:132:9)\n' +
+    '    at IncomingMessage.<anonymous> (C:\\Fiverr\\ASON\\ASON Backends\\ASON-Core-Service\\node_modules\\passport-oauth2\\node_modules\\oauth\\lib\\oauth2.js:157:7)\n' +
+    '    at IncomingMessage.emit (node:events:527:35)\n' +
+    '    at endReadableNT (node:internal/streams/readable:1409:12)\n' +
+    '    at process.processTicksAndRejections (node:internal/process/task_queues:82:21)',
+  label: 'ASON Core Service',
+  timestamp: '2025-05-13T16:38:38.899Z'
+}
+{
+  level: 'error',
+  message: '🔴 globalErrorHandler ~ Failed to obtain access token',
+  stack: 'Error: Failed to obtain access token\n' +
+    '    at C:\\Fiverr\\ASON\\ASON Backends\\ASON-Core-Service\\node_modules\\passport-oauth2\\lib\\strategy.js:178:49\n' +
+    '    at C:\\Fiverr\\ASON\\ASON Backends\\ASON-Core-Service\\node_modules\\passport-oauth2\\node_modules\\oauth\\lib\\oauth2.js:214:7\n' +
+    '    at passBackControl (C:\\Fiverr\\ASON\\ASON Backends\\ASON-Core-Service\\node_modules\\passport-oauth2\\node_modules\\oauth\\lib\\oauth2.js:134:9)\n' +
+    '    at IncomingMessage.<anonymous> (C:\\Fiverr\\ASON\\ASON Backends\\ASON-Core-Service\\node_modules\\passport-oauth2\\node_modules\\oauth\\lib\\oauth2.js:157:7)\n' +
+    '    at IncomingMessage.emit (node:events:527:35)\n' +
+    '    at endReadableNT (node:internal/streams/readable:1409:12)\n' +
+    '    at process.processTicksAndRejections (node:internal/process/task_queues:82:21)',
+  label: 'ASON Core Service',
+  timestamp: '2025-05-13T16:43:24.363Z'
+}
+{
+  level: 'error',
+  message: '🔴 globalErrorHandler ~ Failed to obtain access token',
+  stack: 'Error: Failed to obtain access token\n' +
+    '    at C:\\Fiverr\\ASON\\ASON Backends\\ASON-Core-Service\\node_modules\\passport-oauth2\\lib\\strategy.js:178:49\n' +
+    '    at C:\\Fiverr\\ASON\\ASON Backends\\ASON-Core-Service\\node_modules\\passport-oauth2\\node_modules\\oauth\\lib\\oauth2.js:214:7\n' +
+    '    at passBackControl (C:\\Fiverr\\ASON\\ASON Backends\\ASON-Core-Service\\node_modules\\passport-oauth2\\node_modules\\oauth\\lib\\oauth2.js:134:9)\n' +
+    '    at IncomingMessage.<anonymous> (C:\\Fiverr\\ASON\\ASON Backends\\ASON-Core-Service\\node_modules\\passport-oauth2\\node_modules\\oauth\\lib\\oauth2.js:157:7)\n' +
+    '    at IncomingMessage.emit (node:events:527:35)\n' +
+    '    at endReadableNT (node:internal/streams/readable:1409:12)\n' +
+    '    at process.processTicksAndRejections (node:internal/process/task_queues:82:21)',
+  label: 'ASON Core Service',
+  timestamp: '2025-05-13T16:43:25.378Z'
+}
+{
+  level: 'error',
+  message: '🔴 globalErrorHandler ~ Failed to obtain access token',
+  stack: 'Error: Failed to obtain access token\n' +
+    '    at C:\\Fiverr\\ASON\\ASON Backends\\ASON-Core-Service\\node_modules\\passport-oauth2\\lib\\strategy.js:178:49\n' +
+    '    at C:\\Fiverr\\ASON\\ASON Backends\\ASON-Core-Service\\node_modules\\passport-oauth2\\node_modules\\oauth\\lib\\oauth2.js:214:7\n' +
+    '    at passBackControl (C:\\Fiverr\\ASON\\ASON Backends\\ASON-Core-Service\\node_modules\\passport-oauth2\\node_modules\\oauth\\lib\\oauth2.js:134:9)\n' +
+    '    at IncomingMessage.<anonymous> (C:\\Fiverr\\ASON\\ASON Backends\\ASON-Core-Service\\node_modules\\passport-oauth2\\node_modules\\oauth\\lib\\oauth2.js:157:7)\n' +
+    '    at IncomingMessage.emit (node:events:527:35)\n' +
+    '    at endReadableNT (node:internal/streams/readable:1409:12)\n' +
+    '    at process.processTicksAndRejections (node:internal/process/task_queues:82:21)',
+  label: 'ASON Core Service',
+  timestamp: '2025-05-13T16:43:30.386Z'
+}
+{
+  level: 'error',
+  message: '🔴 globalErrorHandler ~ Failed to obtain access token',
+  stack: 'Error: Failed to obtain access token\n' +
+    '    at C:\\Fiverr\\ASON\\ASON Backends\\ASON-Core-Service\\node_modules\\passport-oauth2\\lib\\strategy.js:178:49\n' +
+    '    at C:\\Fiverr\\ASON\\ASON Backends\\ASON-Core-Service\\node_modules\\passport-oauth2\\node_modules\\oauth\\lib\\oauth2.js:214:7\n' +
+    '    at passBackControl (C:\\Fiverr\\ASON\\ASON Backends\\ASON-Core-Service\\node_modules\\passport-oauth2\\node_modules\\oauth\\lib\\oauth2.js:134:9)\n' +
+    '    at IncomingMessage.<anonymous> (C:\\Fiverr\\ASON\\ASON Backends\\ASON-Core-Service\\node_modules\\passport-oauth2\\node_modules\\oauth\\lib\\oauth2.js:157:7)\n' +
+    '    at IncomingMessage.emit (node:events:527:35)\n' +
+    '    at endReadableNT (node:internal/streams/readable:1409:12)\n' +
+    '    at process.processTicksAndRejections (node:internal/process/task_queues:82:21)',
+  label: 'ASON Core Service',
+  timestamp: '2025-05-13T16:43:31.384Z'
+}

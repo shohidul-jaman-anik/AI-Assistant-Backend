@@ -12,15 +12,26 @@ services:
       - ../ASON-CORE-SERVICE:/app/ason-core-service
     networks:
       - ason-network
+    # depends_on:
+      # - mongodb
+      # - redis-stack
+      # - elasticsearch
+      # - kibana
+      # - rabbitmq
     depends_on:
-      - mongodb
-      - redis-stack
-      - elasticsearch
-      - kibana
-      - rabbitmq
+      mongodb:
+        condition: service_started
+      redis-stack:
+        condition: service_started
+      elasticsearch:
+        condition: service_healthy
+      kibana:
+        condition: service_started
+      rabbitmq:
+        condition: service_started
 
   elasticsearch:
-    image: elasticsearch:7.9.2
+    image: elasticsearch:8.18.1
     container_name: elasticsearch
     restart: always
     environment:
@@ -37,7 +48,7 @@ services:
     networks:
       - ason-network
     healthcheck:
-      test: ['CMD', 'curl', '-f', 'http://localhost:9200']
+      test: curl -s http://localhost:9200/_cluster/health || exit 1
       interval: 30s
       timeout: 10s
       retries: 5

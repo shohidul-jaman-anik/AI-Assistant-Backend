@@ -1,0 +1,12 @@
+{
+  message: '✅ Database connection successfully',
+  level: 'info',
+  label: 'ASON Core Service',
+  timestamp: '2025-05-13T19:27:15.685Z'
+}
+{
+  message: '✅ Database connection successfully',
+  level: 'info',
+  label: 'ASON Core Service',
+  timestamp: '2025-05-13T19:40:39.252Z'
+}

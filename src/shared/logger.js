@@ -169,7 +169,11 @@ import winston, { format } from 'winston';
 import DailyRotateFile from 'winston-daily-rotate-file';
 import { ElasticsearchTransport } from 'winston-elasticsearch';
 
-const { combine, timestamp, label, json } = format;
+const { combine, timestamp, label, prettyPrint, printf } = format;
+
+const myFormat = printf(({ level, message, label, timestamp }) => {
+  return `${timestamp} [${label}] ${level}: ${message}`;
+});
 
 // Elasticsearch Client
 const esClient = new Client({
@@ -198,7 +202,12 @@ const esTransport = new ElasticsearchTransport({
 });
 
 // Base format
-const baseFormat = combine(label({ label: 'ASON' }), timestamp(), json());
+const baseFormat = combine(
+  label({ label: 'ASON Core Service' }),
+  timestamp(),
+  myFormat,
+  prettyPrint(),
+);
 
 // Success logger
 export const logger = winston.createLogger({
@@ -244,8 +253,3 @@ export const errorlogger = winston.createLogger({
   ],
 });
 
-export const httpLogStream = {
-  write: message => {
-    logger.info(message.trim());
-  },
-};

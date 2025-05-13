@@ -4,7 +4,6 @@ import express from 'express';
 import helmet from 'helmet';
 import httpStatus from 'http-status';
 import mongoose from 'mongoose';
-import morgan from 'morgan';
 import toobusy from 'toobusy-js';
 // import config from './config';
 import globalErrorHandler from './src/app/middlewares/globalErrorHandler/globalErrorHandler.js';
@@ -15,7 +14,7 @@ import passport from 'passport';
 import config from './config/index.js';
 import './src/app/middlewares/resetUsage/resetUsage.js';
 import passportConfig from './src/app/modules/social-login/config/passport.js';
-import { httpLogStream, logger } from './src/shared/logger.js';
+import { logger } from './src/shared/logger.js';
 
 // Load environment variables
 dotenv.config();
@@ -28,13 +27,9 @@ app.use(
   express.raw({ type: 'application/json' }),
 );
 
-// Morgan HTTP request logging using winston
-app.use(morgan('combined', { stream: httpLogStream }));
-
 // Middleware
 app.use(cors());
 app.use(express.json());
-app.use(morgan('tiny'));
 app.use(express.urlencoded({ extended: true }));
 app.use(bodyParser.urlencoded({ extended: true }));
 app.disable('x-powered-by');

@@ -1,3 +1,4 @@
 {"label":"ASON","level":"info","message":"::ffff:172.18.0.1 - - [11/May/2025:18:07:30 +0000] \"POST /api/v1/support/req-support/67c0594d9daa4415cebf6687 HTTP/1.1\" 201 324 \"-\" \"PostmanRuntime/7.43.4\"","timestamp":"2025-05-11T18:07:30.557Z"}
 {"label":"ASON","level":"info","message":"::ffff:172.18.0.1 - - [11/May/2025:18:07:45 +0000] \"POST /api/v1/support/req-support/67c0594d9daa4415cebf668 HTTP/1.1\" 201 324 \"-\" \"PostmanRuntime/7.43.4\"","timestamp":"2025-05-11T18:07:45.912Z"}
 {"label":"ASON","level":"info","message":"::ffff:172.18.0.1 - - [11/May/2025:18:07:53 +0000] \"POST /api/v1/support/req-support/67c0594d9daa4415bf668 HTTP/1.1\" 201 324 \"-\" \"PostmanRuntime/7.43.4\"","timestamp":"2025-05-11T18:07:53.521Z"}
+{"label":"ASON","level":"info","message":"✅ Database connection successfully","timestamp":"2025-05-11T18:15:04.153Z"}
