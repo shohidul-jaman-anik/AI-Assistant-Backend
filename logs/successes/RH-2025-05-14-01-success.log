@@ -10,3 +10,9 @@
   label: 'ASON Core Service',
   timestamp: '2025-05-13T19:40:39.252Z'
 }
+{
+  message: '✅ Database connection successfully',
+  level: 'info',
+  label: 'ASON Core Service',
+  timestamp: '2025-05-13T19:42:55.382Z'
+}
