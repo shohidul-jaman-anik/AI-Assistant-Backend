@@ -16,6 +16,7 @@ import UserModel from '../auth/auth.model.js';
 import { paymentController } from '../payment/payment.controller.js';
 import Llama from './groq.model.js';
 import { fetchSearchResults } from './groq.utilities.js';
+import { logger } from '../../../shared/logger.js';
 
 // const sessionMemoryStore = {}; // Stores session memory for each user session
 
@@ -53,7 +54,7 @@ import { fetchSearchResults } from './groq.utilities.js';
 //   });
 
 //   const chain = new ConversationChain({ llm: model, memory });
-//   console.log('Memory Initialized:', memory);
+//   logger.info('Memory Initialized:', memory);
 
 //   try {
 //     // Store user message in chat history
@@ -61,7 +62,7 @@ import { fetchSearchResults } from './groq.utilities.js';
 
 //     // Invoke model
 //     const res1 = await chain.invoke({ input: prompt });
-//     console.log('Model Response:', res1);
+//     logger.info('Model Response:', res1);
 
 //     const reply = res1?.response || 'No reply generated';
 
@@ -97,18 +98,18 @@ import { fetchSearchResults } from './groq.utilities.js';
 //     let llamaSession = await Llama.findOne({ user: userId, sessionId });
 
 //     if (llamaSession) {
-//       console.log('Existing Session Found:', llamaSession);
+//       logger.info('Existing Session Found:', llamaSession);
 //       llamaSession?.responses?.push(responseData);
 //       await llamaSession.save();
-//       console.log('Updated Session:', llamaSession);
+//       logger.info('Updated Session:', llamaSession);
 //     } else {
-//       console.log('Creating New Session...');
+//       logger.info('Creating New Session...');
 //       llamaSession = await Llama.create({
 //         user: userId,
 //         sessionId,
 //         responses: [responseData],
 //       });
-//       console.log('New Session Created:', llamaSession);
+//       logger.info('New Session Created:', llamaSession);
 //       await UserModel.findByIdAndUpdate(userId, {
 //         $push: { llamaAiSessions: llamaSession._id },
 //       });
@@ -177,7 +178,7 @@ export const getAiResponsesGroqService = async (
   try {
     // Only invoke the model — ConversationChain handles memory updates automatically
     const res1 = await chain.invoke({ input: prompt });
-    console.log('Model Response:', res1);
+    logger.info('Model Response:', res1);
 
     const reply = res1?.response || 'No reply generated';
 
@@ -208,18 +209,18 @@ export const getAiResponsesGroqService = async (
     let llamaSession = await Llama.findOne({ user: userId, sessionId });
 
     if (llamaSession) {
-      console.log('Existing Session Found:', llamaSession);
+      logger.info('Existing Session Found:', llamaSession);
       llamaSession.responses.push(responseData);
       await llamaSession.save();
-      console.log('Updated Session:', llamaSession);
+      logger.info('Updated Session:', llamaSession);
     } else {
-      console.log('Creating New Session...');
+      logger.info('Creating New Session...');
       llamaSession = await Llama.create({
         user: userId,
         sessionId,
         responses: [responseData],
       });
-      console.log('New Session Created:', llamaSession);
+      logger.info('New Session Created:', llamaSession);
       await UserModel.findByIdAndUpdate(userId, {
         $push: { llamaAiSessions: llamaSession._id },
       });
@@ -323,7 +324,7 @@ const getAiResponsesByUserIdService = async userId => {
     .populate({
       path: 'llamaAiSessions',
     });
-  console.log(sessionData, 'sessionData');
+  logger.info(sessionData, 'sessionData');
   if (!sessionData) {
     return {
       statusCode: httpStatus.NOT_FOUND,
@@ -339,7 +340,7 @@ const getAiResponsesBySession = async id => {
   const sessionData = await Llama.findOne({
     sessionId: id,
   });
-  console.log(sessionData, 'sessionData');
+  logger.info(sessionData, 'sessionData');
 
   if (!sessionData) {
     return {
@@ -371,7 +372,7 @@ const deleteOneLlamaAiSession = async objectId => {
       { $pull: { llamaAiSessions: objectId } },
     );
 
-    console.log(userUpdateResult, 'userUpdateResult userUpdateResult');
+    logger.info(userUpdateResult, 'userUpdateResult userUpdateResult');
 
     // Check if the user model was successfully updated
     if (userUpdateResult.modifiedCount === 1) {
@@ -404,14 +405,14 @@ const deleteAllAiSessionsService = async userId => {
     }
 
     const aiSessionIds = user.llamaAiSessions.map(id => id.toString());
-    console.log('AI Session IDs to delete:', aiSessionIds);
+    logger.info('AI Session IDs to delete:', aiSessionIds);
 
     // Delete the AI sessions
     const deleteResults = await Promise.all(
       aiSessionIds.map(id => Llama.deleteOne({ _id: id }).session(session)),
     );
 
-    console.log('Delete Results:', deleteResults);
+    logger.info('Delete Results:', deleteResults);
 
     // Check if all AI sessions were successfully deleted
     const allDeleted = deleteResults.every(result => result.deletedCount === 1);
@@ -425,7 +426,7 @@ const deleteAllAiSessionsService = async userId => {
       { $pull: { llamaAiSessions: { $in: aiSessionIds } } },
     ).session(session);
 
-    console.log('User update result:', userUpdateResult);
+    logger.info('User update result:', userUpdateResult);
 
     if (userUpdateResult.acknowledged && userUpdateResult.modifiedCount > 0) {
       await session.commitTransaction();

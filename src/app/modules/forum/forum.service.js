@@ -45,7 +45,7 @@ module.exports.getForumService = async (filters, paginationOptions) => {
     .limit(limit);
 
     
-  // console.log(blogData)
+  // logger.info(blogData)
   const total = await Forum.estimatedDocumentCount();
   return {
     meta: {
@@ -58,21 +58,21 @@ module.exports.getForumService = async (filters, paginationOptions) => {
 };
 
 module.exports.addForumServices = async data => {
-  // console.log(data, 'blog dataaa')
+  // logger.info(data, 'blog dataaa')
   const result = await Forum.create(data);
-  // console.log(result, "dataasss")
+  // logger.info(result, "dataasss")
   return result;
 };
 
 module.exports.getForumServiceById = async id => {
   const result = await Forum.findOne({ _id: id });
-  // console.log(result, 'resultt blog details')
+  // logger.info(result, 'resultt blog details')
   return result;
 };
 
 module.exports.getForumServiceByEmail = async email => {
   const result = await Forum.find({ authorEmail: email });
-  // console.log(result, 'resultt blog details')
+  // logger.info(result, 'resultt blog details')
   return result;
 };
 
@@ -103,17 +103,17 @@ module.exports.addUserForumActivityServices = async data => {
   // if (existingStore) {
   //     return { error: 'One user can add one comment' };
   // }
-  console.log(data, 'dataaaaa');
+  logger.info(data, 'dataaaaa');
 
   const result = await UserForumActivities.create(data);
-  // console.log(result, "resulttttt comment")
+  // logger.info(result, "resulttttt comment")
   return result;
 };
 
 module.exports.getCommnetService = async commentId => {
-  // console.log(commentId, "commentId")
+  // logger.info(commentId, "commentId")
   const result = await UserForumActivities.find({ id: commentId });
-  // console.log(result, "commentssssssss")
+  // logger.info(result, "commentssssssss")
   return result;
 };
 

@@ -1,6 +1,7 @@
 import mongoose from 'mongoose';
 import UserModel from '../auth/auth.model.js';
 import Notification from './notification.model.js';
+import { logger } from '../../../shared/logger.js';
 
 const sendNotificationService = async data => {
   // 1. Create the Notification first
@@ -74,7 +75,7 @@ const deleteAllNotificationService = async () => {
     // Commit the transaction if everything goes fine
     await session.commitTransaction();
 
-    console.log('All notifications deleted successfully.');
+    logger.info('All notifications deleted successfully.');
   } catch (error) {
     // If any error occurs, abort the transaction to roll back all changes
     await session.abortTransaction();

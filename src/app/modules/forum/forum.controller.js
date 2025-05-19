@@ -16,7 +16,7 @@ const {
 const { addForumServices } = require("./forum.service");
 
 module.exports.addForum = async (req, res, next) => {
-  // console.log(req.body, "blog dataaaa");
+  // logger.info(req.body, "blog dataaaa");
   try {
     const data = req.body;
     const result = await addForumServices(data);
@@ -61,7 +61,7 @@ module.exports.getForum = async (req, res) => {
 
 module.exports.getForumById = async (req, res) => {
   const { id } = req.params;
-  console.log(id, 'blog idddd');
+  logger.info(id, 'blog idddd');
   try {
     const result = await getForumServiceById(id);
     res.status(200).json({
@@ -81,7 +81,7 @@ module.exports.getForumById = async (req, res) => {
 
 module.exports.getForumByEmail = async (req, res) => {
   const { email } = req.params;
-  console.log(email, 'blog email');
+  logger.info(email, 'blog email');
   try {
     const result = await getForumServiceByEmail(email);
     res.status(200).json({
@@ -113,7 +113,7 @@ exports.updateForum = async (req, res) => {
       message: "Forum couldn't Update Successfully",
       error: error.message,
     });
-    console.log(error, "error");
+    logger.info(error, "error");
   }
 };
 
@@ -139,14 +139,14 @@ exports.deleteForum = async (req, res) => {
       message: "Forum couldn't Delete Successfully",
       error: error.message,
     });
-    console.log(error, "error");
+    logger.info(error, "error");
   }
 };
 
 module.exports.getForumSuggestion = async (req, res) => {
   try {
     const { suggestion } = req.params;
-    // console.log(suggestion, 'suggestion suggestion')
+    // logger.info(suggestion, 'suggestion suggestion')
 
     const result = await getForumSuggestionService(suggestion);
 
@@ -166,10 +166,10 @@ module.exports.getForumSuggestion = async (req, res) => {
 
 module.exports.addUserForumActivity = async (req, res, next) => {
   try {
-    // console.log(req.body, "dataaaa")
+    // logger.info(req.body, "dataaaa")
     // const { id } = req.params
     const data = req.body;
-    // console.log(data, "dataaaa")
+    // logger.info(data, "dataaaa")
     const result = await addUserForumActivityServices(data);
 
     res.status(200).json({
@@ -190,9 +190,9 @@ module.exports.getComment = async (req, res) => {
   try {
     const { commentId } = req.params;
     // const data = (req.body)
-    // console.log(commentId, "commentIddddddd");
+    // logger.info(commentId, "commentIddddddd");
     const result = await getCommnetService(commentId);
-    // console.log(result, 'comments dataaa')
+    // logger.info(result, 'comments dataaa')
 
     res.status(200).json({
       status: "success",
@@ -229,6 +229,6 @@ exports.deleteComment = async (req, res) => {
       message: "Blog couldn't Delete Successfully",
       error: error.message,
     });
-    console.log(error, "error");
+    logger.info(error, "error");
   }
 };

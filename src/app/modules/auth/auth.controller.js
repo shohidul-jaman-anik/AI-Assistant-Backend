@@ -18,12 +18,13 @@ import {
   forgetPassOtpTemplate,
   generateOTP,
 } from './auth.utils.js';
+import { logger } from '../../../shared/logger.js';
 
 const mailgun = new Mailgun(formData);
 
 const ProtectCommonRoute = async (req, res, next) => {
   const authHeader = req.headers.authorization;
-  // console.log(authHeader, 'authHeaderrrrrrrr');
+  // logger.info(authHeader, 'authHeaderrrrrrrr');
   if (!authHeader) {
     return res.status(401).send({ message: 'UnAuthorized access' });
   }
@@ -71,7 +72,7 @@ const verifyAdmin = async (req, res, next) => {
 
 const register = catchAsync(async (req, res) => {
   const result = await authService.registerService(req);
-  console.log(result, 'resultttttttttttttttt');
+  logger.info(result, 'resultttttttttttttttt');
   sendResponse(res, {
     statusCode: httpStatus.OK,
     success: true,
@@ -97,10 +98,10 @@ const confirmEmail = catchAsync(async (req, res) => {
 });
 
 const login = catchAsync(async (req, res) => {
-  // console.log(req.body, 'data login');
+  // logger.info(req.body, 'data login');
   const { email, password } = req.body;
   const result = await authService.loginService(email, password);
-  console.log(result, 'resultttttttttttttttt');
+  logger.info(result, 'resultttttttttttttttt');
   sendResponse(res, {
     statusCode: httpStatus.OK,
     success: true,
@@ -194,7 +195,7 @@ const resetPassword = async (req, res) => {
 const getUserByEmail = async (req, res, next) => {
   try {
     const userEmail = req.params?.userEmail;
-    console.log(userEmail, 'userId');
+    logger.info(userEmail, 'userId');
 
     if (!userEmail) {
       return res.status(501).send({ error: 'Require Id' });
@@ -224,7 +225,7 @@ const getUserByEmail = async (req, res, next) => {
 const getUser = async (req, res, next) => {
   try {
     const userId = req.params?.userId;
-    console.log(userId, 'userId');
+    logger.info(userId, 'userId');
 
     if (!userId) {
       return res.status(501).send({ error: 'Require Id' });
@@ -486,7 +487,7 @@ const sendMailWithMailGunController = async (req, res) => {
       html: '<h1>Testing some Mailgun awesomeness!</h1>',
     });
     res.status(201).send(result);
-    console.log(result); // logs response data
+    logger.info(result); // logs response data
   } catch (error) {
     console.error(error); // logs any error
   }

@@ -18,9 +18,9 @@ mongoose
     useNewUrlParser: true,
     useUnifiedTopology: true,
   })
-  .then(() => console.log('Database connection successfully'))
+  .then(() => logger.info('Database connection successfully'))
   .catch(err => {
-    console.log('Error connecting to the database:', err);
+    logger.info('Error connecting to the database:', err);
     process.exit(1); // Exit the application on database connection error
   });
 

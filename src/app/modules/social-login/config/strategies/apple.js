@@ -1,5 +1,6 @@
 import AppleStrategy from 'passport-apple';
 import { findOrCreateUserModel } from '../../social-login.utils.js';
+import { logger } from '../../../../../shared/logger.js';
 
 
 const strategy = new AppleStrategy({
@@ -11,7 +12,7 @@ const strategy = new AppleStrategy({
     scope: ['name', 'email']
 },
     async (accessToken, refreshToken, idToken, profile, done) => {
-        console.log("profile: apple: ", profile);
+        logger.info("profile: apple: ", profile);
         try {
             const user = await findOrCreateUserModel(profile, 'apple');
             return done(null, user);

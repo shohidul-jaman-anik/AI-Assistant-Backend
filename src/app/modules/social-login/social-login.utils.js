@@ -1,8 +1,9 @@
+import { logger } from '../../../shared/logger.js';
 import UserModel from '../auth/auth.model.js';
 async function findOrCreateUserModel(profile, provider) {
   try {
-    console.log(provider, 'providerrrrrrrrrrrrrrrrrrrrr');
-    console.log(profile, 'profileeeeeeeeeeeeeeeeeeeeeee');
+    logger.info(provider, 'providerrrrrrrrrrrrrrrrrrrrr');
+    logger.info(profile, 'profileeeeeeeeeeeeeeeeeeeeeee');
     // 1. First check by provider ID
     let user = await UserModel.findOne({
       provider: provider,
@@ -42,7 +43,7 @@ async function findOrCreateUserModel(profile, provider) {
 async function getUser(req, res, next) {
   try {
     const userId = req.params?.userId;
-    console.log(userId, 'userId');
+    logger.info(userId, 'userId');
 
     if (!userId) {
       return res.status(501).send({ error: 'Require Id' });
@@ -72,7 +73,7 @@ async function getUser(req, res, next) {
 async function getUserByEmail(req, res, next) {
   try {
     const userEmail = req.params?.userEmail;
-    console.log(userEmail, 'userId');
+    logger.info(userEmail, 'userId');
 
     if (!userEmail) {
       return res.status(501).send({ error: 'Require Id' });

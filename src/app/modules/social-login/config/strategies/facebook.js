@@ -1,5 +1,6 @@
 import { Strategy as FacebookStrategy } from 'passport-facebook';
 import { findOrCreateUserModel } from '../../social-login.utils.js';
+import { logger } from '../../../../../shared/logger.js';
 
 const strategy = new FacebookStrategy(
   {
@@ -9,7 +10,7 @@ const strategy = new FacebookStrategy(
     profileFields: ['id', 'displayName', 'photos', 'email'],
   },
   async (accessToken, refreshToken, profile, done) => {
-    console.log('profile: facebook: ', profile);
+    logger.info('profile: facebook: ', profile);
     try {
       const user = await findOrCreateUserModel(profile, 'facebook');
       return done(null, user);

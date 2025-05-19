@@ -1,5 +1,6 @@
 import { Strategy as GithubStrategy } from 'passport-github2';
 import { findOrCreateUserModel } from '../../social-login.utils.js';
+import { logger } from '../../../../../shared/logger.js';
 
 const strategy = new GithubStrategy(
   {
@@ -9,7 +10,7 @@ const strategy = new GithubStrategy(
     scope: ['profile', 'email'],
   },
   async (accessToken, refreshToken, profile, done) => {
-    console.log('profile: github: ', profile);
+    logger.info('profile: github: ', profile);
     try {
       const user = await findOrCreateUserModel(profile, 'github');
       return done(null, user);

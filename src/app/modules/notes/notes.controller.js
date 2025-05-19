@@ -10,12 +10,13 @@ const {
 const { default: mongoose } = require('mongoose');
 const { sendResponse } = require('../../../shared/sendResponse');
 const { catchAsync } = require('../../../shared/catchAsync');
+const { logger } = require('../../../shared/logger');
 
 
 
 
 module.exports.addTask = catchAsync(async (req, res) => {
-  // console.log(req.body, "blog dataaaa");
+  // logger.info(req.body, "blog dataaaa");
   const data = req.body;
   const userId = req.body.userId;
   const result = await addTaskServices(userId, data);
@@ -30,7 +31,7 @@ module.exports.addTask = catchAsync(async (req, res) => {
 
 module.exports.getAllTask = catchAsync(async (req, res) => {
   const userId = req.params.userId;
-  console.log(userId, 'all taskk userId');
+  logger.info(userId, 'all taskk userId');
   const result = await getAllTaskServiceById(userId);
 
   sendResponse(res, {
@@ -43,7 +44,7 @@ module.exports.getAllTask = catchAsync(async (req, res) => {
 
 module.exports.getTaskById = catchAsync(async (req, res) => {
   const { id } = req.params;
-  console.log(id, 'taskk idddd');
+  logger.info(id, 'taskk idddd');
 
   const result = await getTaskServiceById(id);
 
@@ -90,7 +91,7 @@ exports.deleteTask = catchAsync(async (req, res) => {
 exports.bulkDeleteTask = catchAsync(async (req, res) => {
 
   const ids = req.body?.ids || [];
-  console.log(ids, 'controller idddddddddddd');
+  logger.info(ids, 'controller idddddddddddd');
 
   // Validate IDs
   if (!ids.every(id => mongoose.Types.ObjectId.isValid(id))) {

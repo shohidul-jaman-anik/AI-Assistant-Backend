@@ -2,6 +2,7 @@ import OAuth from 'oauth';
 import jwt from 'jsonwebtoken';
 import { findOrCreateUserModel } from '../../social-login.utils.js';
 import config from '../../../../../../config/index.js';
+import { logger } from '../../../../../shared/logger.js';
 
 // Ensure BASE_URL doesn't have a trailing slash
 const BASE_URL = process.env.BASE_URL.endsWith('/')
@@ -36,9 +37,9 @@ const tokenStore = {};
 export const twitterAuth = {
     // Initiate OAuth flow
     authenticate: (req, res) => {
-        console.log('Twitter Auth - Starting OAuth flow');
-        console.log('Using consumer key:', process.env.TWITTER_CONSUMER_KEY);
-        console.log('Callback URL:', CALLBACK_URL);
+        logger.info('Twitter Auth - Starting OAuth flow');
+        logger.info('Using consumer key:', process.env.TWITTER_CONSUMER_KEY);
+        logger.info('Callback URL:', CALLBACK_URL);
 
         // Add additional params required by Twitter
         const extraParams = {};
@@ -58,8 +59,8 @@ export const twitterAuth = {
                 });
             }
 
-            console.log('Twitter Auth - Got request token:', token);
-            console.log('Results:',  results);
+            logger.info('Twitter Auth - Got request token:', token);
+            logger.info('Results:',  results);
 
             // Store the token secret for later
             tokenStore[token] = secret;

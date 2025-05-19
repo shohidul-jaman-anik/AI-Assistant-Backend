@@ -8,6 +8,7 @@ import paginationHelpers from '../../helpers/paginationHelpers.js';
 import { sendMailWithMailGun } from '../../middlewares/sendEmail/sendMailWithMailGun.js';
 import UserModel from './auth.model.js';
 import { registrationOtpTemplate } from './auth.utils.js';
+import { logger } from '../../../shared/logger.js';
 
 const getAllUsersService = async (filters, paginationOptions) => {
   const { searchTerm } = filters;
@@ -218,7 +219,7 @@ const updateUserService = async (userId, data) => {
 
     // Update the data
     const result = await UserModel.updateOne({ _id: userId }, updateData);
-    console.log(result, 'result');
+    logger.info(result, 'result');
     return result;
   } catch (error) {
     console.error('Error updating user:', error);

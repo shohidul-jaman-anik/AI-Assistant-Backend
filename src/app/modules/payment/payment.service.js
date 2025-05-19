@@ -3,6 +3,7 @@ const stripe = new Stripe(process.env.STRIPE_SECRET_KEY);
 import UserModel from '../auth/auth.model.js';
 import SubscriptionModel from './payment.model.js';
 import moment from 'moment';
+import { logger } from '../../../shared/logger.js';
 
 
 const createCheckoutSessionService = async (user, plan) => {
@@ -102,7 +103,7 @@ const handleWebhookService = async (req, res) => {
 
       await Promise.all([newSubscription.save(), user.save()]);
 
-      console.log('✅ Subscription created and user updated successfully.');
+      logger.info('✅ Subscription created and user updated successfully.');
     }
 
     if (event.type === 'customer.subscription.deleted') {
@@ -118,7 +119,7 @@ const handleWebhookService = async (req, res) => {
           user.isSubscribed = false;
           user.subscription = null;
           await user.save();
-          console.log(`🚨 User subscription status updated: ${user.email}`);
+          logger.info(`🚨 User subscription status updated: ${user.email}`);
         }
       }
     }

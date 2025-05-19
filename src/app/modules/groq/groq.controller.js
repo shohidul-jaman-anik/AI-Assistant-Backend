@@ -4,6 +4,7 @@ import sendResponse from '../../../shared/sendResponse.js';
 import { LlamaAiService } from './groq.service.js';
 import zepPackage from '@getzep/zep-js';
 import { randomUUID } from 'crypto';
+import { logger } from '../../../shared/logger.js';
 // import { Serper } from 'serper';
 
 const { ZepClient } = zepPackage;
@@ -325,7 +326,7 @@ const { ZepClient } = zepPackage;
 
 // const chain = new ConversationChain({ llm: model, memory });
 
-// console.log('Memory Initialized:', memory);
+// logger.info('Memory Initialized:', memory);
 
 // try {
 //   // Store user message in chat history
@@ -333,7 +334,7 @@ const { ZepClient } = zepPackage;
 
 //   // Invoke model with the full conversation context
 //   const res1 = await chain.invoke({ input: prompt });
-//   console.log('Model Response:', res1);
+//   logger.info('Model Response:', res1);
 
 //   const reply = res1?.response || 'No reply generated'; // Extract correct response
 
@@ -351,18 +352,18 @@ const { ZepClient } = zepPackage;
 //   let llamaSession = await Llama.findOne({ user: userId, sessionId });
 
 //   if (llamaSession) {
-//     console.log('Existing Session Found:', llamaSession);
+//     logger.info('Existing Session Found:', llamaSession);
 //     llamaSession?.responses?.push(responseData);
 //     await llamaSession.save();
-//     console.log('Updated Session:', llamaSession);
+//     logger.info('Updated Session:', llamaSession);
 //   } else {
-//     console.log('Creating New Session...');
+//     logger.info('Creating New Session...');
 //     llamaSession = await Llama.create({
 //       user: userId,
 //       sessionId,
 //       responses: [responseData],
 //     });
-//     console.log('New Session Created:', llamaSession);
+//     logger.info('New Session Created:', llamaSession);
 //     await UserModel.findByIdAndUpdate(userId, {
 //       $push: { llamaAiSessions: llamaSession._id },
 //     });
@@ -531,7 +532,7 @@ const { ZepClient } = zepPackage;
 
 //   const chain = new ConversationChain({ llm: model, memory });
 
-//   console.log('Memory Initialized:', memory);
+//   logger.info('Memory Initialized:', memory);
 
 //   try {
 //     // Store user message in chat history
@@ -547,7 +548,7 @@ const { ZepClient } = zepPackage;
 //     // Include the search results in the prompt if available
 //     const input = searchResults ? `${prompt}\n\nSearch Results:\n${searchResults}` : prompt;
 //     const res1 = await chain.invoke({ input });
-//     console.log('Model Response:', res1);
+//     logger.info('Model Response:', res1);
 
 //     const reply = res1?.response || 'No reply generated'; // Extract correct response
 
@@ -566,18 +567,18 @@ const { ZepClient } = zepPackage;
 //     let llamaSession = await Llama.findOne({ user: userId, sessionId });
 
 //     if (llamaSession) {
-//       console.log('Existing Session Found:', llamaSession);
+//       logger.info('Existing Session Found:', llamaSession);
 //       llamaSession?.responses?.push(responseData);
 //       await llamaSession.save();
-//       console.log('Updated Session:', llamaSession);
+//       logger.info('Updated Session:', llamaSession);
 //     } else {
-//       console.log('Creating New Session...');
+//       logger.info('Creating New Session...');
 //       llamaSession = await Llama.create({
 //         user: userId,
 //         sessionId,
 //         responses: [responseData],
 //       });
-//       console.log('New Session Created:', llamaSession);
+//       logger.info('New Session Created:', llamaSession);
 //       await UserModel.findByIdAndUpdate(userId, {
 //         $push: { llamaAiSessions: llamaSession._id },
 //       });
@@ -616,7 +617,7 @@ const { ZepClient } = zepPackage;
 //   const prompt = req.body?.prompt;
 //   const userId = req.body?.user;
 //   const sessionId = req.body?.sessionId || randomUUID(); // Unique session ID if not provided
-//   console.log('Serper API Key:', config.serper_api_key); // Debugging
+//   logger.info('Serper API Key:', config.serper_api_key); // Debugging
 
 //   if (!prompt) {
 //     return sendResponse(res, {
@@ -654,7 +655,7 @@ const { ZepClient } = zepPackage;
 //   });
 
 //   const chain = new ConversationChain({ llm: model, memory });
-//   console.log('Memory Initialized:', memory);
+//   logger.info('Memory Initialized:', memory);
 
 //   try {
 //     // Fetch real-time search results using Serper
@@ -680,7 +681,7 @@ const { ZepClient } = zepPackage;
 //         snippet: r.snippet,
 //         position: index + 1,
 //       })) || [];
-//     console.log('Formatted Search Results:', formattedSearchResults);
+//     logger.info('Formatted Search Results:', formattedSearchResults);
 
 //     const enrichedPrompt = searchSummary
 //       ? `${prompt}\n\nAdditional Context: ${searchSummary}`
@@ -691,7 +692,7 @@ const { ZepClient } = zepPackage;
 
 //     // Invoke model with search-enhanced context
 //     const res1 = await chain.invoke({ input: enrichedPrompt });
-//     console.log('Model Response:', res1);
+//     logger.info('Model Response:', res1);
 
 //     const reply = res1?.response || 'No reply generated';
 
@@ -726,18 +727,18 @@ const { ZepClient } = zepPackage;
 //     let llamaSession = await Llama.findOne({ user: userId, sessionId });
 
 //     if (llamaSession) {
-//       console.log('Existing Session Found:', llamaSession);
+//       logger.info('Existing Session Found:', llamaSession);
 //       llamaSession?.responses?.push(responseData);
 //       await llamaSession.save();
-//       console.log('Updated Session:', llamaSession);
+//       logger.info('Updated Session:', llamaSession);
 //     } else {
-//       console.log('Creating New Session...');
+//       logger.info('Creating New Session...');
 //       llamaSession = await Llama.create({
 //         user: userId,
 //         sessionId,
 //         responses: [responseData],
 //       });
-//       console.log('New Session Created:', llamaSession);
+//       logger.info('New Session Created:', llamaSession);
 //       await UserModel.findByIdAndUpdate(userId, {
 //         $push: { llamaAiSessions: llamaSession._id },
 //       });
@@ -775,13 +776,13 @@ const GroqAiGetResponse = catchAsync(async (req, res) => {
   const prompt = req.body?.prompt;
   const userId = req.body?.user;
   const sessionIdFromClient = req.body?.sessionId;
-  console.log('✅ Request received at /groq:', req.body); // log incoming request
+  logger.info('✅ Request received at /groq:', req.body); // log incoming request
   const result = await LlamaAiService.getAiResponsesGroqService(
     prompt,
     userId,
     sessionIdFromClient,
   );
-  console.log('✅ Service result:', result); // log result
+  logger.info('✅ Service result:', result); // log result
   sendResponse(res, {
     statusCode: httpStatus.OK,
     success: true,
@@ -809,7 +810,7 @@ const GroqAiGetResponseAnonymously = catchAsync(async (req, res) => {
 
 const LlamaAiGetResponseFromDbByUserId = catchAsync(async (req, res) => {
   const id = req.params?.userId;
-  console.log(id, 'session');
+  logger.info(id, 'session');
 
   const responseData = await LlamaAiService.getAiResponsesByUserIdService(id);
 
@@ -823,7 +824,7 @@ const LlamaAiGetResponseFromDbByUserId = catchAsync(async (req, res) => {
 
 const LlamaAiGetResponseFromDbBySessionId = catchAsync(async (req, res) => {
   const id = req.params?.sessionId;
-  console.log(id, 'session');
+  logger.info(id, 'session');
 
   const responseData = await LlamaAiService.getAiResponsesBySession(id);
 
@@ -838,7 +839,7 @@ const LlamaAiGetResponseFromDbBySessionId = catchAsync(async (req, res) => {
 const deleteOneAiSession = catchAsync(async (req, res) => {
   const id = req.params?.objectId;
   const result = await LlamaAiService.deleteOneLlamaAiSession(id);
-  console.log(result, 'resultttt');
+  logger.info(result, 'resultttt');
   if (!result.success) {
     return res.status(httpStatus.INTERNAL_SERVER_ERROR).json({
       status: 'fail',
@@ -857,7 +858,7 @@ const deleteOneAiSession = catchAsync(async (req, res) => {
 const deleteAllAiSessions = catchAsync(async (req, res) => {
   const id = req.params?.userId;
   const result = await LlamaAiService.deleteAllAiSessionsService(id);
-  console.log(result, 'resultttt');
+  logger.info(result, 'resultttt');
 
   if (!result.success) {
     return res.status(httpStatus.INTERNAL_SERVER_ERROR).json({

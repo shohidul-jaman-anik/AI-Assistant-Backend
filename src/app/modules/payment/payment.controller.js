@@ -6,10 +6,11 @@ import SubscriptionModel from './payment.model.js';
 import { PaymentService } from './payment.service.js';
 import { checkImageUsageLimits, checkPromtsUsageLimits } from '../../middlewares/checkUsageLimits/checkUsageLimits.js';
 import { checkFreePlanLimits } from '../../middlewares/checkFreePlanLimits/checkFreePlanLimits.js';
+import { logger } from '../../../shared/logger.js';
 
 const createCheckoutSession = catchAsync(async (req, res, next) => {
   const { userId, plan } = req.body;
-  console.log(userId,plan)
+  logger.info(userId,plan)
   
   if (!mongoose.Types.ObjectId.isValid(userId)) {
     console.error('Invalid User ID:', userId);
@@ -76,7 +77,7 @@ const incrementPromptsUsed = async (userId) => {
 
     if (user.isSubscribed) {
       const subscription = await checkPromtsUsageLimits(userId);
-      console.log("Subscription check result:", subscription);
+      logger.info("Subscription check result:", subscription);
 
       if (!subscription || !subscription._id) {
         throw new Error('Subscription not found or invalid.');
@@ -108,7 +109,7 @@ const incrementImagesUsed = async (userId) => {
 
     if (user.isSubscribed) {
       const subscription = await checkImageUsageLimits(userId);
-      console.log("Subscription check result:", subscription);
+      logger.info("Subscription check result:", subscription);
 
       if (!subscription || !subscription._id) {
         throw new Error('Subscription not found or invalid.');

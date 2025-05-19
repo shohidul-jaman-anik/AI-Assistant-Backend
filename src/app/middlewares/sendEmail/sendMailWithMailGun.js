@@ -22,7 +22,7 @@ export const  sendMailWithMailGun = async mailData => {
         html: message,
       })
       .then(msg => {
-        console.log(msg); // logs response data
+        logger.info(msg); // logs response data
         resolve(msg);
       })
       .catch(err => {

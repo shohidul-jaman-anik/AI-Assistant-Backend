@@ -1,5 +1,6 @@
 import { Strategy as GoogleStrategy } from 'passport-google-oauth20';
 import { findOrCreateUserModel } from '../../social-login.utils.js';
+import { logger } from '../../../../../shared/logger.js';
 
 const strategy = new GoogleStrategy(
   {
@@ -9,7 +10,7 @@ const strategy = new GoogleStrategy(
     scope: ['profile', 'email'],
   },
   async (accessToken, refreshToken, profile, done) => {
-    console.log('profile: google: ', profile);
+    logger.info('profile: google: ', profile);
     try {
       const user = await findOrCreateUserModel(profile, 'google');
       return done(null, user);

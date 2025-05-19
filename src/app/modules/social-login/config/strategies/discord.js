@@ -1,5 +1,6 @@
 import { Strategy as DiscordStrategy } from 'passport-discord';
 import { findOrCreateUserModel } from '../../social-login.utils.js';
+import { logger } from '../../../../../shared/logger.js';
 
 const strategy = new DiscordStrategy(
   {
@@ -9,7 +10,7 @@ const strategy = new DiscordStrategy(
     scope: ['identify', 'email'],
   },
   async (accessToken, refreshToken, profile, done) => {
-    console.log('profile: discord: ', profile);
+    logger.info('profile: discord: ', profile);
     try {
       const user = await findOrCreateUserModel(profile, 'discord');
       return done(null, user);

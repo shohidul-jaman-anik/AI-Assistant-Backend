@@ -102,7 +102,7 @@ const updateNotificationById = catchAsync(async (req, res) => {
 // Controller for deleting notification
 const deleteNotificationById = catchAsync(async (req, res) => {
   const { notificationId } = req.params;
-  // console.log(notificationId, 'notificationId')
+  // logger.info(notificationId, 'notificationId')
 
   const result =
     await NotificationService.deleteNotificationByIdService(notificationId);

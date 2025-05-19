@@ -1,9 +1,10 @@
+import { logger } from '../../../shared/logger.js';
 import UserModel from '../auth/auth.model.js';
 import Support from './support.model.js';
 
 const reqForSupportService = async (userId, data) => {
   // const user = await UserModel.findOne({ _id: new mongoose.Types.ObjectId(userId) });
-  // console.log(user, 'userrr');
+  // logger.info(user, 'userrr');
   // if (!user) {
   //   throw new ApiError(httpStatus.NOT_FOUND, 'User not found');
   // }
@@ -20,7 +21,7 @@ const reqForSupportService = async (userId, data) => {
 
 const getAllSupportService = async ()=> {
   const result = await Support.find({});
-  // console.log(result, 'resulttttttt');
+  // logger.info(result, 'resulttttttt');
   return result;
 };
 
@@ -45,10 +46,10 @@ const deleteSupportReqService = async id => {
 };
 
 const bulkDeleteSupportReqService = async ids => {
-  console.log(ids, 'idssssssss');
+  logger.info(ids, 'idssssssss');
   const result = await Support.deleteMany({ _id: { $in: ids } });
 
-  console.log(result);
+  logger.info(result);
   return result;
 };
 

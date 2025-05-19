@@ -1,3 +1,4 @@
+import { logger } from '../../../shared/logger.js';
 import paginationHelpers from '../../helpers/paginationHelpers.js';
 import UserModel from '../auth/auth.model.js';
 import SubscriptionModel from '../payment/payment.model.js';
@@ -83,7 +84,7 @@ const getAllBuyerServices = async () => {
 
 const getSellerServiceById = async id => {
   const result = await UserModel.findOne({ _id: id });
-  console.log(result);
+  logger.info(result);
   return result;
 };
 
@@ -106,7 +107,7 @@ const deleteUserService = async objectId => {
   const mongoId = new mongoose.Types.ObjectId(objectId); // <-- convert explicitly
 
   const user = await UserModel.findOne({ _id: mongoId });
-  console.log('User found:', user);
+  logger.info('User found:', user);
 
   if (!user) {
     throw new Error('User not found');

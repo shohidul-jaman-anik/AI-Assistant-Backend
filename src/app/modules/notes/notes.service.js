@@ -1,3 +1,4 @@
+const { logger } = require('../../../shared/logger');
 const UserModel = require('../auth/auth.model');
 const Task = require('./notes.model');
 
@@ -17,7 +18,7 @@ module.exports.getAllTaskServiceById = async id => {
     path: 'userId',
     select: '-password -wishlist -task -role -contract', // Exclude the 'password' field
   });
-  // console.log(result, 'resulttttttt');
+  // logger.info(result, 'resulttttttt');
   return result;
 };
 
@@ -26,7 +27,7 @@ module.exports.getTaskServiceById = async id => {
     path: 'userId',
     select: '-password -wishlist -task -role -contract', // Exclude the 'password' field
   });
-  // console.log(result, 'resulttttttt');
+  // logger.info(result, 'resulttttttt');
   return result;
 };
 
@@ -47,9 +48,9 @@ exports.deleteTaskService = async id => {
 };
 
 exports.bulkDeleteTaskService = async ids => {
-  console.log(ids, 'idssssssss')
+  logger.info(ids, 'idssssssss')
   const result = await Task.deleteMany({ _id: { $in: ids } });
 
-  console.log(result);
+  logger.info(result);
   return result;
 };

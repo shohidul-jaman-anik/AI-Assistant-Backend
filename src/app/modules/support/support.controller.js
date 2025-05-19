@@ -2,9 +2,10 @@ import httpStatus from 'http-status';
 import catchAsync from '../../../shared/catchAsync.js';
 import sendResponse from '../../../shared/sendResponse.js';
 import { supportService } from './support.service.js';
+import { logger } from '../../../shared/logger.js';
 
 const reqForSupport = catchAsync(async (req, res) => {
-  // console.log(req.body, "blog dataaaa");
+  // logger.info(req.body, "blog dataaaa");
   const data = req.body;
   const userId = req.body.id;
   const result = await supportService.reqForSupportService(userId, data);
@@ -30,7 +31,7 @@ const getAllSupportReq = catchAsync(async (req, res) => {
 
 const getSupportById = catchAsync(async (req, res) => {
   const id = req.params?.id;
-  console.log(id, 'idddddddd');
+  logger.info(id, 'idddddddd');
   const result = await supportService.getSupportServiceById(id);
 
   sendResponse(res, {
@@ -67,7 +68,7 @@ const deleteSupportReq = catchAsync(async (req, res) => {
 
 const bulkDeleteSupportReq = catchAsync(async (req, res) => {
   const ids = req.body?.ids || [];
-  console.log(ids, 'controller idddddddddddd');
+  logger.info(ids, 'controller idddddddddddd');
 
   // Validate IDs
   if (!ids.every(id => mongoose.Types.ObjectId.isValid(id))) {

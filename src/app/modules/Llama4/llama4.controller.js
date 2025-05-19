@@ -12,6 +12,7 @@ import UserModel from '../auth/auth.model.js';
 import Llama from '../groq/groq.model.js';
 import { paymentController } from '../payment/payment.controller.js';
 import ApiError from '../../../errors/ApiError.js';
+import { logger } from '../../../shared/logger.js';
 
 
 const sessionMemoryStore = {}; // Stores session memory for each user session
@@ -54,7 +55,7 @@ const Llama4AiGetResponse = catchAsync(async (req, res) => {
   });
 
   const chain = new ConversationChain({ llm: model, memory });
-  console.log('Memory Initialized:', memory);
+  logger.info('Memory Initialized:', memory);
 
   try {
     // Store user message in chat history
@@ -62,7 +63,7 @@ const Llama4AiGetResponse = catchAsync(async (req, res) => {
 
     // Invoke model
     const res1 = await chain.invoke({ input: prompt });
-    console.log('Model Response:', res1);
+    logger.info('Model Response:', res1);
 
     const reply = res1?.response || 'No reply generated';
 
@@ -96,18 +97,18 @@ const Llama4AiGetResponse = catchAsync(async (req, res) => {
     let llamaSession = await Llama.findOne({ user: userId, sessionId });
 
     if (llamaSession) {
-      console.log('Existing Session Found:', llamaSession);
+      logger.info('Existing Session Found:', llamaSession);
       llamaSession?.responses?.push(responseData);
       await llamaSession.save();
-      console.log('Updated Session:', llamaSession);
+      logger.info('Updated Session:', llamaSession);
     } else {
-      console.log('Creating New Session...');
+      logger.info('Creating New Session...');
       llamaSession = await Llama.create({
         user: userId,
         sessionId,
         responses: [responseData],
       });
-      console.log('New Session Created:', llamaSession);
+      logger.info('New Session Created:', llamaSession);
       await UserModel.findByIdAndUpdate(userId, {
         $push: { llamaAiSessions: llamaSession._id },
       });

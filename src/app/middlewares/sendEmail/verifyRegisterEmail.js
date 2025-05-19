@@ -1,6 +1,7 @@
 import { google } from 'googleapis';
 import nodemailer from 'nodemailer';
 import config from '../../../../config';
+import { logger } from '../../../shared/logger';
 // import config from '../../../../config';
 
 const oAuth2Client = new google.auth.OAuth2(
@@ -34,9 +35,9 @@ export const sendMailForRegisterWithGmail = async data => {
 
   let info = await transporter.sendMail(mailData);
 
-  console.log('Message sent: %s', info.messageId);
+  logger.info('Message sent: %s', info.messageId);
 
-  console.log('Preview URL: %s', nodemailer.getTestMessageUrl(info));
+  logger.info('Preview URL: %s', nodemailer.getTestMessageUrl(info));
 
   return info.messageId;
 };

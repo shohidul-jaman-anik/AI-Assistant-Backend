@@ -8,12 +8,13 @@ const accountSid = 'ACe353d3ca367b8f5e0762b6f168fd2b8b';
 
 // const client = require('twilio')(accountSid, authToken);
 import twilio from 'twilio';
+import { logger } from '../../../shared/logger';
 const client = twilio(accountSid, authToken);
 
 client.verify.v2
   .services('VAa627ca35a14cd1ae0e9b0710c3decd92')
   .verifications.create({ to: '+88001862812422', channel: 'sms' })
-  .then(verification => console.log(verification.sid));
+  .then(verification => logger.info(verification.sid));
 
 export const sendOTP = catchAsync(async (req, res) => {
   const phoneNumber = '01969452868';
