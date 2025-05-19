@@ -19,11 +19,7 @@ function sendTokenResponse(user, res) {
         { expiresIn: '7d' }
     );
     // return res.redirect(process.env.CLIENT_URL + '/auth/callback#token=' + token);
-    return res.status(200).send({
-        mgs: 'Login successful...!',
-        email: user.email,
-        token
-    });
+    return res.status(200).redirect('https://www.asonai.com');
 }
 
 router.route('/user/single-user/:userId').get(getUser); // user with id

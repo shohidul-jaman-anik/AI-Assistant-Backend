@@ -7,6 +7,7 @@ import Mailgun from 'mailgun.js';
 import mongoose from 'mongoose';
 import config from '../../../../config/index.js';
 import ApiError from '../../../errors/ApiError.js';
+import catchAsync from '../../../shared/catchAsync.js';
 import sendResponse from '../../../shared/sendResponse.js';
 import pick from '../../middlewares/other/pick.js';
 import { sendMailWithMailGun } from '../../middlewares/sendEmail/sendMailWithMailGun.js';
@@ -68,17 +69,18 @@ const verifyAdmin = async (req, res, next) => {
   });
 };
 
-const register = async (req, res, next) => {
+const register = catchAsync(async (req, res) => {
   const result = await authService.registerService(req);
+  console.log(result, 'resultttttttttttttttt');
   sendResponse(res, {
     statusCode: httpStatus.OK,
     success: true,
     message: 'Register Successfully',
     data: result,
   });
-};
+});
 
-const confirmEmail = async (req, res) => {
+const confirmEmail = catchAsync(async (req, res) => {
   const { token } = req.params;
   const result = await authService.confirmEmailService(token);
   if (result instanceof ApiError) {
@@ -92,19 +94,20 @@ const confirmEmail = async (req, res) => {
 
   // If no error, redirect to the URL
   res.status(302).redirect('https://www.asonai.com');
-};
+});
 
-const login = async (req, res, next) => {
+const login = catchAsync(async (req, res) => {
   // console.log(req.body, 'data login');
   const { email, password } = req.body;
   const result = await authService.loginService(email, password);
+  console.log(result, 'resultttttttttttttttt');
   sendResponse(res, {
     statusCode: httpStatus.OK,
     success: true,
     message: 'Login Successfully',
     data: result,
   });
-};
+});
 
 const forgetPassword = async (req, res) => {
   const session = await mongoose.startSession();

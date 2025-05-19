@@ -150,6 +150,12 @@ const confirmEmailService = async token => {
 };
 
 const loginService = async (email, password) => {
+  if (!email || !password) {
+    return new ApiError(
+      httpStatus.BAD_REQUEST,
+      'Email and password are required',
+    );
+  }
   const user = await UserModel.findOne({ email });
 
   if (!user) {
@@ -162,6 +168,13 @@ const loginService = async (email, password) => {
     return new ApiError(
       httpStatus.UNAUTHORIZED,
       'Please verify your email first',
+    );
+  }
+
+  if (!user.password) {
+    return new ApiError(
+      httpStatus.BAD_REQUEST,
+      'This account was created using social login. Please log in using your social provider.',
     );
   }
 
