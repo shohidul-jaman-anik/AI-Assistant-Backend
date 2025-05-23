@@ -94,6 +94,11 @@
             "date": 1748019698192,
             "name": "C:\\Fiverr\\ASON\\ASON Backends\\ASON-Core-Service\\logs\\successes\\RH-2025-05-23-23-success.log",
             "hash": "b9ce9b79f606cb53bc4eb741df53946af917b107b26d2e4f59a5c6d2bc3e6e9a"
+        },
+        {
+            "date": 1748023200292,
+            "name": "C:\\Fiverr\\ASON\\ASON Backends\\ASON-Core-Service\\logs\\successes\\RH-2025-05-24-00-success.log",
+            "hash": "fa3d77726b10f1fc767b636d0c7a62aeceb66bc008b258b23e2c87ebea1e3b26"
         }
     ],
     "hashType": "sha256"
