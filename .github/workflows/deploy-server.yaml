@@ -10,40 +10,35 @@ jobs:
     runs-on: ubuntu-latest
 
     steps:
-      - name: Checkout repo (optional, in case you need it)
+      - name: Checkout repo
         uses: actions/checkout@v3
 
       - name: Setup SSH key
         run: |
           mkdir -p ~/.ssh
-          echo "${{ secrets.VPS_SSH_KEY }}" > ~/.ssh/inso.pem
-          chmod 600 ~/.ssh/inso.pem
+          echo "${{ secrets.VPS_SSH_KEY }}" > ~/.ssh/id_rsa
+          chmod 600 ~/.ssh/id_rsa
+          ssh-keyscan -H ${{ secrets.VPS_HOST }} >> ~/.ssh/known_hosts
 
-      - name: SSH and deploy
-        env:
-          GIT_SSH_COMMAND: "ssh -i ~/.ssh/inso.pem -o StrictHostKeyChecking=no"
+      - name: Deploy to VPS
         run: |
-          ssh -i ~/.ssh/inso.pem -o StrictHostKeyChecking=no ubuntu@174.136.129.139 << 'EOF'
-            echo "🔐 Switching to root..."
-            sudo -i bash << 'EOC'
-              echo "📍 Root user: $(whoami)"
-              cd /root/ASON-Backend || exit 1
+          ssh -o StrictHostKeyChecking=no ${{ secrets.VPS_USER }}@${{ secrets.VPS_HOST }} << EOF
+            echo "🔍 Git status before pull:"
+            sudo git -C /root/ASON-Backend status
 
-              echo "🔁 Git status before pull:"
-              git status
+            echo "🔁 Current commit BEFORE pull:"
+            sudo git -C /root/ASON-Backend rev-parse HEAD
 
-              echo "📥 Pulling latest code from main branch..."
-              GIT_SSH_COMMAND="ssh -i ~/.ssh/inso.pem -o StrictHostKeyChecking=no" git pull origin main || echo "⚠️ Git pull failed"
+            echo "📥 Pulling latest code..."
+            sudo git -C /root/ASON-Backend pull origin main || echo "⚠️ Git pull failed"
 
-              echo "🚀 Restarting PM2 app..."
-              pm2 restart AsonBackend || echo "⚠️ PM2 restart failed"
+            echo "🔁 Current commit AFTER pull:"
+            sudo git -C /root/ASON-Backend rev-parse HEAD
 
-              echo "✅ Deployment completed at: $(date)"
-            EOC
+            echo "🚀 Restarting PM2 app..."
+            sudo pm2 restart AsonBackend || echo "⚠️ PM2 restart failed"
+
+            echo "✅ Deployment completed at: \$(date)"
           EOF
 
-      - name: Clean up SSH key
-        run: rm -rf ~/.ssh
-
-
-# 
+#
