@@ -8,6 +8,7 @@ import mongoose from 'mongoose';
 import config from '../../../../config/index.js';
 import ApiError from '../../../errors/ApiError.js';
 import catchAsync from '../../../shared/catchAsync.js';
+import { logger } from '../../../shared/logger.js';
 import sendResponse from '../../../shared/sendResponse.js';
 import pick from '../../middlewares/other/pick.js';
 import { sendMailWithMailGun } from '../../middlewares/sendEmail/sendMailWithMailGun.js';
@@ -18,7 +19,6 @@ import {
   forgetPassOtpTemplate,
   generateOTP,
 } from './auth.utils.js';
-import { logger } from '../../../shared/logger.js';
 
 const mailgun = new Mailgun(formData);
 
@@ -30,7 +30,7 @@ const ProtectCommonRoute = async (req, res, next) => {
   }
 
   const token = authHeader.split(' ')[1];
-  jwt.verify(token, config.jwt_secret, function (err, decoded) {
+  jwt.verify(token, config.jwt.access_token, function (err, decoded) {
     if (err) {
       return res.status(403).send({ message: 'Forbidden access' });
     }
@@ -53,7 +53,7 @@ const verifyAdmin = async (req, res, next) => {
   }
 
   const token = authHeader.split(' ')[1];
-  jwt.verify(token, config.jwt_secret, function (err, decoded) {
+  jwt.verify(token, config.jwt.access_token, function (err, decoded) {
     if (err) {
       return res.status(403).send({ message: 'Forbidden access' });
     }
@@ -102,10 +102,41 @@ const login = catchAsync(async (req, res) => {
   const { email, password } = req.body;
   const result = await authService.loginService(email, password);
   logger.info(result, 'resultttttttttttttttt');
+
+  const { refreshToken, ...others } = result;
+
+  // Set Refresh Token into cookie
+  const cookieOption = {
+    secure: config.env === 'production' ? true : false,
+    httpOnly: true,
+  };
+  res.cookie('refreshToken', refreshToken, cookieOption);
+
   sendResponse(res, {
     statusCode: httpStatus.OK,
     success: true,
     message: 'Login Successfully',
+    data: others,
+  });
+});
+
+const refreshToken = catchAsync(async (req, res) => {
+  const { refreshToken } = req.cookies;
+
+  const result = await authService.refreshToken(refreshToken);
+
+  // set refresh token into cookie
+  const cookieOptions = {
+    secure: config.env === 'production',
+    httpOnly: true,
+  };
+
+  res.cookie('refreshToken', refreshToken, cookieOptions);
+
+  sendResponse(res, {
+    statusCode: 200,
+    success: true,
+    message: 'User logged in successfully !',
     data: result,
   });
 });
@@ -498,6 +529,7 @@ export const authController = {
   verifyAdmin,
   register,
   login,
+  refreshToken,
   confirmEmail,
   getUser,
   getUserByEmail,

@@ -1,10 +1,10 @@
 import bcrypt from 'bcryptjs';
 import httpStatus from 'http-status';
-import jwt from 'jsonwebtoken';
 import mongoose from 'mongoose';
 import config from '../../../../config/index.js';
 import ApiError from '../../../errors/ApiError.js';
 import { logger } from '../../../shared/logger.js';
+import { jwtHelpers } from '../../helpers/jwtHelpers.js';
 import paginationHelpers from '../../helpers/paginationHelpers.js';
 import { sendMailWithMailGun } from '../../middlewares/sendEmail/sendMailWithMailGun.js';
 import UserModel from './auth.model.js';
@@ -82,7 +82,7 @@ const registerService = async req => {
 
       const user = await UserModel.create(
         [{ email, password: hashedPassword }],
-        { session }
+        { session },
       );
 
       const token = user[0].generateConfirmationToken();
@@ -116,7 +116,7 @@ const registerService = async req => {
 
     throw new ApiError(
       httpStatus.INTERNAL_SERVER_ERROR,
-      "Couldn't register successfully"
+      "Couldn't register successfully",
     );
   }
 };
@@ -181,19 +181,56 @@ const loginService = async (email, password) => {
     throw new ApiError(httpStatus.UNAUTHORIZED, 'Invalid credentials');
   }
 
-  const token = jwt.sign(
+  const accessToken = jwtHelpers.createToken(
     {
-      // email: user.email,
       _id: user._id,
       role: user.role,
     },
-    config.jwt_secret,
-    { expiresIn: '7d' },
+    config.jwt.access_token,
+    config.jwt.access_expires_in,
+  );
+  const refreshToken = jwtHelpers.createToken(
+    {
+      _id: user._id,
+      role: user.role,
+    },
+    config.jwt.refresh_token,
+    config.jwt.refresh_expires_in,
   );
 
   return {
     _id: user._id,
-    token,
+    accessToken,
+    refreshToken,
+  };
+};
+
+const refreshToken = async token => {
+  let verifiedToken;
+  try {
+    // verifiedToken = jwt.verify(token, config.jwt.refresh_secret);
+    verifiedToken = jwtHelpers.verifyToken(token, config.jwt.refresh_token);
+  } catch (err) {
+    throw new ApiError(httpStatus.FORBIDDEN, 'Invalid Refresh Token');
+  }
+
+  console.log(verifiedToken, 'verifiedToken');
+  const { _id, role } = verifiedToken;
+  const isUserExist = await UserModel.isUserExist(_id);
+  if (!isUserExist) {
+    throw new ApiError(httpStatus.NOT_FOUND, 'User does not exist');
+  }
+  //generate new token;
+  const newAccessToken = jwtHelpers.createToken(
+    {
+      id: isUserExist._id,
+      role: isUserExist.role,
+    },
+    config.jwt.access_token,
+    config.jwt.access_expires_in,
+  );
+  return {
+    accessToken: newAccessToken,
   };
 };
 
@@ -233,5 +270,6 @@ export const authService = {
   registerService,
   confirmEmailService,
   loginService,
+  refreshToken,
   updateUserService,
 };

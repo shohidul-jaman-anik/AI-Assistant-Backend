@@ -15,7 +15,7 @@ function sendTokenResponse(user, res) {
             role: user.role,
             id: user._id
         },
-        config.jwt_secret,
+        config.jwt.access_token,
         { expiresIn: '7d' }
     );
     // return res.redirect(process.env.CLIENT_URL + '/auth/callback#token=' + token);

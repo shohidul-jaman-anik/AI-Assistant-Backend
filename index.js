@@ -15,6 +15,9 @@ import config from './config/index.js';
 import './src/app/middlewares/resetUsage/resetUsage.js';
 import passportConfig from './src/app/modules/social-login/config/passport.js';
 import { logger } from './src/shared/logger.js';
+import cookieParser from 'cookie-parser';
+
+
 
 // Load environment variables
 dotenv.config();
@@ -30,9 +33,12 @@ app.use(
 // Middleware
 app.use(cors());
 app.use(express.json());
+app.use(cookieParser());
 app.use(express.urlencoded({ extended: true }));
 app.use(bodyParser.urlencoded({ extended: true }));
 app.disable('x-powered-by');
+
+
 
 // Enable trust proxy (For Rate-Limit)
 app.set('trust proxy', 'loopback');

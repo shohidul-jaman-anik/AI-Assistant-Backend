@@ -1,5 +1,8 @@
 import express from 'express';
 import { authController } from './auth.controller.js';
+import { AuthValidation } from './auth.validation.js';
+import { validateRequest } from '../../middlewares/validateRequest/validateRequest.js';
+// import validateRequest from '../../middlewares/validateRequest/validateRequest.js';
 
 const router = express.Router();
 
@@ -11,13 +14,19 @@ router
   .route('/register')
   .post(
     // limiter.authLimiter,
-    // validateRequest(UserValidationSchema),
+    // validateRequest(AuthValidation.UserValidationSchema),
     authController.register,
   ); // Register user
 router.route('/register/confirmation/:token').get(authController.confirmEmail); // verify mail
 
 router.route('/login').post(authController.login); // login in app
 // router.route('/login').post(limiter.authLimiter, authController.login) // login in app
+
+router.post(
+  '/refresh-token',
+  validateRequest(AuthValidation.refreshTokenZodSchema),
+  authController.refreshToken
+);
 
 router.route('/forget-password').post(authController.forgetPassword);
 router.route('/reset-password').post(authController.resetPassword);

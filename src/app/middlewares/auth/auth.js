@@ -9,7 +9,7 @@ const Auth = async (req, res, next) => {
     const token = req.headers.authorization.split(' ')[1];
 
     // retrive the user details fo the logged in user
-    const decodedToken = await jwt.verify(token, config.jwt_secret);
+    const decodedToken = await jwt.verify(token, config.jwt.access_token);
 
     req.user = decodedToken;
 

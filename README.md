@@ -1,10 +1,10 @@
-# 🌐 ASON AI  
-[Live Site → https://asonai.com](https://asonai.com)
+# 🌐 ASON AI Core Service
 
----
 
 🚀 **Overview**  
 ASON AI is a powerful AI-driven platform designed to revolutionize content creation, task automation, and intelligent interactions. From generating high-quality audio and video to engaging in prompt-based AI conversations and deploying specialized AI agents, ASON AI brings a wide array of advanced artificial intelligence technologies into a single, user-friendly platform.
+
+Visit our website for more information: [ASON AI Website](https://www.asonai.com/)
 
 ---
 
@@ -71,10 +71,12 @@ ASON AI is a powerful AI-driven platform designed to revolutionize content creat
 
 Explore our full documentation for comprehensive setup guides, API references, and integration tutorials across all services.
 
-| Service           | API Documentation                                                                 |
-|-------------------|------------------------------------------------------------------------------------|
-| Core Service      | [View on Postman →](https://documenter.getpostman.com/view/22819233/2sB2qak2mM)   |
-| AI-Agent Service  | [View on Postman →](https://documenter.getpostman.com/view/22819233/2sB2qak2mN)   |
-| API Gateway       | [View on Postman →](https://documenter.getpostman.com/view/22819233/2sB2qak2qe)   |
-                           |
+
+| Service           | API Documentation                                                               | GitHub Repository                                               |
+|-------------------|----------------------------------------------------------------------------------|------------------------------------------------------------------|
+| Core Service      | [View on Postman →](https://documenter.getpostman.com/view/22819233/2sB2qak2mM) | [GitHub →](https://github.com/shohidul-jaman-anik/ASON-Backend-Core-Service) |
+| AI-Agent Service  | [View on Postman →](https://documenter.getpostman.com/view/22819233/2sB2qak2mN) | [GitHub →](https://github.com/shohidul-jaman-anik/ASON-Backend-Ai-Agent-Service)      |
+| API Gateway       | [View on Postman →](https://documenter.getpostman.com/view/22819233/2sB2qak2qe) | [GitHub →](https://github.com/shohidul-jaman-anik/ASON-Api-Gateway)          |
+
+
 

@@ -7,7 +7,12 @@ export default {
   env: process.env.NODE_ENV,
   database_local: process.env.DATABASE_LOCAL,
   port: process.env.PORT,
-  jwt_secret: process.env.JWT_SECRET,
+  jwt: {
+    access_token: process.env.JWT_ACCESS_TOKEN,
+    access_expires_in: process.env.JWT_ACCESS_EXPIRES_IN,
+    refresh_token: process.env.JWT_REFRESH_REFRESH_TOKEN,
+    refresh_expires_in: process.env.JWT_REFRESH_EXPIRES_IN,
+  },
   email: process.env.email,
   password: process.env.password,
   client_id: process.env.CLIENT_ID,
