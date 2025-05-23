@@ -6,21 +6,6 @@
     "auditLog": "C:\\Fiverr\\ASON\\ASON Backends\\ASON-Core-Service\\logs\\successes\\.9ac34fc2435190e4ceedc4c2030a9a8b02b256ed-audit.json",
     "files": [
         {
-            "date": 1746541771780,
-            "name": "C:\\Fiverr\\ASON\\ASON Backends\\ASON-Core-Service\\logs\\successes\\RH-2025-05-06-20-success.log",
-            "hash": "803a9cb14b33bec13e62085d90ccb630b22c647fea1ede728b5dcb034e32f40f"
-        },
-        {
-            "date": 1746700503561,
-            "name": "C:\\Fiverr\\ASON\\ASON Backends\\ASON-Core-Service\\logs\\successes\\RH-2025-05-08-16-success.log",
-            "hash": "66310a9bfa7b7d1414a1bc1db2c53bb893af72ad8087f83457570e7d88f3480d"
-        },
-        {
-            "date": 1746705969757,
-            "name": "C:\\Fiverr\\ASON\\ASON Backends\\ASON-Core-Service\\logs\\successes\\RH-2025-05-08-18-success.log",
-            "hash": "35b24ec69f7bb9f9b9699c714379c2acb26e25e7ffdf20e2e1fb2dc9ba3cde5c"
-        },
-        {
             "date": 1746890740327,
             "name": "C:\\Fiverr\\ASON\\ASON Backends\\ASON-Core-Service\\logs\\successes\\RH-2025-05-10-21-success.log",
             "hash": "1e61ea738107da196b7d947f68b14c310b60de923bbc4dd796ad1959e2348e77"
@@ -79,6 +64,36 @@
             "date": 1747664342524,
             "name": "C:\\Fiverr\\ASON\\ASON Backends\\ASON-Core-Service\\logs\\successes\\RH-2025-05-19-20-success.log",
             "hash": "005ba7aa341cc4aa5cb77e001d8185cd7fb69d50bfd862698550504f557659e7"
+        },
+        {
+            "date": 1747896392903,
+            "name": "C:\\Fiverr\\ASON\\ASON Backends\\ASON-Core-Service\\logs\\successes\\RH-2025-05-22-12-success.log",
+            "hash": "84e61d764e52aec90ed1f1e6cc78c5ab820cec10fb653ac499cc74e48c74d1c6"
+        },
+        {
+            "date": 1747904788073,
+            "name": "C:\\Fiverr\\ASON\\ASON Backends\\ASON-Core-Service\\logs\\successes\\RH-2025-05-22-15-success.log",
+            "hash": "ad695dc8070f5a1b31e75080d0569908d9dd085a83db71c7c8690d56a836e82f"
+        },
+        {
+            "date": 1747929494724,
+            "name": "C:\\Fiverr\\ASON\\ASON Backends\\ASON-Core-Service\\logs\\successes\\RH-2025-05-22-21-success.log",
+            "hash": "90dd9ef858d13a01f76c295259c6580bb8e23b02a7e43182aa8bd7e15ffa84fc"
+        },
+        {
+            "date": 1747929746603,
+            "name": "C:\\Fiverr\\ASON\\ASON Backends\\ASON-Core-Service\\logs\\successes\\RH-2025-05-22-22-success.log",
+            "hash": "5ed3a307f2213c2af470a1bd971b5a49d02422812bf106db69b3ddc124275957"
+        },
+        {
+            "date": 1748018337047,
+            "name": "C:\\Fiverr\\ASON\\ASON Backends\\ASON-Core-Service\\logs\\successes\\RH-2025-05-23-22-success.log",
+            "hash": "718929826eb19f6ff58eef3f8fe68de040655092bf5de6b769e03c0fa57fd70b"
+        },
+        {
+            "date": 1748019698192,
+            "name": "C:\\Fiverr\\ASON\\ASON Backends\\ASON-Core-Service\\logs\\successes\\RH-2025-05-23-23-success.log",
+            "hash": "b9ce9b79f606cb53bc4eb741df53946af917b107b26d2e4f59a5c6d2bc3e6e9a"
         }
     ],
     "hashType": "sha256"

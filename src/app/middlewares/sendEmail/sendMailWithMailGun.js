@@ -1,6 +1,7 @@
 import formData from 'form-data';
 import Mailgun from 'mailgun.js';
 import config from '../../../../config/index.js';
+import { logger } from '../../../shared/logger.js';
 
 const mailgun = new Mailgun(formData);
 

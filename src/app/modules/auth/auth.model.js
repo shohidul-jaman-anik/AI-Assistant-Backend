@@ -19,6 +19,7 @@ const UserSchema = new mongoose.Schema(
       type: String,
       // required: [true, 'Please provide a password'],
       unique: false,
+      select:0
     },
     isSubscribed: {
       type: Boolean,

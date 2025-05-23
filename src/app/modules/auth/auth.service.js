@@ -4,11 +4,11 @@ import jwt from 'jsonwebtoken';
 import mongoose from 'mongoose';
 import config from '../../../../config/index.js';
 import ApiError from '../../../errors/ApiError.js';
+import { logger } from '../../../shared/logger.js';
 import paginationHelpers from '../../helpers/paginationHelpers.js';
 import { sendMailWithMailGun } from '../../middlewares/sendEmail/sendMailWithMailGun.js';
 import UserModel from './auth.model.js';
 import { registrationOtpTemplate } from './auth.utils.js';
-import { logger } from '../../../shared/logger.js';
 
 const getAllUsersService = async (filters, paginationOptions) => {
   const { searchTerm } = filters;
@@ -63,64 +63,60 @@ const deleteUserAccountService = async userId => {
   const result = await UserModel.deleteOne({ _id: userId });
   return result;
 };
-
 const registerService = async req => {
   const session = await mongoose.startSession();
-  let transactionAborted = false;
 
   try {
     session.startTransaction();
 
-    const { password, confirmPassword, email } = req.body;
+    const { password, email } = req.body;
 
     const existingEmail = await UserModel.findOne({ email }).session(session);
     if (existingEmail) {
-      transactionAborted = true;
       await session.abortTransaction();
-      session.endSession();
-      return new ApiError(httpStatus.CONFLICT, 'Email already exists!');
+      throw new ApiError(httpStatus.CONFLICT, 'Email already exists!');
     }
 
     if (password) {
       const hashedPassword = await bcrypt.hash(password, 10);
 
       const user = await UserModel.create(
-        [
-          {
-            email,
-            password: hashedPassword,
-          },
-        ],
-        { session },
+        [{ email, password: hashedPassword }],
+        { session }
       );
 
       const token = user[0].generateConfirmationToken();
       await user[0].save({ session, validateBeforeSave: false });
 
       const mailData = await registrationOtpTemplate(email, token);
-
-      // Sending email and handling success or failure
       await sendMailWithMailGun(mailData);
 
-      // Commit transaction if everything succeeds
       await session.commitTransaction();
+      session.endSession();
+
+      // ✅ Instead of throwing, return a success response
+      return {
+        message: 'Please verify your E-mail.',
+        statusCode: httpStatus.CREATED,
+      };
     }
 
+    // fallback if no password provided (this shouldn't usually happen)
+    await session.abortTransaction();
     session.endSession();
-    if (!transactionAborted) {
-      return new ApiError(httpStatus.CREATED, 'Please verify your E-mail.');
-    }
+    throw new ApiError(httpStatus.BAD_REQUEST, 'Password is required.');
   } catch (error) {
-    if (!transactionAborted) {
-      // Roll back transaction on error
-      await session.abortTransaction();
-    }
+    await session.abortTransaction().catch(() => {});
     session.endSession();
-    console.error(error);
 
-    return new ApiError(
+    // Only rethrow if it's already an ApiError
+    if (error instanceof ApiError) {
+      throw error;
+    }
+
+    throw new ApiError(
       httpStatus.INTERNAL_SERVER_ERROR,
-      "Couldn't register successfully",
+      "Couldn't register successfully"
     );
   }
 };
@@ -129,13 +125,13 @@ const confirmEmailService = async token => {
   const user = await UserModel.findOne({ confirmationToken: token });
 
   if (!user) {
-    return new ApiError(httpStatus.NOT_FOUND, 'User not found');
+    throw new ApiError(httpStatus.NOT_FOUND, 'User not found');
   }
 
   const expired = new Date() > new Date(user.confirmationTokenExpires);
 
   if (expired) {
-    return new ApiError(
+    throw new ApiError(
       httpStatus.UNAUTHORIZED,
       'Token expired, please register again',
     );
@@ -152,28 +148,28 @@ const confirmEmailService = async token => {
 
 const loginService = async (email, password) => {
   if (!email || !password) {
-    return new ApiError(
+    throw new ApiError(
       httpStatus.BAD_REQUEST,
       'Email and password are required',
     );
   }
-  const user = await UserModel.findOne({ email });
+  const user = await UserModel.findOne({ email }).select('+password');
 
   if (!user) {
-    return new ApiError(
+    throw new ApiError(
       httpStatus.NOT_FOUND,
       'User not found, please register first',
     );
   }
   if (user.role === 'unauthorized') {
-    return new ApiError(
+    throw new ApiError(
       httpStatus.UNAUTHORIZED,
       'Please verify your email first',
     );
   }
 
-  if (!user.password) {
-    return new ApiError(
+  if (user && !user?.password) {
+    throw new ApiError(
       httpStatus.BAD_REQUEST,
       'This account was created using social login. Please log in using your social provider.',
     );
@@ -182,12 +178,13 @@ const loginService = async (email, password) => {
   const passwordCheck = await bcrypt.compare(password, user.password);
 
   if (!passwordCheck) {
-    return new ApiError(httpStatus.UNAUTHORIZED, 'Invalid credentials');
+    throw new ApiError(httpStatus.UNAUTHORIZED, 'Invalid credentials');
   }
 
   const token = jwt.sign(
     {
-      email: user.email,
+      // email: user.email,
+      _id: user._id,
       role: user.role,
     },
     config.jwt_secret,
@@ -195,7 +192,7 @@ const loginService = async (email, password) => {
   );
 
   return {
-    email: user?.email,
+    _id: user._id,
     token,
   };
 };
@@ -203,18 +200,18 @@ const loginService = async (email, password) => {
 const updateUserService = async (userId, data) => {
   try {
     if (!userId) {
-      return new ApiError(httpStatus.BAD_REQUEST, 'User ID is required.');
+      throw new ApiError(httpStatus.BAD_REQUEST, 'User ID is required.');
     }
     const user = UserModel.findOne({ _id: userId });
 
     if (!user) {
-      return new ApiError(httpStatus.NOT_FOUND, 'User not found.');
+      throw new ApiError(httpStatus.NOT_FOUND, 'User not found.');
     }
 
     const { email, password, ...updateData } = data; // Avoid updating email/password
 
     if (Object.keys(updateData).length === 0) {
-      return new ApiError(httpStatus.BAD_REQUEST, 'No valid fields to update.');
+      throw new ApiError(httpStatus.BAD_REQUEST, 'No valid fields to update.');
     }
 
     // Update the data
@@ -223,7 +220,7 @@ const updateUserService = async (userId, data) => {
     return result;
   } catch (error) {
     console.error('Error updating user:', error);
-    return new ApiError(
+    throw new ApiError(
       httpStatus.INTERNAL_SERVER_ERROR,
       'Internal Server Error',
     );
