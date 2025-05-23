@@ -5,59 +5,9 @@ import config from '../../../../config/index.js';
 import ApiError from '../../../errors/ApiError.js';
 import { logger } from '../../../shared/logger.js';
 import { jwtHelpers } from '../../helpers/jwtHelpers.js';
-import paginationHelpers from '../../helpers/paginationHelpers.js';
 import { sendMailWithMailGun } from '../../middlewares/sendEmail/sendMailWithMailGun.js';
 import UserModel from './auth.model.js';
 import { registrationOtpTemplate } from './auth.utils.js';
-
-const getAllUsersService = async (filters, paginationOptions) => {
-  const { searchTerm } = filters;
-
-  const productsSearchAbleFields = ['username', 'email'];
-  const andConditions = [];
-
-  // Add a default condition if andConditions is empty
-  if (andConditions.length === 0) {
-    andConditions.push({});
-  }
-
-  if (searchTerm) {
-    andConditions.push({
-      $or: productsSearchAbleFields.map(field => ({
-        [field]: { $regex: searchTerm, $options: 'i' },
-      })),
-    });
-  }
-
-  const { page, limit, skip, sortBy, sortOrder } =
-    paginationHelpers.calculatePagination(paginationOptions);
-
-  const sortConditions = {};
-  if (sortBy && sortOrder) {
-    sortConditions[sortBy] = sortOrder;
-  }
-
-  const users = await UserModel.find({ $and: andConditions })
-    .sort(sortConditions)
-    .skip(skip)
-    .limit(limit);
-
-  const total = await UserModel.estimatedDocumentCount();
-  const totalSeller = await UserModel.countDocuments({
-    $and: [{ seller: true }, { role: 'seller' }],
-  });
-  const totalBuyer = await UserModel.countDocuments({ role: 'buyer' });
-  return {
-    meta: {
-      page,
-      limit,
-      total,
-      totalSeller,
-      totalBuyer,
-    },
-    data: users,
-  };
-};
 
 const deleteUserAccountService = async userId => {
   const result = await UserModel.deleteOne({ _id: userId });
@@ -264,12 +214,20 @@ const updateUserService = async (userId, data) => {
   }
 };
 
+const getUserService = async userId => {
+  const user = await UserModel.findOne({ _id: userId });
+  if (!user) {
+    throw new ApiError(httpStatus.NOT_FOUND, 'User not found.');
+  }
+  return user;
+};
+
 export const authService = {
-  getAllUsersService,
   deleteUserAccountService,
   registerService,
   confirmEmailService,
   loginService,
   refreshToken,
   updateUserService,
+  getUserService,
 };

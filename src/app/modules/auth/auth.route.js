@@ -1,38 +1,34 @@
 import express from 'express';
+import authLimiter from '../../middlewares/rateLimit/authLimiter.js';
+import { validateRequest } from '../../middlewares/validateRequest/validateRequest.js';
 import { authController } from './auth.controller.js';
 import { AuthValidation } from './auth.validation.js';
-import { validateRequest } from '../../middlewares/validateRequest/validateRequest.js';
 // import validateRequest from '../../middlewares/validateRequest/validateRequest.js';
 
 const router = express.Router();
 
 router.route('/user/single-user/:userId').get(authController.getUser); // user with id
-router.route('/user/:userEmail').get(authController.getUserByEmail); // user with email
 
 // router.route('/register').post(authController.register)// Register user
-router
-  .route('/register')
-  .post(
-    // limiter.authLimiter,
-    // validateRequest(AuthValidation.UserValidationSchema),
-    authController.register,
-  ); // Register user
+router.route('/register').post(
+  authLimiter(5, 2),
+  // validateRequest(AuthValidation.UserValidationSchema),
+  authController.register,
+); // Register user
 router.route('/register/confirmation/:token').get(authController.confirmEmail); // verify mail
 
-router.route('/login').post(authController.login); // login in app
+router.route('/login').post(authLimiter(5, 5), authController.login); // login in app
 // router.route('/login').post(limiter.authLimiter, authController.login) // login in app
 
 router.post(
   '/refresh-token',
   validateRequest(AuthValidation.refreshTokenZodSchema),
-  authController.refreshToken
+  authController.refreshToken,
 );
 
 router.route('/forget-password').post(authController.forgetPassword);
 router.route('/reset-password').post(authController.resetPassword);
 router.route('/change-password/:userId').post(authController.changePassword); // Change Pass if match
-
-router.route('/allUser').get(authController.getAllUsers); // get all user
 
 router.route('/update-user/:userId').put(authController.updateUser); // is to use update user profile
 router
@@ -41,4 +37,3 @@ router
 router.route('/delete-account/:id').delete(authController.deleteUserAccount); // use to delete account
 
 export const authRoutes = router;
-

@@ -10,7 +10,6 @@ import ApiError from '../../../errors/ApiError.js';
 import catchAsync from '../../../shared/catchAsync.js';
 import { logger } from '../../../shared/logger.js';
 import sendResponse from '../../../shared/sendResponse.js';
-import pick from '../../middlewares/other/pick.js';
 import { sendMailWithMailGun } from '../../middlewares/sendEmail/sendMailWithMailGun.js';
 import UserModel from './auth.model.js';
 import { authService } from './auth.service.js';
@@ -223,96 +222,6 @@ const resetPassword = async (req, res) => {
   }
 };
 
-const getUserByEmail = async (req, res, next) => {
-  try {
-    const userEmail = req.params?.userEmail;
-    logger.info(userEmail, 'userId');
-
-    if (!userEmail) {
-      return res.status(501).send({ error: 'Require Id' });
-    }
-
-    const user = await UserModel.findOne({ email: userEmail });
-
-    if (!user) {
-      return res
-        .status(httpStatus.NOT_FOUND)
-        .send({ error: "Couldn't Find the User" });
-    }
-
-    // Remove password, notes, and llamaAiSessions from user
-    const { llamaAiSessions, notes, password, ...rest } = Object.assign(
-      {},
-      user.toJSON(),
-    );
-
-    return res.status(201).send(rest);
-  } catch (error) {
-    console.error(error); // Log the error for debugging purposes
-    return res.status(404).send({ error: 'Cannot Find User Data' });
-  }
-};
-
-const getUser = async (req, res, next) => {
-  try {
-    const userId = req.params?.userId;
-    logger.info(userId, 'userId');
-
-    if (!userId) {
-      return res.status(501).send({ error: 'Require Id' });
-    }
-
-    const user = await UserModel.findOne({ _id: userId });
-
-    if (!user) {
-      return res
-        .status(httpStatus.NOT_FOUND)
-        .send({ error: "Couldn't Find the User" });
-    }
-
-    // Remove password from user
-    const { llamaAiSessions, notes, password, ...rest } = Object.assign(
-      {},
-      user.toJSON(),
-    );
-
-    return res.status(201).send(rest);
-  } catch (error) {
-    console.error(error); // Log the error for debugging purposes
-    return res.status(404).send({ error: 'Cannot Find User Data' });
-  }
-};
-
-const getAllUsers = async (req, res, next) => {
-  try {
-    const paginationOptions = pick(req.query, [
-      'page',
-      'limit',
-      'sortBy',
-      'sortOrder',
-    ]);
-
-    const filters = pick(req.query, ['searchTerm']);
-
-    const users = await authService.getAllUsersService(
-      filters,
-      paginationOptions,
-    );
-    res.status(200).json({
-      status: 'Success',
-      message: 'Users find Successfully',
-      meta: users.meta,
-      data: users.data,
-    });
-  } catch (error) {
-    res.status(400).json({
-      status: 'Fail',
-      message: "Users couldn't found Successfully",
-      error: error.message,
-    });
-  }
-};
-
 const deleteUserAccountOTP = async (req, res, next) => {
   const session = await mongoose.startSession();
   session.startTransaction();
@@ -481,12 +390,25 @@ const changePassword = async (req, res, next) => {
   }
 };
 
-const updateUser = async (req, res) => {
+const getUser = catchAsync(async (req, res) => {
+  const userId = req.params?.userId;
+
+  const result = await authService.getUserService(userId);
+
+  sendResponse(res, {
+    statusCode: httpStatus.OK,
+    success: true,
+    message: 'Get User Successfully',
+    data: result,
+  });
+});
+
+const updateUser = catchAsync(async (req, res) => {
   const userId = req.params?.userId;
   const data = req.body;
   const result = await authService.updateUserService(userId, data);
   if (result.modifiedCount == !1) {
-    return new ApiError(
+    throw new ApiError(
       httpStatus.NOT_FOUND,
       'User not found or no changes made',
     );
@@ -497,7 +419,7 @@ const updateUser = async (req, res) => {
     message: 'Update Successfully',
     data: result,
   });
-};
+});
 
 const mg = mailgun.client({
   username: 'api',
@@ -532,8 +454,6 @@ export const authController = {
   refreshToken,
   confirmEmail,
   getUser,
-  getUserByEmail,
-  getAllUsers,
   updateUser,
   forgetPassword,
   resetPassword,
