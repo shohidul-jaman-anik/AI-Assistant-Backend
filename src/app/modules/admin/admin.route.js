@@ -1,28 +1,36 @@
 import express from 'express';
-import { AdminController } from './admin.controller.js';
+import { ENUM_USER_ROLE } from '../../../shared/enum.js';
+import auth from '../../middlewares/auth/auth.js';
 import { authController } from '../auth/auth.controller.js';
+import { AdminController } from './admin.controller.js';
 const router = express.Router();
 
-router.route('/update-user-role/:id').put(AdminController.updateUserRole);
-
-router.route('/delete-user/:objectId').delete(authController.verifyAdmin, AdminController.deleteUser);
+router
+  .route('/update-user-role/:id')
+  .put(auth(ENUM_USER_ROLE.SUPER_ADMIN), AdminController.updateUserRole);
 
 router
-  .route('/buyer/all-user')
-  .get(AdminController.getAllBuyer);
+  .route('/delete-user/:objectId')
+  .delete(auth(ENUM_USER_ROLE.ADMIN), AdminController.deleteUser);
 
+router.route('/buyer/all-user').get(AdminController.getAllBuyer);
 
 router
   .route('/all-user')
-  .get(authController.verifyAdmin, AdminController.getAllUsers);
-  
+  .get(
+    auth(ENUM_USER_ROLE.ADMIN),
+    authController.verifyAdmin,
+    AdminController.getAllUsers,
+  );
+
 router
   .route('/all-payment')
-  .get(authController.verifyAdmin, AdminController.getAllPayment);
+  .get(auth(ENUM_USER_ROLE.ADMIN), AdminController.getAllPayment);
 
 router.route('/admin/:email').get(AdminController.getAdmin);
 
-router.route('/all-user/statistics').get(AdminController.getUserStatisticsByMonth);
-
+router
+  .route('/all-user/statistics')
+  .get(auth(ENUM_USER_ROLE.ADMIN), AdminController.getUserStatisticsByMonth);
 
 export const adminRoutes = router;

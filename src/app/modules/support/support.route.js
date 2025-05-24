@@ -10,16 +10,28 @@ router
   .route('/req-support/:id')
   .post(
     validateRequest(supportValidationSchema),
+    auth(ENUM_USER_ROLE.ADMIN, ENUM_USER_ROLE.USER),
     SupportController.reqForSupport,
   );
 
-router.route('/:id').get(SupportController.getSupportById);
+router
+  .route('/:id')
+  .get(
+    auth(ENUM_USER_ROLE.ADMIN, ENUM_USER_ROLE.USER),
+    SupportController.getSupportById,
+  );
 router
   .route('/update-support-req/:id')
-  .patch(SupportController.updateSupportReq);
+  .patch(
+    auth(ENUM_USER_ROLE.ADMIN, ENUM_USER_ROLE.USER),
+    SupportController.updateSupportReq,
+  );
 router
   .route('/delete-support-req/:id')
-  .delete(SupportController.deleteSupportReq);
+  .delete(
+    auth(ENUM_USER_ROLE.ADMIN, ENUM_USER_ROLE.USER),
+    SupportController.deleteSupportReq,
+  );
 
 router
   .route('/all-support')

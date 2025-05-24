@@ -1,5 +1,7 @@
 import express from 'express';
 import { NotificationController } from './notification.controller.js';
+import { ENUM_USER_ROLE } from '../../../shared/enum.js';
+import auth from '../../middlewares/auth/auth.js';
 const router = express.Router();
 
 router.route('/user/:userId').post(NotificationController.sendNotificationById);
@@ -22,7 +24,7 @@ router
 
 router
   .route('/send-notification-all')
-  .post(NotificationController.sendNotification);
+  .post(auth(ENUM_USER_ROLE.ADMIN),NotificationController.sendNotification);
 
 router.route('/get-all').get(NotificationController.getNotification);
 

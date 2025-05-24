@@ -18,14 +18,23 @@ router
 
 router
   .route('/get-response-by-sessionid/:sessionId')
-  .get(LlamaAiController.LlamaAiGetResponseFromDbBySessionId);
+  .get(
+    auth(ENUM_USER_ROLE.ADMIN, ENUM_USER_ROLE.USER),
+    LlamaAiController.LlamaAiGetResponseFromDbBySessionId,
+  );
 
 router
   .route('/delete-single-response/:objectId')
-  .delete(LlamaAiController.deleteOneAiSession);
+  .delete(
+    auth(ENUM_USER_ROLE.ADMIN, ENUM_USER_ROLE.USER),
+    LlamaAiController.deleteOneAiSession,
+  );
 
 router
   .route('/delete-all-response-from-db/:userId')
-  .delete(LlamaAiController.deleteAllAiSessions);
+  .delete(
+    auth(ENUM_USER_ROLE.ADMIN, ENUM_USER_ROLE.USER),
+    LlamaAiController.deleteAllAiSessions,
+  );
 
 export const llamaAiRoutes = router;
