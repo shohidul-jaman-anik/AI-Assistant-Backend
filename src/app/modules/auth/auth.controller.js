@@ -1,6 +1,4 @@
 import bcrypt from 'bcryptjs';
-import jwt from 'jsonwebtoken';
-
 import formData from 'form-data';
 import httpStatus from 'http-status';
 import Mailgun from 'mailgun.js';
@@ -20,54 +18,6 @@ import {
 } from './auth.utils.js';
 
 const mailgun = new Mailgun(formData);
-
-const ProtectCommonRoute = async (req, res, next) => {
-  const authHeader = req.headers.authorization;
-  // logger.info(authHeader, 'authHeaderrrrrrrr');
-  if (!authHeader) {
-    return res.status(401).send({ message: 'UnAuthorized access' });
-  }
-
-  const token = authHeader.split(' ')[1];
-  jwt.verify(token, config.jwt.access_token, function (err, decoded) {
-    if (err) {
-      return res.status(403).send({ message: 'Forbidden access' });
-    }
-    // Check the user's role in the decoded JWT payload
-    const userRole = decoded.role;
-
-    if (userRole === 'user' || userRole === 'admin') {
-      req.decoded = decoded;
-      next(); // User with 'buyer' role is allowed
-    } else {
-      return res.status(403).send({ message: 'Forbidden access' });
-    }
-  });
-};
-
-const verifyAdmin = async (req, res, next) => {
-  const authHeader = req.headers.authorization;
-  if (!authHeader) {
-    return res.status(401).send({ message: 'Unauthorized access' });
-  }
-
-  const token = authHeader.split(' ')[1];
-  jwt.verify(token, config.jwt.access_token, function (err, decoded) {
-    if (err) {
-      return res.status(403).send({ message: 'Forbidden access' });
-    }
-
-    // Check the user's role in the decoded JWT payload
-    const userRole = decoded.role;
-
-    if (userRole === 'admin') {
-      req.decoded = decoded;
-      next(); // User with 'admin' role is allowed
-    } else {
-      return res.status(403).send({ message: 'Forbidden access' });
-    }
-  });
-};
 
 const register = catchAsync(async (req, res) => {
   const result = await authService.registerService(req);
@@ -447,8 +397,6 @@ const sendMailWithMailGunController = async (req, res) => {
 };
 
 export const authController = {
-  ProtectCommonRoute,
-  verifyAdmin,
   register,
   login,
   refreshToken,

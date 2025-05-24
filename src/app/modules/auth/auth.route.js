@@ -1,5 +1,5 @@
 import express from 'express';
-import authLimiter from '../../middlewares/rateLimit/authLimiter.js';
+import createRateLimiter from '../../middlewares/rateLimit/authLimiter.js';
 import { validateRequest } from '../../middlewares/validateRequest/validateRequest.js';
 import { authController } from './auth.controller.js';
 import { AuthValidation } from './auth.validation.js';
@@ -9,16 +9,14 @@ const router = express.Router();
 
 router.route('/user/single-user/:userId').get(authController.getUser); // user with id
 
-// router.route('/register').post(authController.register)// Register user
 router.route('/register').post(
-  authLimiter(5, 2),
+  createRateLimiter(5, 2),
   // validateRequest(AuthValidation.UserValidationSchema),
   authController.register,
-); // Register user
-router.route('/register/confirmation/:token').get(authController.confirmEmail); // verify mail
+);
+router.route('/register/confirmation/:token').get(authController.confirmEmail); // verify mail 
 
-router.route('/login').post(authLimiter(5, 5), authController.login); // login in app
-// router.route('/login').post(limiter.authLimiter, authController.login) // login in app
+router.route('/login').post(createRateLimiter(5, 5), authController.login); // login in app
 
 router.post(
   '/refresh-token',
@@ -26,9 +24,15 @@ router.post(
   authController.refreshToken,
 );
 
-router.route('/forget-password').post(authController.forgetPassword);
-router.route('/reset-password').post(authController.resetPassword);
-router.route('/change-password/:userId').post(authController.changePassword); // Change Pass if match
+router
+  .route('/forget-password')
+  .post(createRateLimiter(5, 2), authController.forgetPassword);
+router
+  .route('/reset-password')
+  .post(createRateLimiter(5, 1), authController.resetPassword);
+router
+  .route('/change-password/:userId')
+  .post(createRateLimiter(10, 1), authController.changePassword); // Change Pass if match
 
 router.route('/update-user/:userId').put(authController.updateUser); // is to use update user profile
 router

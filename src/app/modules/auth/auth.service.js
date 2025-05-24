@@ -185,33 +185,22 @@ const refreshToken = async token => {
 };
 
 const updateUserService = async (userId, data) => {
-  try {
-    if (!userId) {
-      throw new ApiError(httpStatus.BAD_REQUEST, 'User ID is required.');
-    }
-    const user = UserModel.findOne({ _id: userId });
+  const user = UserModel.findOne({ _id: userId });
 
-    if (!user) {
-      throw new ApiError(httpStatus.NOT_FOUND, 'User not found.');
-    }
-
-    const { email, password, ...updateData } = data; // Avoid updating email/password
-
-    if (Object.keys(updateData).length === 0) {
-      throw new ApiError(httpStatus.BAD_REQUEST, 'No valid fields to update.');
-    }
-
-    // Update the data
-    const result = await UserModel.updateOne({ _id: userId }, updateData);
-    logger.info(result, 'result');
-    return result;
-  } catch (error) {
-    console.error('Error updating user:', error);
-    throw new ApiError(
-      httpStatus.INTERNAL_SERVER_ERROR,
-      'Internal Server Error',
-    );
+  if (!user) {
+    throw new ApiError(httpStatus.NOT_FOUND, 'User not found.');
   }
+
+  const { email, password, ...updateData } = data; // Avoid updating email/password
+
+  if (Object.keys(updateData).length === 0) {
+    throw new ApiError(httpStatus.BAD_REQUEST, 'No valid fields to update.');
+  }
+
+  // Update the data
+  const result = await UserModel.updateOne({ _id: userId }, updateData);
+  logger.info(result, 'result');
+  return result;
 };
 
 const getUserService = async userId => {
