@@ -4,13 +4,18 @@ import auth from '../../middlewares/auth/auth.js';
 import { LlamaAiController } from './groq.controller.js';
 const router = express.Router();
 
-router.route('/get-response').post(LlamaAiController.GroqAiGetResponse);
+router
+  .route('/get-response')
+  .post(
+    auth(ENUM_USER_ROLE.ADMIN, ENUM_USER_ROLE.USER),
+    LlamaAiController.GroqAiGetResponse,
+  );
 router
   .route('/get-response-anonymously')
   .post(LlamaAiController.GroqAiGetResponseAnonymously);
 
 router
-  .route('/get-response-from-db/:userId')
+  .route('/get-response-from-db')
   .get(
     auth(ENUM_USER_ROLE.ADMIN, ENUM_USER_ROLE.USER),
     LlamaAiController.LlamaAiGetResponseFromDbByUserId,
@@ -31,7 +36,7 @@ router
   );
 
 router
-  .route('/delete-all-response-from-db/:userId')
+  .route('/delete-all-response-from-db')
   .delete(
     auth(ENUM_USER_ROLE.ADMIN, ENUM_USER_ROLE.USER),
     LlamaAiController.deleteAllAiSessions,

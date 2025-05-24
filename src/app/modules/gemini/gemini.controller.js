@@ -19,7 +19,8 @@ const sessionMemoryStore = {};
 
 const GeminiAiGetResponse = catchAsync(async (req, res) => {
   const prompt = req.body?.prompt;
-  const userId = req.body?.user;
+  const userId = req.user?._id;
+  console.log(userId, 'userId from token in controller');
   const sessionId = req.body?.sessionId || randomUUID();
 
   if (!prompt) {

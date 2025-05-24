@@ -41,6 +41,7 @@ const deleteUser = catchAsync(async (req, res) => {
 });
 
 const getAllUsers = catchAsync(async (req, res) => {
+  
   const filters = pick(req.query, [
     'searchTerm',
     'email',

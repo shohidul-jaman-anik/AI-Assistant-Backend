@@ -8,17 +8,18 @@ import { BufferMemory } from 'langchain/memory';
 import httpStatus from 'http-status';
 import config from '../../../../config/index.js';
 import catchAsync from '../../../shared/catchAsync.js';
+import { logger } from '../../../shared/logger.js';
 import sendResponse from '../../../shared/sendResponse.js';
 import UserModel from '../auth/auth.model.js';
 import Llama from '../groq/groq.model.js';
 import { paymentController } from '../payment/payment.controller.js';
-import { logger } from '../../../shared/logger.js';
 
 const sessionMemoryStore = {}; // Stores session memory for each user session
 
 const QwenAiGetResponse = catchAsync(async (req, res) => {
   const prompt = req.body?.prompt;
-  const userId = req.body?.user;
+  const userId = req.user?._id;
+  console.log(userId, 'userId from token in controller');
   const sessionId = req.body?.sessionId || randomUUID(); // Unique session ID if not provided
 
   if (!prompt) {
@@ -147,7 +148,8 @@ const QwenQWQSessionMemoryStore = {}; // Stores session memory for each user ses
 
 const QwenQWQAiGetResponse = catchAsync(async (req, res) => {
   const prompt = req.body?.prompt;
-  const userId = req.body?.user;
+  const userId = req.user?._id;
+  console.log(userId, 'userId from token in controller');
   const sessionId = req.body?.sessionId || randomUUID(); // Unique session ID if not provided
 
   if (!prompt) {

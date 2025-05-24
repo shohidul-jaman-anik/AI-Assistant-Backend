@@ -1,10 +1,10 @@
-import httpStatus from 'http-status';
-import catchAsync from '../../../shared/catchAsync.js';
-import sendResponse from '../../../shared/sendResponse.js';
-import { LlamaAiService } from './groq.service.js';
 import zepPackage from '@getzep/zep-js';
 import { randomUUID } from 'crypto';
+import httpStatus from 'http-status';
+import catchAsync from '../../../shared/catchAsync.js';
 import { logger } from '../../../shared/logger.js';
+import sendResponse from '../../../shared/sendResponse.js';
+import { LlamaAiService } from './groq.service.js';
 // import { Serper } from 'serper';
 
 const { ZepClient } = zepPackage;
@@ -469,10 +469,6 @@ const { ZepClient } = zepPackage;
 //   }
 // });
 
-
-
-
-
 // const sessionMemoryStore = {}; // Stores session memory for each user session
 // const searchWeb = async (query) => {
 //   const searchApiUrl = `https://api.serpapi.com/search?q=${encodeURIComponent(query)}&api_key=${process.env.SERP_API_KEY}`;
@@ -766,15 +762,13 @@ const { ZepClient } = zepPackage;
 //   }
 // });
 
-
-
 // =========================================================
 //          Without Serper
 // ==========================================================
 
 const GroqAiGetResponse = catchAsync(async (req, res) => {
   const prompt = req.body?.prompt;
-  const userId = req.body?.user;
+  const userId = req.user?._id;
   const sessionIdFromClient = req.body?.sessionId;
   logger.info('✅ Request received at /groq:', req.body); // log incoming request
   const result = await LlamaAiService.getAiResponsesGroqService(
@@ -809,10 +803,12 @@ const GroqAiGetResponseAnonymously = catchAsync(async (req, res) => {
 });
 
 const LlamaAiGetResponseFromDbByUserId = catchAsync(async (req, res) => {
-  const id = req.params?.userId;
-  logger.info(id, 'session');
-
-  const responseData = await LlamaAiService.getAiResponsesByUserIdService(id);
+  // const id = req.params?.userId;
+  // logger.info(id, 'session');
+  const userId = req.user?._id;
+  console.log(userId, 'userId from token in controller');
+  const responseData =
+    await LlamaAiService.getAiResponsesByUserIdService(userId);
 
   sendResponse(res, {
     statusCode: httpStatus.OK,
@@ -856,8 +852,10 @@ const deleteOneAiSession = catchAsync(async (req, res) => {
 });
 
 const deleteAllAiSessions = catchAsync(async (req, res) => {
-  const id = req.params?.userId;
-  const result = await LlamaAiService.deleteAllAiSessionsService(id);
+  // const id = req.params?.userId;
+  const userId = req.user?._id;
+  console.log(userId, 'userId from token in controller');
+  const result = await LlamaAiService.deleteAllAiSessionsService(userId);
   logger.info(result, 'resultttt');
 
   if (!result.success) {

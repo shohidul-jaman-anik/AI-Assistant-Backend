@@ -1,27 +1,29 @@
-import Groq from "groq-sdk";
 import { InMemoryChatMessageHistory } from '@langchain/core/chat_history';
 import { AIMessage, HumanMessage } from '@langchain/core/messages';
 import { randomUUID } from 'crypto';
+import Groq from 'groq-sdk';
 import httpStatus from 'http-status';
+import { BufferMemory } from 'langchain/memory';
+import ApiError from '../../../errors/ApiError.js';
 import catchAsync from '../../../shared/catchAsync.js';
 import sendResponse from '../../../shared/sendResponse.js';
 import UserModel from '../auth/auth.model.js';
 import Llama from '../groq/groq.model.js';
-import { BufferMemory } from 'langchain/memory';
-import ApiError from "../../../errors/ApiError.js";
 
 const groq = new Groq(); // Initialize the Groq SDK
 
 const sessionMemoryStore = {};
 
 const DeepseekAiGetResponse = catchAsync(async (req, res) => {
-  const { prompt, user: userId, sessionId = randomUUID() } = req.body;
+  const userId = req.user?._id;
+  console.log(userId, 'userId from token in controller');
+  const { prompt, sessionId = randomUUID() } = req.body;
 
   if (!prompt) {
     return sendResponse(res, {
       statusCode: httpStatus.BAD_REQUEST,
       success: false,
-      message: "Prompt is required.",
+      message: 'Prompt is required.',
     });
   }
 
@@ -34,7 +36,7 @@ const DeepseekAiGetResponse = catchAsync(async (req, res) => {
   if (!memory) {
     memory = new BufferMemory({
       returnMessages: true,
-      memoryKey: "history",
+      memoryKey: 'history',
       chatHistory: new InMemoryChatMessageHistory(),
     });
     sessionMemoryStore[sessionId] = memory;
@@ -48,10 +50,10 @@ const DeepseekAiGetResponse = catchAsync(async (req, res) => {
     // Call Groq API to generate a response using the deepseek model
     const completion = await groq.chat.completions.create({
       // model: "deepseek-r1-distill-qwen-32b", // Use the deepseek model
-      model: "DeepSeek-R1-Distill-Llama-70B",
+      model: 'DeepSeek-R1-Distill-Llama-70B',
       messages: [
         {
-          role: "user",
+          role: 'user',
           content: prompt,
         },
       ],
@@ -60,13 +62,14 @@ const DeepseekAiGetResponse = catchAsync(async (req, res) => {
     const endTime = Date.now(); // Record end time
     const totalTime = endTime - startTime; // Calculate total time taken
 
-    const reply = completion.choices[0]?.message?.content || "No reply generated";
+    const reply =
+      completion.choices[0]?.message?.content || 'No reply generated';
 
     await memory.chatHistory.addMessage(new AIMessage(reply));
 
     const responseData = {
       prompt,
-      model: "deepseek-r1-distill-qwen-32b",
+      model: 'deepseek-r1-distill-qwen-32b',
       reply,
       total_time: totalTime, // Add total time to response data
     };
@@ -90,21 +93,19 @@ const DeepseekAiGetResponse = catchAsync(async (req, res) => {
     sendResponse(res, {
       statusCode: httpStatus.OK,
       success: true,
-      message: "Response processed successfully.",
+      message: 'Response processed successfully.',
       data: { prompt, sessionId, reply },
     });
   } catch (error) {
-    console.error("Error in Groq DeepSeek AI:", error);
+    console.error('Error in Groq DeepSeek AI:', error);
     sendResponse(res, {
       statusCode: httpStatus.INTERNAL_SERVER_ERROR,
       success: false,
-      message: "Failed to get response",
+      message: 'Failed to get response',
       error: error.message,
     });
   }
 });
-
-
 
 export const DeepseekAiController = {
   DeepseekAiGetResponse,

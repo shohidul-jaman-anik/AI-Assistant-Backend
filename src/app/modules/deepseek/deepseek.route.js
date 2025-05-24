@@ -1,6 +1,7 @@
 import express from 'express';
 import auth from '../../middlewares/auth/auth.js';
 import { DeepseekAiController } from './deepseek.controller.js';
+import { ENUM_USER_ROLE } from '../../../shared/enum.js';
 
 const router = express.Router();
 

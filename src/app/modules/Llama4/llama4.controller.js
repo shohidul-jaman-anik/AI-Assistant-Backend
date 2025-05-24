@@ -2,24 +2,24 @@ import { InMemoryChatMessageHistory } from '@langchain/core/chat_history';
 import { AIMessage, HumanMessage } from '@langchain/core/messages';
 import { ChatGroq } from '@langchain/groq';
 import { randomUUID } from 'crypto';
+import httpStatus from 'http-status';
 import { ConversationChain } from 'langchain/chains';
 import { BufferMemory } from 'langchain/memory';
-import httpStatus from 'http-status';
 import config from '../../../../config/index.js';
+import ApiError from '../../../errors/ApiError.js';
 import catchAsync from '../../../shared/catchAsync.js';
+import { logger } from '../../../shared/logger.js';
 import sendResponse from '../../../shared/sendResponse.js';
 import UserModel from '../auth/auth.model.js';
 import Llama from '../groq/groq.model.js';
 import { paymentController } from '../payment/payment.controller.js';
-import ApiError from '../../../errors/ApiError.js';
-import { logger } from '../../../shared/logger.js';
-
 
 const sessionMemoryStore = {}; // Stores session memory for each user session
 
 const Llama4AiGetResponse = catchAsync(async (req, res) => {
   const prompt = req.body?.prompt;
-  const userId = req.body?.user;
+  const userId = req.user?._id;
+  console.log(userId, 'userId from token in controller');
   const sessionId = req.body?.sessionId || randomUUID(); // Unique session ID if not provided
 
   if (!prompt) {
@@ -68,20 +68,24 @@ const Llama4AiGetResponse = catchAsync(async (req, res) => {
     const reply = res1?.response || 'No reply generated';
 
     try {
-      const paymentResult = await paymentController.incrementPromptsUsed(userId);
-    
+      const paymentResult =
+        await paymentController.incrementPromptsUsed(userId);
+
       if (!paymentResult.success) {
-        return res.status(400).json({ success: false, message: paymentResult.message });
+        return res
+          .status(400)
+          .json({ success: false, message: paymentResult.message });
       }
     } catch (error) {
       console.error('Error in incrementPromptsUsed:', error);
-    
+
       // Send the full error message as a response
       return res.status(400).json({
         success: false,
-        message: error.message || 'An error occurred while updating prompt usage.',
+        message:
+          error.message || 'An error occurred while updating prompt usage.',
       });
-    }  
+    }
 
     // Store AI response in chat history
     await memory.chatHistory.addMessage(new AIMessage(reply));
@@ -134,7 +138,6 @@ const Llama4AiGetResponse = catchAsync(async (req, res) => {
     });
   }
 });
-
 
 export const Llama4AiController = {
   Llama4AiGetResponse,
