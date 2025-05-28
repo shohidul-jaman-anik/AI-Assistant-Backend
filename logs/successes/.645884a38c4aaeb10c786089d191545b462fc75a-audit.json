@@ -6,71 +6,6 @@
     "auditLog": "/app/ason-core-service/logs/successes/.645884a38c4aaeb10c786089d191545b462fc75a-audit.json",
     "files": [
         {
-            "date": 1746541162395,
-            "name": "/app/ason-core-service/logs/successes/RH-2025-05-06-14-success.log",
-            "hash": "29319fd0ea9ae756ccd2e5a6dcb2008ada87af399bf0ad5593ad3bdcc9be3691"
-        },
-        {
-            "date": 1746554804415,
-            "name": "/app/ason-core-service/logs/successes/RH-2025-05-06-18-success.log",
-            "hash": "3ebb96efe346edea7000b19403c6337684ee0a92752633681b005f651bc47b55"
-        },
-        {
-            "date": 1746559708664,
-            "name": "/app/ason-core-service/logs/successes/RH-2025-05-06-19-success.log",
-            "hash": "a26e100cfb6ed774aa9a291e7330718ef6696a42c6a7e0811be5756f9676a08f"
-        },
-        {
-            "date": 1746562656305,
-            "name": "/app/ason-core-service/logs/successes/RH-2025-05-06-20-success.log",
-            "hash": "e2d424e0e42ce0f6ad3f24f3de58341b45b507ac2656839d467a516f4a918c96"
-        },
-        {
-            "date": 1746565843861,
-            "name": "/app/ason-core-service/logs/successes/RH-2025-05-06-21-success.log",
-            "hash": "38992865a9dd7305d31a52e2f696a0a1addca3fabd7fe5450c646fc7b15056f1"
-        },
-        {
-            "date": 1746569534233,
-            "name": "/app/ason-core-service/logs/successes/RH-2025-05-06-22-success.log",
-            "hash": "e1e3a9c5377638309552d6b5325f6ab1fcf018149764c5de428b64ab6b7f0746"
-        },
-        {
-            "date": 1746608675145,
-            "name": "/app/ason-core-service/logs/successes/RH-2025-05-07-09-success.log",
-            "hash": "67f128efab4dcef954e15c4794c64e1ed9b77e6e06242c6d8f298f3449ce6956"
-        },
-        {
-            "date": 1746615108553,
-            "name": "/app/ason-core-service/logs/successes/RH-2025-05-07-10-success.log",
-            "hash": "7bf4a85680ce0d2adfa32f6cadddaf4da6668443670157feb9786a825b65b3ad"
-        },
-        {
-            "date": 1746615762116,
-            "name": "/app/ason-core-service/logs/successes/RH-2025-05-07-11-success.log",
-            "hash": "f22e4893a035acf0e8e4aecc846e351f84371f09faaa172ecc937ba880a4461a"
-        },
-        {
-            "date": 1746623778643,
-            "name": "/app/ason-core-service/logs/successes/RH-2025-05-07-13-success.log",
-            "hash": "f1292a57712f0d17e551700ebcbe94fe4464c311845c47a9011ba2266a5be099"
-        },
-        {
-            "date": 1746637474828,
-            "name": "/app/ason-core-service/logs/successes/RH-2025-05-07-17-success.log",
-            "hash": "62a347bad8e1d925a77a36d2d6bf843a2bbd3d285c746c8ad26a6602b0a73645"
-        },
-        {
-            "date": 1746801753065,
-            "name": "/app/ason-core-service/logs/successes/RH-2025-05-09-14-success.log",
-            "hash": "724dc56600f5e1cdc0f8892567c63625fbd1716f6a237942c57e6e9fd05b2bfd"
-        },
-        {
-            "date": 1746891965133,
-            "name": "/app/ason-core-service/logs/successes/RH-2025-05-10-15-success.log",
-            "hash": "74103b0e5427121126e5395780fb154ad27ab489b539434649a853352c4691e2"
-        },
-        {
             "date": 1746969437780,
             "name": "/app/ason-core-service/logs/successes/RH-2025-05-11-13-success.log",
             "hash": "df34dfe5313aed170bbeec36981b9033f2ba49664770f695921f9b039674ade4"
@@ -104,6 +39,16 @@
             "date": 1747150674806,
             "name": "/app/ason-core-service/logs/successes/RH-2025-05-13-15-success.log",
             "hash": "400d4fe5632b82f6b1278dd565345152fe52009e9196cdd1ace58a5bbce074a1"
+        },
+        {
+            "date": 1748116657817,
+            "name": "/app/ason-core-service/logs/successes/RH-2025-05-24-19-success.log",
+            "hash": "43fe68e9854e80ef6cf7ba40b5dc932d90b5ec835b54f502d5939f353ed3dc35"
+        },
+        {
+            "date": 1748116829825,
+            "name": "/app/ason-core-service/logs/successes/RH-2025-05-24-20-success.log",
+            "hash": "b0e3e6e6259e1199060b952b805956f1c324e02f43ab345d2522bb9b3e0a6d38"
         }
     ],
     "hashType": "sha256"

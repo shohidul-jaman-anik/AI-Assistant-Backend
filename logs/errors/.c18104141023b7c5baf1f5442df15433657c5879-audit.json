@@ -6,71 +6,6 @@
     "auditLog": "/app/ason-core-service/logs/errors/.c18104141023b7c5baf1f5442df15433657c5879-audit.json",
     "files": [
         {
-            "date": 1746541162404,
-            "name": "/app/ason-core-service/logs/errors/RH-2025-05-06-14-error.log",
-            "hash": "e8a83bd7a3c87f82f36ddb1beb105af315e5a1278c95adbdfdb60aad23ac5421"
-        },
-        {
-            "date": 1746554804432,
-            "name": "/app/ason-core-service/logs/errors/RH-2025-05-06-18-error.log",
-            "hash": "19eb90142b5b1a00ea4d9dff70a28bf13139e7d9043a2e998cf3bb570a16985b"
-        },
-        {
-            "date": 1746559708674,
-            "name": "/app/ason-core-service/logs/errors/RH-2025-05-06-19-error.log",
-            "hash": "f8533c26a48cf49297de32708c42452699e86ffc4e98e33bb9a0151e3ea5d0c2"
-        },
-        {
-            "date": 1746562959037,
-            "name": "/app/ason-core-service/logs/errors/RH-2025-05-06-20-error.log",
-            "hash": "30f5240b67aa553ba2295e4518153bb644f8ad09bcda9108910090ccf0e36c72"
-        },
-        {
-            "date": 1746565843872,
-            "name": "/app/ason-core-service/logs/errors/RH-2025-05-06-21-error.log",
-            "hash": "fae81822ce492f2d7aa3120ffbd18922b3702edc49bfcb7eabba0c63a49f98af"
-        },
-        {
-            "date": 1746569534243,
-            "name": "/app/ason-core-service/logs/errors/RH-2025-05-06-22-error.log",
-            "hash": "ba8feefba00a5a39d99db9d010d7053fb0fea240c71aec4299d4819879f96ac1"
-        },
-        {
-            "date": 1746608675157,
-            "name": "/app/ason-core-service/logs/errors/RH-2025-05-07-09-error.log",
-            "hash": "7f3b82cfc2db971c85e491db48eb12ebcfb37d4d95c1714aae6938e377a1df1d"
-        },
-        {
-            "date": 1746615108566,
-            "name": "/app/ason-core-service/logs/errors/RH-2025-05-07-10-error.log",
-            "hash": "feb39d2b13ad9eb74d46146b57b82f758b8655a53e37f568fdc6195438a88f89"
-        },
-        {
-            "date": 1746615762126,
-            "name": "/app/ason-core-service/logs/errors/RH-2025-05-07-11-error.log",
-            "hash": "56d5a793f8382bdb55701bf998741e406cbbf778ec8dd73b54da7cc6f4166c6b"
-        },
-        {
-            "date": 1746623778661,
-            "name": "/app/ason-core-service/logs/errors/RH-2025-05-07-13-error.log",
-            "hash": "f08fe765268dfdd258c23a8956dce14457b94ba8426be13ba30e979b9a497788"
-        },
-        {
-            "date": 1746637474837,
-            "name": "/app/ason-core-service/logs/errors/RH-2025-05-07-17-error.log",
-            "hash": "68ef707bf1ed7d3d7ce361bf23fdaf2b03893ace49297cb44fe825f4e56ee1e3"
-        },
-        {
-            "date": 1746801753098,
-            "name": "/app/ason-core-service/logs/errors/RH-2025-05-09-14-error.log",
-            "hash": "bbda251fd897e892ec486c6c9a919d471b0bd0d0e49bfc872dfd6dc672700880"
-        },
-        {
-            "date": 1746891965143,
-            "name": "/app/ason-core-service/logs/errors/RH-2025-05-10-15-error.log",
-            "hash": "27687dd166a7202c4ee5ec445266573268b20439e4d9ab0e775b7927103d4bc3"
-        },
-        {
             "date": 1746969437798,
             "name": "/app/ason-core-service/logs/errors/RH-2025-05-11-13-error.log",
             "hash": "1be4a7d9f8db086d6a870ff413b46b5a7a40d6e19ab38881ba95b47518d1b8ea"
@@ -99,6 +34,16 @@
             "date": 1747150674829,
             "name": "/app/ason-core-service/logs/errors/RH-2025-05-13-15-error.log",
             "hash": "3aaf2f0249a57b7b8e2cfdda985d1e1cf91e3398734e79a7bf5b6faea14426d8"
+        },
+        {
+            "date": 1748116657900,
+            "name": "/app/ason-core-service/logs/errors/RH-2025-05-24-19-error.log",
+            "hash": "5b4b2ea4a783ac4f6f9f2418d33492e516a246d1e9a6a89e059e92229b54946c"
+        },
+        {
+            "date": 1748117115485,
+            "name": "/app/ason-core-service/logs/errors/RH-2025-05-24-20-error.log",
+            "hash": "7d3c9daf2060b069a05f7a828c47418ec7980fd6fd3d8eea6e2099abd24cb84e"
         }
     ],
     "hashType": "sha256"

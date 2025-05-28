@@ -13,11 +13,11 @@ services:
     networks:
       - ason-network
     # depends_on:
-      # - mongodb
-      # - redis-stack
-      # - elasticsearch
-      # - kibana
-      # - rabbitmq
+    # - mongodb
+    # - redis-stack
+    # - elasticsearch
+    # - kibana
+    # - rabbitmq
     depends_on:
       mongodb:
         condition: service_started
@@ -35,30 +35,23 @@ services:
     container_name: elasticsearch
     restart: always
     environment:
-      ES_JAVA_OPTS: "-Xms1024m -Xmx1024m"
-      discovery.type: single-node
-    ulimits:
-      memlock:
-        soft: -1
-        hard: -1
-    mem_limit: 2g
+      - discovery.type=single-node
+      - xpack.security.enabled=false
+      - xpack.security.http.ssl.enabled=false
+      - xpack.security.transport.ssl.enabled=false
+      - ES_JAVA_OPTS=-Xms1024m -Xmx1024m
     ports:
       - '9200:9200'
       - '9300:9300'
     networks:
       - ason-network
-    healthcheck:
-      test: curl -s http://localhost:9200/_cluster/health || exit 1
-      interval: 30s
-      timeout: 10s
-      retries: 5
 
   kibana:
-    image: kibana:7.9.2
+    image: kibana:8.18.1
     container_name: kibana
     restart: always
     environment:
-      ELASTICSEARCH_URL: http://elasticsearch:9200
+      ELASTICSEARCH_HOSTS: 'http://elasticsearch:9200'
     ports:
       - '5601:5601'
     depends_on:
@@ -102,8 +95,8 @@ services:
       - ason-network
     volumes:
       - mongodb_data:/data/db
-    command: ["--replSet", "rs0"]
-  
+    command: ['--replSet', 'rs0']
+
   mongodb-express:
     image: mongo-express:latest
     container_name: mongodb-express
@@ -132,7 +125,7 @@ services:
       - ason-network
     volumes:
       - postgres_data:/var/lib/postgresql/data
-  
+
   pgadmin:
     image: dpage/pgadmin4:latest
     container_name: pgadmin
@@ -146,9 +139,6 @@ services:
     depends_on:
       - postgresql
 
-
- 
-
 networks:
   ason-network:
     driver: bridge
@@ -158,5 +148,4 @@ volumes:
   postgres_data:
   redis_data:
   rabbitmq_data:
-
 # end

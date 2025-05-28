@@ -287,8 +287,18 @@ const changePassword = async (req, res, next) => {
   session.startTransaction();
 
   try {
-    const userId = req.params?.userId;
+    // const userId = req.params?.userId;
+    const userId = req.user?._id;
+    console.log(userId, 'userId from token in controller');
     const { newPassword, oldPassword } = req.body;
+    if (!oldPassword || !newPassword) {
+      await session.abortTransaction();
+      session.endSession();
+      return res.status(400).json({
+        status: 'Fail',
+        message: 'Old password and new password are required',
+      });
+    }
 
     if (!userId) {
       await session.abortTransaction();
@@ -298,7 +308,9 @@ const changePassword = async (req, res, next) => {
         .send({ error: 'Invalid user ID' });
     }
 
-    const user = await UserModel.findById(userId).session(session);
+    const user = await UserModel.findById(userId)
+      .select('+password')
+      .session(session);
 
     if (!user) {
       await session.abortTransaction();
@@ -341,7 +353,9 @@ const changePassword = async (req, res, next) => {
 };
 
 const getUser = catchAsync(async (req, res) => {
-  const userId = req.params?.userId;
+  // const userId = req.params?.userId;
+  const userId = req.user?._id;
+  console.log(userId, 'userId from token in controller');
 
   const result = await authService.getUserService(userId);
 
