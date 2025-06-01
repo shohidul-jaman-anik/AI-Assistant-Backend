@@ -12,11 +12,11 @@ import { BufferMemory } from 'langchain/memory';
 import mongoose from 'mongoose';
 import config from '../../../../config/index.js';
 import ApiError from '../../../errors/ApiError.js';
+import { logger } from '../../../shared/logger.js';
 import UserModel from '../auth/auth.model.js';
 import { paymentController } from '../payment/payment.controller.js';
 import Llama from './groq.model.js';
 import { fetchSearchResults } from './groq.utilities.js';
-import { logger } from '../../../shared/logger.js';
 
 // const sessionMemoryStore = {}; // Stores session memory for each user session
 
@@ -183,21 +183,31 @@ export const getAiResponsesGroqService = async (
     const reply = res1?.response || 'No reply generated';
 
     // Handle prompt usage tracking
+
     try {
       const paymentResult =
         await paymentController.incrementPromptsUsed(userId);
+
       if (!paymentResult.success) {
-        return { success: false, message: paymentResult.message };
+        // return res
+        //   .status(400)
+        //   .json({ success: false, message: paymentResult.message });
+        throw new ApiError(httpStatus.BAD_REQUEST, paymentResult.message);
       }
     } catch (error) {
       console.error('Error in incrementPromptsUsed:', error);
-      return {
-        success: false,
-        message:
-          error.message || 'An error occurred while updating prompt usage.',
-      };
-    }
 
+      // Send the full error message as a response
+      // return res.status(400).json({
+      //   success: false,
+      //   message:
+      //     error.message || 'An error occurred while updating prompt usage.',
+      // });
+      throw new ApiError(
+        httpStatus.INTERNAL_SERVER_ERROR,
+        error.message || 'An error occurred while updating prompt usage.',
+      );
+    }
     // Save response in database
     const responseData = {
       prompt,

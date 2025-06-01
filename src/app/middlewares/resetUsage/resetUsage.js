@@ -1,12 +1,12 @@
 import cron from 'node-cron';
 import SubscriptionModel from '../../modules/payment/payment.model.js';
 import UserModel from '../../modules/auth/auth.model.js';
-import { logger } from '../../../shared/logger.js';
 
 cron.schedule(
-  '0 0 * * *', // Runs at 3:11 PM UTC (3:11 PM Bangladesh Time)
+  '47 18 * * *', // Runs at 6:47 PM UTC (3:11 PM Bangladesh Time)
+  // '30 2 * * *',  // Runs at 2:30 AM Bangladesh Time
   async () => {
-    logger.info(`⏳ Running scheduled task at ${new Date().toLocaleString('en-US', { timeZone: 'Asia/Dhaka' })}`);
+    console.log(`⏳ Running scheduled task at ${new Date().toLocaleString('en-US', { timeZone: 'Asia/Dhaka' })}`);
 
     // ✅ 1. Reset daily usage for all active subscriptions (paid & not expired)
     const activeSubscriptions = await SubscriptionModel.find({
@@ -20,7 +20,7 @@ cron.schedule(
       await subscription.save();
     }
 
-    logger.info(`✅ Reset prompts & images for ${activeSubscriptions.length} active subscriptions.`);
+    console.log(`✅ Reset prompts & images for ${activeSubscriptions.length} active subscriptions.`);
 
     // ✅ 2. Expire subscriptions that have reached their expiry date:-
     const expiredSubscriptions = await SubscriptionModel.find({
@@ -39,7 +39,7 @@ cron.schedule(
       );
     }
 
-    logger.info(`✅ Expired ${expiredSubscriptions.length} subscriptions.`);
+    console.log(`✅ Expired ${expiredSubscriptions.length} subscriptions.`);
 
     // ✅ 3. Reset free plan usage for all users
     await UserModel.updateMany(
@@ -53,7 +53,7 @@ cron.schedule(
       }
     );
 
-    logger.info('✅ Reset free plan usage for all users.');
+    console.log('✅ Reset free plan usage for all users.');
   },
   {
     scheduled: true,

@@ -109,6 +109,41 @@
             "date": 1748441964188,
             "name": "C:\\Fiverr\\ASON\\ASON Backends\\ASON-Core-Service\\logs\\successes\\RH-2025-05-28-20-success.log",
             "hash": "994a9e3f8a2956cfde2237cbcf2bb7b4781ad57cb0ba43a466abff5da9478d55"
+        },
+        {
+            "date": 1748639718828,
+            "name": "C:\\Fiverr\\ASON\\ASON Backends\\ASON-Core-Service\\logs\\successes\\RH-2025-05-31-03-success.log",
+            "hash": "8c163d23d867d17789673ef73d5ebb9d08dcaa0446e02228b6363ff07b07c0cf"
+        },
+        {
+            "date": 1748643074128,
+            "name": "C:\\Fiverr\\ASON\\ASON Backends\\ASON-Core-Service\\logs\\successes\\RH-2025-05-31-04-success.log",
+            "hash": "990201100d22a8cee69bdc633476a9adfa0d5dcd66298eef7f63a0f8a6a3f527"
+        },
+        {
+            "date": 1748780734848,
+            "name": "C:\\Fiverr\\ASON\\ASON Backends\\ASON-Core-Service\\logs\\successes\\RH-2025-06-01-18-success.log",
+            "hash": "9f79593ccfc025ba63511434dd9ca145d53da1b6392daf8fc1c221e33ebf5da9"
+        },
+        {
+            "date": 1748782828194,
+            "name": "C:\\Fiverr\\ASON\\ASON Backends\\ASON-Core-Service\\logs\\successes\\RH-2025-06-01-19-success.log",
+            "hash": "4d4386140d74fd096955cfcc4db11789466b2463744575167736d5daf9f619f3"
+        },
+        {
+            "date": 1748803619256,
+            "name": "C:\\Fiverr\\ASON\\ASON Backends\\ASON-Core-Service\\logs\\successes\\RH-2025-06-02-00-success.log",
+            "hash": "467041e55662d6702289ca4cd5564cb47dcf7cb046fb94a261afc30ff5786a7e"
+        },
+        {
+            "date": 1748804921100,
+            "name": "C:\\Fiverr\\ASON\\ASON Backends\\ASON-Core-Service\\logs\\successes\\RH-2025-06-02-01-success.log",
+            "hash": "ecc5d92ff5f002a7fe504a373a9fd77a97a94b7e5aefa6bab5044c6febf1b2ed"
+        },
+        {
+            "date": 1748808000101,
+            "name": "C:\\Fiverr\\ASON\\ASON Backends\\ASON-Core-Service\\logs\\successes\\RH-2025-06-02-02-success.log",
+            "hash": "2e0475da98ca9bd2fb28eb3e7bb320f9b225ad99877644c15203ff594d348243"
         }
     ],
     "hashType": "sha256"

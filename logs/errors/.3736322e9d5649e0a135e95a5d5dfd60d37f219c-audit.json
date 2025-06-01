@@ -99,6 +99,41 @@
             "date": 1748441964207,
             "name": "C:\\Fiverr\\ASON\\ASON Backends\\ASON-Core-Service\\logs\\errors\\RH-2025-05-28-20-error.log",
             "hash": "bbe4111570c082312ba9ad99d98a475a132d163f212d5c01e6b5839c4af2a8cb"
+        },
+        {
+            "date": 1748639718841,
+            "name": "C:\\Fiverr\\ASON\\ASON Backends\\ASON-Core-Service\\logs\\errors\\RH-2025-05-31-03-error.log",
+            "hash": "3165842906f5060c7ed6238f8e9f12eaa464fa54dcf010215e96a7f20e0704a1"
+        },
+        {
+            "date": 1748643074137,
+            "name": "C:\\Fiverr\\ASON\\ASON Backends\\ASON-Core-Service\\logs\\errors\\RH-2025-05-31-04-error.log",
+            "hash": "1ace10d0c18b5d59c4c83451f9935a0e9e3de37c0f9cb665baab3ab450b04c6d"
+        },
+        {
+            "date": 1748780734863,
+            "name": "C:\\Fiverr\\ASON\\ASON Backends\\ASON-Core-Service\\logs\\errors\\RH-2025-06-01-18-error.log",
+            "hash": "0b15b1eca90b9bff60e25ff1988c243b47530c4842d585e9e4ee995babf73e3e"
+        },
+        {
+            "date": 1748782828200,
+            "name": "C:\\Fiverr\\ASON\\ASON Backends\\ASON-Core-Service\\logs\\errors\\RH-2025-06-01-19-error.log",
+            "hash": "f07a8b4ee8db6af6278b37aedb8441681c339a6bd9f59e6de9bc10f3295a7619"
+        },
+        {
+            "date": 1748803619269,
+            "name": "C:\\Fiverr\\ASON\\ASON Backends\\ASON-Core-Service\\logs\\errors\\RH-2025-06-02-00-error.log",
+            "hash": "bd19f32f41c3ecc7141eb168497cf5438bcd7647c287a0b21fe49cbba3b03e63"
+        },
+        {
+            "date": 1748804921105,
+            "name": "C:\\Fiverr\\ASON\\ASON Backends\\ASON-Core-Service\\logs\\errors\\RH-2025-06-02-01-error.log",
+            "hash": "4bb8d7d7be28cee07d534d7fd0f7903081b987de80cb542c77bff34e4a53db0e"
+        },
+        {
+            "date": 1748808003820,
+            "name": "C:\\Fiverr\\ASON\\ASON Backends\\ASON-Core-Service\\logs\\errors\\RH-2025-06-02-02-error.log",
+            "hash": "5c5e7cfa2d78030758a5daec37e19d7452c2cff89cd8fa892f01a844ad67fd86"
         }
     ],
     "hashType": "sha256"

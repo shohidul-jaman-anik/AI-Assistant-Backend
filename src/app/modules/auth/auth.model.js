@@ -19,7 +19,7 @@ const UserSchema = new mongoose.Schema(
       type: String,
       // required: [true, 'Please provide a password'],
       unique: false,
-      select:0
+      select: 0,
     },
     isSubscribed: {
       type: Boolean,
@@ -31,7 +31,8 @@ const UserSchema = new mongoose.Schema(
       plan_name: { type: String }, // "personal", "business"
       duration: { type: String, enum: ['month', 'year'] }, // "month" or "year"
       expiresAt: { type: Date },
-      status: { type: String, enum: ['paid', 'expired'], default: 'paid' },
+      status: { type: String, enum: ['paid', 'expired'] },
+      invoiceUrl: { type: String },
     },
 
     freePlanUsage: {

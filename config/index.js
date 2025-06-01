@@ -7,6 +7,7 @@ export default {
   env: process.env.NODE_ENV,
   database_local: process.env.DATABASE_LOCAL,
   port: process.env.PORT,
+  client_url: process.env.CLIENT_URL,
   jwt: {
     access_token: process.env.JWT_ACCESS_TOKEN,
     access_expires_in: process.env.JWT_ACCESS_EXPIRES_IN,
@@ -31,6 +32,12 @@ export default {
     mailgun_key: process.env.MAILGUN_KEY,
     mailgun_from: process.env.MAILGUN_FROM,
   },
+  composio: {
+    projectId: process.env.COMPOSIO_PROJECT_ID,
+    clientId: process.env.COMPOSIO_CLIENT_ID,
+    clientSecret: process.env.COMPOSIO_CLIENT_SECRET,
+    apiKey: process.env.COMPOSIO_API_KEY,
+  },
   groq_api_key: process.env.GROQ_API_KEY,
   tavily_api_key: process.env.TAVILY_API_KEY,
   serper_api_key: process.env.SERPER_API_KEY,
@@ -38,6 +45,8 @@ export default {
   gemini_secret_key: process.env.GEMINI_API_KEY,
   deepseek_secret_key: process.env.DEEPSEEK_API_KEY,
   openai_secret_key: process.env.OPENAI_API_KEY,
-  stripe_secret_key: process.env.STRIPE_SECRET_KEY,
-  stripe_webhook_secret_key: process.env.STRIPE_WEBHOOK_SECRET,
+  stripe: {
+    stripe_secret_key: process.env.STRIPE_SECRET_KEY,
+    stripe_webhook_secret_key: process.env.STRIPE_WEBHOOK_SECRET,
+  },
 };

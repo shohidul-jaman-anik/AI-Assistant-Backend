@@ -4,14 +4,13 @@ import sendResponse from '../../../shared/sendResponse.js';
 import UserModel from '../auth/auth.model.js';
 import SubscriptionModel from './payment.model.js';
 import { PaymentService } from './payment.service.js';
-import { checkImageUsageLimits, checkPromtsUsageLimits } from '../../middlewares/checkUsageLimits/checkUsageLimits.js';
+import { checkUsageLimits } from '../../middlewares/checkUsageLimits/checkUsageLimits.js';
 import { checkFreePlanLimits } from '../../middlewares/checkFreePlanLimits/checkFreePlanLimits.js';
-import { logger } from '../../../shared/logger.js';
 
 const createCheckoutSession = catchAsync(async (req, res, next) => {
   const { userId, plan } = req.body;
-  logger.info(userId,plan)
-  
+  // console.log(userId, plan);
+
   if (!mongoose.Types.ObjectId.isValid(userId)) {
     console.error('Invalid User ID:', userId);
     return res.status(400).json({ error: 'Invalid User ID' });
@@ -34,17 +33,15 @@ const handleWebhook = catchAsync(async (req, res, next) => {
   await PaymentService.handleWebhookService(req, res);
 });
 
-
 const getAllSubscriptions = catchAsync(async (req, res, next) => {
-  const subscriptions = await SubscriptionModel.find({}).sort({ createdAt: -1 }); // ✅ Sort by latest first
-    sendResponse(res, {
-        statusCode: 200,
-        success: true,
-        message: "All subscriptions fetched successfully",
-        data: subscriptions,
-    });
+  const subscriptions = await SubscriptionModel.find({}).sort({ createdAt: -1 });
+  sendResponse(res, {
+    statusCode: 200,
+    success: true,
+    message: "All subscriptions fetched successfully",
+    data: subscriptions,
+  });
 });
-
 
 const getSubscriptionsByUserId = catchAsync(async (req, res, next) => {
   const { userId } = req.params;
@@ -52,32 +49,33 @@ const getSubscriptionsByUserId = catchAsync(async (req, res, next) => {
 
   const subscriptions = await SubscriptionModel.find({ userId })
     .populate('userId', 'email')
-    .sort({ createdAt: -1 }); // ✅ Sort by latest first
+    .sort({ createdAt: -1 });
 
   if (!subscriptions.length) {
-      return sendResponse(res, {
-          statusCode: 404,
-          success: false,
-          message: "No subscriptions found for this user",
-      });
+    return sendResponse(res, {
+      statusCode: 404,
+      success: false,
+      message: "No subscriptions found for this user",
+    });
   }
 
   sendResponse(res, {
-      statusCode: 200,
-      success: true,
-      message: "User subscriptions fetched successfully",
-      data: subscriptions,
+    statusCode: 200,
+    success: true,
+    message: "User subscriptions fetched successfully",
+    data: subscriptions,
   });
 });
 
-
 const incrementPromptsUsed = async (userId) => {
+  const session = await mongoose.startSession();
   try {
-    const user = await checkFreePlanLimits(userId, 'prompt');
+    session.startTransaction();
+    const user = await checkFreePlanLimits(userId, 'prompt').session(session);
 
     if (user.isSubscribed) {
-      const subscription = await checkPromtsUsageLimits(userId);
-      logger.info("Subscription check result:", subscription);
+      const subscription = await checkUsageLimits(userId);
+      console.log("Subscription check result:", subscription);
 
       if (!subscription || !subscription._id) {
         throw new Error('Subscription not found or invalid.');
@@ -85,31 +83,34 @@ const incrementPromptsUsed = async (userId) => {
 
       await SubscriptionModel.updateOne(
         { _id: subscription._id },
-        { $inc: { 'usage.promptsUsed': 1 } }
+        { $inc: { 'usage.promptsUsed': 1 } },
+        { session }
       );
     } else {
-      // Increment free plan usage
       user.freePlanUsage.promptsUsed += 1;
-      await user.save();
+      await user.save({ session });
     }
 
+    await session.commitTransaction();
     return { success: true, message: 'Prompt usage updated successfully.' };
-
   } catch (error) {
     console.error('Error in incrementPromptsUsed:', error);
+    await session.abortTransaction();
     return { success: false, message: error.message };
+  } finally {
+    session.endSession();
   }
 };
 
-
-
 const incrementImagesUsed = async (userId) => {
+  const session = await mongoose.startSession();
   try {
-    const user = await checkFreePlanLimits(userId, 'image');
+    session.startTransaction();
+    const user = await checkFreePlanLimits(userId, 'image').session(session);
 
     if (user.isSubscribed) {
-      const subscription = await checkImageUsageLimits(userId);
-      logger.info("Subscription check result:", subscription);
+      const subscription = await checkUsageLimits(userId);
+      // console.log("Subscription check result:", subscription);
 
       if (!subscription || !subscription._id) {
         throw new Error('Subscription not found or invalid.');
@@ -117,29 +118,30 @@ const incrementImagesUsed = async (userId) => {
 
       await SubscriptionModel.updateOne(
         { _id: subscription._id },
-        { $inc: { 'usage.imagesUsed': 1 } }
+        { $inc: { 'usage.imagesUsed': 1 } },
+        { session }
       );
     } else {
-      // Increment free plan usage
       user.freePlanUsage.imagesUsed += 1;
-      await user.save();
+      await user.save({ session });
     }
 
+    await session.commitTransaction();
     return { success: true, message: 'Image usage updated successfully.' };
-
   } catch (error) {
     console.error('Error in incrementImagesUsed:', error);
+    await session.abortTransaction();
     return { success: false, message: error.message || 'An error occurred while updating image usage.' };
+  } finally {
+    session.endSession();
   }
 };
 
-
-
 export const paymentController = {
-    createCheckoutSession,
-    handleWebhook,
-    getAllSubscriptions,
-    getSubscriptionsByUserId,
-    incrementPromptsUsed,
-    incrementImagesUsed
+  createCheckoutSession,
+  handleWebhook,
+  getAllSubscriptions,
+  getSubscriptionsByUserId,
+  incrementPromptsUsed,
+  incrementImagesUsed,
 };
