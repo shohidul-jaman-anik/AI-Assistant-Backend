@@ -1,0 +1,70 @@
+{"eventTimestamp":"2025-06-01T21:48:10.000Z","eventType":"charge.succeeded","level":"info","message":"Webhook event received","timestamp":"2025-06-01T21:48:12.677Z"}
+{"eventType":"charge.succeeded","level":"info","message":"Processing event","timestamp":"2025-06-01T21:48:12.679Z"}
+{"eventTimestamp":"2025-06-01T21:48:08.000Z","eventType":"customer.created","level":"info","message":"Webhook event received","timestamp":"2025-06-01T21:48:12.810Z"}
+{"eventType":"customer.created","level":"info","message":"Processing event","timestamp":"2025-06-01T21:48:12.811Z"}
+{"eventTimestamp":"2025-06-01T21:48:09.000Z","eventType":"customer.updated","level":"info","message":"Webhook event received","timestamp":"2025-06-01T21:48:12.873Z"}
+{"eventType":"customer.updated","level":"info","message":"Processing event","timestamp":"2025-06-01T21:48:12.874Z"}
+{"eventTimestamp":"2025-06-01T21:48:10.000Z","eventType":"customer.subscription.created","level":"info","message":"Webhook event received","timestamp":"2025-06-01T21:48:13.022Z"}
+{"eventType":"customer.subscription.created","level":"info","message":"Processing event","timestamp":"2025-06-01T21:48:13.023Z"}
+{"eventTimestamp":"2025-06-01T21:48:12.000Z","eventType":"checkout.session.completed","level":"info","message":"Webhook event received","timestamp":"2025-06-01T21:48:13.107Z"}
+{"eventType":"checkout.session.completed","level":"info","message":"Processing event","timestamp":"2025-06-01T21:48:13.108Z"}
+{"level":"info","message":"Checkout session data","sessionId":"cs_test_a1MP7jruFa4A1omEBIHo0WIzDqV6NyyBWDRn53jACAzgpkAqSwpFRukaLx","timestamp":"2025-06-01T21:48:13.108Z"}
+{"eventTimestamp":"2025-06-01T21:48:11.000Z","eventType":"customer.subscription.updated","level":"info","message":"Webhook event received","timestamp":"2025-06-01T21:48:13.164Z"}
+{"eventType":"customer.subscription.updated","level":"info","message":"Processing event","timestamp":"2025-06-01T21:48:13.165Z"}
+{"eventTimestamp":"2025-06-01T21:48:11.000Z","eventType":"payment_intent.succeeded","level":"info","message":"Webhook event received","timestamp":"2025-06-01T21:48:13.221Z"}
+{"eventType":"payment_intent.succeeded","level":"info","message":"Processing event","timestamp":"2025-06-01T21:48:13.222Z"}
+{"eventTimestamp":"2025-06-01T21:48:09.000Z","eventType":"payment_intent.created","level":"info","message":"Webhook event received","timestamp":"2025-06-01T21:48:13.255Z"}
+{"eventType":"payment_intent.created","level":"info","message":"Processing event","timestamp":"2025-06-01T21:48:13.256Z"}
+{"eventTimestamp":"2025-06-01T21:48:10.000Z","eventType":"invoice.created","level":"info","message":"Webhook event received","timestamp":"2025-06-01T21:48:13.345Z"}
+{"eventType":"invoice.created","level":"info","message":"Processing event","timestamp":"2025-06-01T21:48:13.346Z"}
+{"eventTimestamp":"2025-06-01T21:48:10.000Z","eventType":"invoice.finalized","level":"info","message":"Webhook event received","timestamp":"2025-06-01T21:48:13.433Z"}
+{"eventType":"invoice.finalized","level":"info","message":"Processing event","timestamp":"2025-06-01T21:48:13.434Z"}
+{"eventTimestamp":"2025-06-01T21:48:11.000Z","eventType":"invoice.updated","level":"info","message":"Webhook event received","timestamp":"2025-06-01T21:48:13.544Z"}
+{"eventType":"invoice.updated","level":"info","message":"Processing event","timestamp":"2025-06-01T21:48:13.545Z"}
+{"eventTimestamp":"2025-06-01T21:48:11.000Z","eventType":"invoice.paid","level":"info","message":"Webhook event received","timestamp":"2025-06-01T21:48:13.608Z"}
+{"eventType":"invoice.paid","level":"info","message":"Processing event","timestamp":"2025-06-01T21:48:13.608Z"}
+{"eventTimestamp":"2025-06-01T21:48:11.000Z","eventType":"invoice.payment_succeeded","level":"info","message":"Webhook event received","timestamp":"2025-06-01T21:48:13.693Z"}
+{"eventType":"invoice.payment_succeeded","level":"info","message":"Processing event","timestamp":"2025-06-01T21:48:13.694Z"}
+{"eventTimestamp":"2025-06-01T21:48:11.000Z","eventType":"payment_method.attached","level":"info","message":"Webhook event received","timestamp":"2025-06-01T21:48:13.976Z"}
+{"eventType":"payment_method.attached","level":"info","message":"Processing event","timestamp":"2025-06-01T21:48:13.977Z"}
+{"level":"info","message":"Subscription saved","subscriptionId":"683cca9e925d026ebf18a95d","timestamp":"2025-06-01T21:48:14.465Z"}
+{"email":"meram.michael@gmail.com","level":"info","message":"User updated","timestamp":"2025-06-01T21:48:14.544Z"}
+{"email":"meram.michael@gmail.com","level":"info","message":"Confirmation email sent","timestamp":"2025-06-01T21:48:15.702Z"}
+{"level":"info","message":"Subscription created and user updated successfully","timestamp":"2025-06-01T21:48:15.777Z","userId":"67c1389dfa1f0fc1dbe9fd64"}
+{"eventTimestamp":"2025-06-01T21:48:33.000Z","eventType":"invoice_payment.paid","level":"info","message":"Webhook event received","timestamp":"2025-06-01T21:48:33.596Z"}
+{"eventType":"invoice_payment.paid","level":"info","message":"Processing event","timestamp":"2025-06-01T21:48:33.597Z"}
+{"eventTimestamp":"2025-06-01T21:50:11.000Z","eventType":"charge.succeeded","level":"info","message":"Webhook event received","timestamp":"2025-06-01T21:50:13.189Z"}
+{"eventType":"charge.succeeded","level":"info","message":"Processing event","timestamp":"2025-06-01T21:50:13.190Z"}
+{"eventTimestamp":"2025-06-01T21:50:11.000Z","eventType":"payment_method.attached","level":"info","message":"Webhook event received","timestamp":"2025-06-01T21:50:13.264Z"}
+{"eventType":"payment_method.attached","level":"info","message":"Processing event","timestamp":"2025-06-01T21:50:13.264Z"}
+{"eventTimestamp":"2025-06-01T21:50:12.000Z","eventType":"checkout.session.completed","level":"info","message":"Webhook event received","timestamp":"2025-06-01T21:50:13.360Z"}
+{"eventType":"checkout.session.completed","level":"info","message":"Processing event","timestamp":"2025-06-01T21:50:13.360Z"}
+{"level":"info","message":"Checkout session data","sessionId":"cs_test_a18jh8mOkp9uwPgMSxFlclb16A6hzUHzDIYpQjqIbG0upJG4vy1iyhQyqP","timestamp":"2025-06-01T21:50:13.360Z"}
+{"eventTimestamp":"2025-06-01T21:50:09.000Z","eventType":"customer.created","level":"info","message":"Webhook event received","timestamp":"2025-06-01T21:50:13.453Z"}
+{"eventType":"customer.created","level":"info","message":"Processing event","timestamp":"2025-06-01T21:50:13.453Z"}
+{"eventTimestamp":"2025-06-01T21:50:10.000Z","eventType":"customer.updated","level":"info","message":"Webhook event received","timestamp":"2025-06-01T21:50:13.500Z"}
+{"eventType":"customer.updated","level":"info","message":"Processing event","timestamp":"2025-06-01T21:50:13.501Z"}
+{"eventTimestamp":"2025-06-01T21:50:10.000Z","eventType":"customer.subscription.created","level":"info","message":"Webhook event received","timestamp":"2025-06-01T21:50:13.606Z"}
+{"eventType":"customer.subscription.created","level":"info","message":"Processing event","timestamp":"2025-06-01T21:50:13.607Z"}
+{"eventTimestamp":"2025-06-01T21:50:12.000Z","eventType":"customer.subscription.updated","level":"info","message":"Webhook event received","timestamp":"2025-06-01T21:50:13.700Z"}
+{"eventType":"customer.subscription.updated","level":"info","message":"Processing event","timestamp":"2025-06-01T21:50:13.700Z"}
+{"eventTimestamp":"2025-06-01T21:50:11.000Z","eventType":"payment_intent.succeeded","level":"info","message":"Webhook event received","timestamp":"2025-06-01T21:50:13.784Z"}
+{"eventType":"payment_intent.succeeded","level":"info","message":"Processing event","timestamp":"2025-06-01T21:50:13.785Z"}
+{"eventTimestamp":"2025-06-01T21:50:10.000Z","eventType":"payment_intent.created","level":"info","message":"Webhook event received","timestamp":"2025-06-01T21:50:13.841Z"}
+{"eventType":"payment_intent.created","level":"info","message":"Processing event","timestamp":"2025-06-01T21:50:13.842Z"}
+{"eventTimestamp":"2025-06-01T21:50:10.000Z","eventType":"invoice.created","level":"info","message":"Webhook event received","timestamp":"2025-06-01T21:50:13.970Z"}
+{"eventType":"invoice.created","level":"info","message":"Processing event","timestamp":"2025-06-01T21:50:13.970Z"}
+{"eventTimestamp":"2025-06-01T21:50:10.000Z","eventType":"invoice.finalized","level":"info","message":"Webhook event received","timestamp":"2025-06-01T21:50:14.052Z"}
+{"eventType":"invoice.finalized","level":"info","message":"Processing event","timestamp":"2025-06-01T21:50:14.052Z"}
+{"eventTimestamp":"2025-06-01T21:50:12.000Z","eventType":"invoice.updated","level":"info","message":"Webhook event received","timestamp":"2025-06-01T21:50:14.184Z"}
+{"eventType":"invoice.updated","level":"info","message":"Processing event","timestamp":"2025-06-01T21:50:14.185Z"}
+{"level":"info","message":"Subscription saved","subscriptionId":"683ccb16925d026ebf18a963","timestamp":"2025-06-01T21:50:14.243Z"}
+{"eventTimestamp":"2025-06-01T21:50:12.000Z","eventType":"invoice.paid","level":"info","message":"Webhook event received","timestamp":"2025-06-01T21:50:14.266Z"}
+{"eventType":"invoice.paid","level":"info","message":"Processing event","timestamp":"2025-06-01T21:50:14.266Z"}
+{"email":"anik561460@gmail.com","level":"info","message":"User updated","timestamp":"2025-06-01T21:50:14.318Z"}
+{"eventTimestamp":"2025-06-01T21:50:12.000Z","eventType":"invoice.payment_succeeded","level":"info","message":"Webhook event received","timestamp":"2025-06-01T21:50:14.362Z"}
+{"eventType":"invoice.payment_succeeded","level":"info","message":"Processing event","timestamp":"2025-06-01T21:50:14.364Z"}
+{"email":"anik561460@gmail.com","level":"info","message":"Confirmation email sent","timestamp":"2025-06-01T21:50:15.388Z"}
+{"level":"info","message":"Subscription created and user updated successfully","timestamp":"2025-06-01T21:50:15.463Z","userId":"6830a57675ab371485a0be3a"}
+{"eventTimestamp":"2025-06-01T21:50:59.000Z","eventType":"invoice_payment.paid","level":"info","message":"Webhook event received","timestamp":"2025-06-01T21:50:59.424Z"}
+{"eventType":"invoice_payment.paid","level":"info","message":"Processing event","timestamp":"2025-06-01T21:50:59.424Z"}

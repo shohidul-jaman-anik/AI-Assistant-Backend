@@ -7,6 +7,7 @@ import { BufferMemory } from 'langchain/memory';
 // import { Serper } from 'serper';
 import httpStatus from 'http-status';
 import config from '../../../../config/index.js';
+import ApiError from '../../../errors/ApiError.js';
 import catchAsync from '../../../shared/catchAsync.js';
 import { logger } from '../../../shared/logger.js';
 import sendResponse from '../../../shared/sendResponse.js';
@@ -76,21 +77,25 @@ const QwenAiGetResponse = catchAsync(async (req, res) => {
         await paymentController.incrementPromptsUsed(userId);
 
       if (!paymentResult.success) {
-        return res
-          .status(400)
-          .json({ success: false, message: paymentResult.message });
+        // return res
+        //   .status(400)
+        //   .json({ success: false, message: paymentResult.message });
+        throw new ApiError(httpStatus.BAD_REQUEST, paymentResult.message);
       }
     } catch (error) {
       console.error('Error in incrementPromptsUsed:', error);
 
       // Send the full error message as a response
-      return res.status(400).json({
-        success: false,
-        message:
-          error.message || 'An error occurred while updating prompt usage.',
-      });
+      // return res.status(400).json({
+      //   success: false,
+      //   message:
+      //     error.message || 'An error occurred while updating prompt usage.',
+      // });
+      throw new ApiError(
+        httpStatus.INTERNAL_SERVER_ERROR,
+        error.message || 'An error occurred while updating prompt usage.',
+      );
     }
-
     // Store AI response in chat history
     await memory.chatHistory.addMessage(new AIMessage(reply));
 
@@ -205,19 +210,14 @@ const QwenQWQAiGetResponse = catchAsync(async (req, res) => {
         await paymentController.incrementPromptsUsed(userId);
 
       if (!paymentResult.success) {
-        return res
-          .status(400)
-          .json({ success: false, message: paymentResult.message });
+        throw new ApiError(httpStatus.BAD_REQUEST, paymentResult.message);
       }
     } catch (error) {
-      console.error('Error in incrementPromptsUsed:', error);
-
-      // Send the full error message as a response
-      return res.status(400).json({
-        success: false,
-        message:
-          error.message || 'An error occurred while updating prompt usage.',
-      });
+      logger.error('Error in incrementPromptsUsed:', error);
+      throw new ApiError(
+        httpStatus.INTERNAL_SERVER_ERROR,
+        error.message || 'An error occurred while updating prompt usage.',
+      );
     }
 
     // Store AI response in chat history

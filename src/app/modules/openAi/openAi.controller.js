@@ -10,6 +10,8 @@ import Llama from '../groq/groq.model.js';
 // import { ConversationChain } from 'langchain/chains';
 import { BufferMemory } from 'langchain/memory';
 import { OpenAI } from 'openai';
+import { logger } from '../../../shared/logger.js';
+import { paymentController } from '../payment/payment.controller.js';
 
 const openaiClient = new OpenAI({ apiKey: config.openai_secret_key });
 
@@ -61,6 +63,21 @@ const Gpt4oMiniGetResponse = catchAsync(async (req, res) => {
     const reply =
       response?.choices?.[0]?.message?.content || 'No reply generated';
     await memory.chatHistory.addMessage(new AIMessage(reply));
+
+    try {
+      const paymentResult =
+        await paymentController.incrementPromptsUsed(userId);
+
+      if (!paymentResult.success) {
+        throw new ApiError(httpStatus.BAD_REQUEST, paymentResult.message);
+      }
+    } catch (error) {
+      logger.error('Error in incrementPromptsUsed:', error);
+      throw new ApiError(
+        httpStatus.INTERNAL_SERVER_ERROR,
+        error.message || 'An error occurred while updating prompt usage.',
+      );
+    }
 
     const responseData = {
       prompt,

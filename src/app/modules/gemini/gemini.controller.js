@@ -11,6 +11,8 @@ import Llama from '../groq/groq.model.js';
 // import { ConversationChain } from 'langchain/chains';
 import { BufferMemory } from 'langchain/memory';
 import ApiError from '../../../errors/ApiError.js';
+import { logger } from '../../../shared/logger.js';
+import { paymentController } from '../payment/payment.controller.js';
 
 const client = new GoogleGenerativeAI(config.gemini_secret_key);
 const model = client.getGenerativeModel({ model: 'gemini-1.5-flash' });
@@ -55,6 +57,21 @@ const GeminiAiGetResponse = catchAsync(async (req, res) => {
     const reply =
       result?.response?.candidates?.[0]?.content?.parts?.[0]?.text ||
       'No reply generated';
+
+    try {
+      const paymentResult =
+        await paymentController.incrementPromptsUsed(userId);
+
+      if (!paymentResult.success) {
+        throw new ApiError(httpStatus.BAD_REQUEST, paymentResult.message);
+      }
+    } catch (error) {
+      logger.error('Error in incrementPromptsUsed:', error);
+      throw new ApiError(
+        httpStatus.INTERNAL_SERVER_ERROR,
+        error.message || 'An error occurred while updating prompt usage.',
+      );
+    }
 
     await memory.chatHistory.addMessage(new AIMessage(reply));
 

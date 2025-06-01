@@ -1,10 +1,11 @@
 import mongoose from 'mongoose';
 import catchAsync from '../../../shared/catchAsync.js';
 import sendResponse from '../../../shared/sendResponse.js';
+import { checkUsageLimits } from '../../middlewares/checkUsageLimits/checkUsageLimits.js';
 import UserModel from '../auth/auth.model.js';
 import SubscriptionModel from './payment.model.js';
 import { PaymentService } from './payment.service.js';
-import { checkUsageLimits } from '../../middlewares/checkUsageLimits/checkUsageLimits.js';
+// import { checkFreePlanLimits } from '../../middlewares/checkFreePlanLimits/checkFreePlanLimits.js';
 import { checkFreePlanLimits } from '../../middlewares/checkFreePlanLimits/checkFreePlanLimits.js';
 
 const createCheckoutSession = catchAsync(async (req, res, next) => {
@@ -17,14 +18,17 @@ const createCheckoutSession = catchAsync(async (req, res, next) => {
   }
 
   const user = await UserModel.findById(userId);
-  if (!user) return res.status(404).json({ error: "User not found" });
+  if (!user) return res.status(404).json({ error: 'User not found' });
 
-  const sessionUrl = await PaymentService.createCheckoutSessionService(user, plan);
+  const sessionUrl = await PaymentService.createCheckoutSessionService(
+    user,
+    plan,
+  );
 
   sendResponse(res, {
     statusCode: 200,
     success: true,
-    message: "Checkout session created successfully",
+    message: 'Checkout session created successfully',
     data: { url: sessionUrl },
   });
 });
@@ -34,18 +38,20 @@ const handleWebhook = catchAsync(async (req, res, next) => {
 });
 
 const getAllSubscriptions = catchAsync(async (req, res, next) => {
-  const subscriptions = await SubscriptionModel.find({}).sort({ createdAt: -1 });
+  const subscriptions = await SubscriptionModel.find({}).sort({
+    createdAt: -1,
+  });
   sendResponse(res, {
     statusCode: 200,
     success: true,
-    message: "All subscriptions fetched successfully",
+    message: 'All subscriptions fetched successfully',
     data: subscriptions,
   });
 });
 
 const getSubscriptionsByUserId = catchAsync(async (req, res, next) => {
   const { userId } = req.params;
-  if (!userId) return res.status(400).json({ error: "User ID is required" });
+  if (!userId) return res.status(400).json({ error: 'User ID is required' });
 
   const subscriptions = await SubscriptionModel.find({ userId })
     .populate('userId', 'email')
@@ -55,27 +61,28 @@ const getSubscriptionsByUserId = catchAsync(async (req, res, next) => {
     return sendResponse(res, {
       statusCode: 404,
       success: false,
-      message: "No subscriptions found for this user",
+      message: 'No subscriptions found for this user',
     });
   }
 
   sendResponse(res, {
     statusCode: 200,
     success: true,
-    message: "User subscriptions fetched successfully",
+    message: 'User subscriptions fetched successfully',
     data: subscriptions,
   });
 });
 
-const incrementPromptsUsed = async (userId) => {
+const incrementPromptsUsed = async userId => {
   const session = await mongoose.startSession();
   try {
     session.startTransaction();
-    const user = await checkFreePlanLimits(userId, 'prompt').session(session);
+    // const user = await checkFreePlanLimits(userId, 'prompt').session(session);
+    const user = await checkFreePlanLimits(userId, 'prompt', session);
 
     if (user.isSubscribed) {
       const subscription = await checkUsageLimits(userId);
-      console.log("Subscription check result:", subscription);
+      console.log('Subscription check result:', subscription);
 
       if (!subscription || !subscription._id) {
         throw new Error('Subscription not found or invalid.');
@@ -84,7 +91,7 @@ const incrementPromptsUsed = async (userId) => {
       await SubscriptionModel.updateOne(
         { _id: subscription._id },
         { $inc: { 'usage.promptsUsed': 1 } },
-        { session }
+        { session },
       );
     } else {
       user.freePlanUsage.promptsUsed += 1;
@@ -102,11 +109,12 @@ const incrementPromptsUsed = async (userId) => {
   }
 };
 
-const incrementImagesUsed = async (userId) => {
+const incrementImagesUsed = async userId => {
   const session = await mongoose.startSession();
   try {
     session.startTransaction();
-    const user = await checkFreePlanLimits(userId, 'image').session(session);
+    // const user = await checkFreePlanLimits(userId, 'image').session(session);
+    const user = await checkFreePlanLimits(userId, 'prompt', session);
 
     if (user.isSubscribed) {
       const subscription = await checkUsageLimits(userId);
@@ -119,7 +127,7 @@ const incrementImagesUsed = async (userId) => {
       await SubscriptionModel.updateOne(
         { _id: subscription._id },
         { $inc: { 'usage.imagesUsed': 1 } },
-        { session }
+        { session },
       );
     } else {
       user.freePlanUsage.imagesUsed += 1;
@@ -131,7 +139,10 @@ const incrementImagesUsed = async (userId) => {
   } catch (error) {
     console.error('Error in incrementImagesUsed:', error);
     await session.abortTransaction();
-    return { success: false, message: error.message || 'An error occurred while updating image usage.' };
+    return {
+      success: false,
+      message: error.message || 'An error occurred while updating image usage.',
+    };
   } finally {
     session.endSession();
   }

@@ -9,6 +9,8 @@ import catchAsync from '../../../shared/catchAsync.js';
 import sendResponse from '../../../shared/sendResponse.js';
 import UserModel from '../auth/auth.model.js';
 import Llama from '../groq/groq.model.js';
+import { paymentController } from '../payment/payment.controller.js';
+import { logger } from '../../../shared/logger.js';
 
 const groq = new Groq(); // Initialize the Groq SDK
 
@@ -64,6 +66,21 @@ const DeepseekAiGetResponse = catchAsync(async (req, res) => {
 
     const reply =
       completion.choices[0]?.message?.content || 'No reply generated';
+
+    try {
+      const paymentResult =
+        await paymentController.incrementPromptsUsed(userId);
+
+      if (!paymentResult.success) {
+        throw new ApiError(httpStatus.BAD_REQUEST, paymentResult.message);
+      }
+    } catch (error) {
+      logger.error('Error in incrementPromptsUsed:', error);
+      throw new ApiError(
+        httpStatus.INTERNAL_SERVER_ERROR,
+        error.message || 'An error occurred while updating prompt usage.',
+      );
+    }
 
     await memory.chatHistory.addMessage(new AIMessage(reply));
 
