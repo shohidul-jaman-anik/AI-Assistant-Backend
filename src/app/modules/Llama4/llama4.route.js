@@ -5,11 +5,10 @@ import { Llama4AiController } from './llama4.controller.js';
 
 const router = express.Router();
 
-router
-  .route('/get-response')
-  .post(
-    auth(ENUM_USER_ROLE.ADMIN, ENUM_USER_ROLE.USER),
-    Llama4AiController.Llama4AiGetResponse,
-  );
+router.post(
+  '/get-response',
+  auth(ENUM_USER_ROLE.ADMIN, ENUM_USER_ROLE.USER),
+  Llama4AiController.Llama4AiGetResponse,
+);
 
 export const llama4AiRoutes = router;

@@ -5,11 +5,10 @@ import { openAIAiController } from './openAi.controller.js';
 
 const router = express.Router();
 
-router
-  .route('/get-response')
-  .post(
-    auth(ENUM_USER_ROLE.ADMIN, ENUM_USER_ROLE.USER),
-    openAIAiController.Gpt4oMiniGetResponse,
-  );
+router.post(
+  '/get-response',
+  auth(ENUM_USER_ROLE.ADMIN, ENUM_USER_ROLE.USER),
+  openAIAiController.Gpt4oMiniGetResponse,
+);
 
 export const openAIAiRoutes = router;
