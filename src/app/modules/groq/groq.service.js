@@ -128,22 +128,7 @@ import { fetchSearchResults } from './groq.utilities.js';
 
 const sessionMemoryStore = {}; // In-memory session store
 
-export const getAiResponsesGroqService = async (
-  prompt,
-  userId,
-  sessionIdFromClient,
-) => {
-  const sessionId = sessionIdFromClient || randomUUID(); // Create new session if none provided
-
-  if (!prompt) {
-    throw new ApiError(httpStatus.BAD_REQUEST, 'Prompt is required.');
-  }
-
-  const user = await UserModel.isUserExist(userId);
-  if (!user) {
-    throw new ApiError(httpStatus.NOT_FOUND, 'User not found');
-  }
-
+export const getAiResponsesGroqService = async (prompt, userId, sessionId) => {
   // Initialize or retrieve memory
   let memory = sessionMemoryStore[sessionId];
   if (!memory) {
@@ -233,7 +218,7 @@ export const getAiResponsesGroqService = async (
       reply,
     };
   } catch (error) {
-    console.error('Error in getAiResponsesGroqService:', error);
+    logger.error('Error in getAiResponsesGroqService:', error);
     throw new ApiError(httpStatus.INTERNAL_SERVER_ERROR, 'AI service failed.');
   }
 };

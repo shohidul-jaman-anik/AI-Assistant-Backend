@@ -1,0 +1,88 @@
+import { InMemoryChatMessageHistory } from '@langchain/core/chat_history';
+import { AIMessage, HumanMessage } from '@langchain/core/messages';
+import { BufferMemory } from 'langchain/memory';
+import { logger } from '../../../shared/logger.js';
+import Llama from '../groq/groq.model.js';
+import { paymentController } from '../payment/payment.controller.js';
+import { GoogleGenerativeAI } from '@google/generative-ai';
+import config from '../../../../config/index.js';
+
+const client = new GoogleGenerativeAI(config.gemini_secret_key);
+const model = client.getGenerativeModel({ model: 'gemini-1.5-flash' });
+
+const sessionMemoryStore = {};
+
+const geminiService = async (sessionId, prompt, userId) => {
+  let memory = sessionMemoryStore[sessionId];
+  if (!memory) {
+    memory = new BufferMemory({
+      returnMessages: true,
+      memoryKey: 'history',
+      chatHistory: new InMemoryChatMessageHistory(),
+    });
+    sessionMemoryStore[sessionId] = memory;
+  }
+
+  try {
+    await memory.chatHistory.addMessage(new HumanMessage(prompt));
+
+    // Call Gemini AI to generate a response
+    const result = await model.generateContent(prompt);
+    const reply =
+      result?.response?.candidates?.[0]?.content?.parts?.[0]?.text ||
+      'No reply generated';
+
+    try {
+      const paymentResult =
+        await paymentController.incrementPromptsUsed(userId);
+
+      if (!paymentResult.success) {
+        throw new ApiError(httpStatus.BAD_REQUEST, paymentResult.message);
+      }
+    } catch (error) {
+      logger.error('Error in incrementPromptsUsed:', error);
+      throw new ApiError(
+        httpStatus.INTERNAL_SERVER_ERROR,
+        error.message || 'An error occurred while updating prompt usage.',
+      );
+    }
+
+    await memory.chatHistory.addMessage(new AIMessage(reply));
+
+    const responseData = {
+      prompt,
+      model: 'gemini-1.5-flash',
+      reply,
+      total_time: result?.usage?.total_time || 0,
+    };
+
+    let geminiSession = await Llama.findOne({ user: userId, sessionId });
+
+    if (geminiSession) {
+      geminiSession.responses.push(responseData);
+      await geminiSession.save();
+    } else {
+      geminiSession = await Llama.create({
+        user: userId,
+        sessionId,
+        responses: [responseData],
+      });
+      await UserModel.findByIdAndUpdate(userId, {
+        $push: { llamaAiSessions: geminiSession._id },
+      });
+    }
+
+    const payload = { prompt, sessionId, reply };
+    return payload;
+  } catch (err) {
+    logger.error('Gemini Service Error:', err);
+    throw new ApiError(
+      httpStatus.INTERNAL_SERVER_ERROR,
+      'Gemini Service failed',
+    );
+  }
+};
+
+export const GeminiAiService = {
+  geminiService,
+};

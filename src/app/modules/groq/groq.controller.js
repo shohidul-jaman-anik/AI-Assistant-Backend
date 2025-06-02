@@ -5,6 +5,7 @@ import catchAsync from '../../../shared/catchAsync.js';
 import { logger } from '../../../shared/logger.js';
 import sendResponse from '../../../shared/sendResponse.js';
 import { LlamaAiService } from './groq.service.js';
+import validatePromptRequest from '../../../shared/validatePromptRequest.js';
 // import { Serper } from 'serper';
 
 const { ZepClient } = zepPackage;
@@ -767,14 +768,12 @@ const { ZepClient } = zepPackage;
 // ==========================================================
 
 const GroqAiGetResponse = catchAsync(async (req, res) => {
-  const prompt = req.body?.prompt;
-  const userId = req.user?._id;
-  const sessionIdFromClient = req.body?.sessionId;
+  const { prompt, userId, sessionId } = await validatePromptRequest(req);
   logger.info('✅ Request received at /groq:', req.body); // log incoming request
   const result = await LlamaAiService.getAiResponsesGroqService(
     prompt,
     userId,
-    sessionIdFromClient,
+    sessionId,
   );
   logger.info('✅ Service result:', result); // log result
   sendResponse(res, {
