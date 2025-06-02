@@ -8,7 +8,7 @@ import { openAIAiServices } from './openAi.service.js';
 const Gpt4oMiniGetResponse = catchAsync(async (req, res) => {
   const { prompt, userId, sessionId } = await validatePromptRequest(req);
 
-  const result = await openAIAiServices.openAiService4o(
+  const result = await openAIAiServices.openAiResponseService(
     prompt,
     userId,
     sessionId,

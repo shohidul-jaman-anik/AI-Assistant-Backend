@@ -13,7 +13,7 @@ import { paymentController } from '../payment/payment.controller.js';
 const openaiClient = new OpenAI({ apiKey: config.openai_secret_key });
 const sessionMemoryStore = {};
 
-const openAiService4o = async (prompt, userId, sessionId) => {
+const openAiResponseService = async (prompt, userId, sessionId) => {
   let memory = sessionMemoryStore[sessionId];
   if (!memory) {
     memory = new BufferMemory({
@@ -77,16 +77,11 @@ const openAiService4o = async (prompt, userId, sessionId) => {
     const payload = { prompt, sessionId, reply };
     return payload;
   } catch (error) {
-    console.error('Error in GPT-4o Mini:', error);
-    sendResponse(res, {
-      statusCode: httpStatus.INTERNAL_SERVER_ERROR,
-      success: false,
-      message: 'Failed to get response',
-      error: error.message,
-    });
+    logger.error('Error in openAiResponseService:', error);
+    throw new ApiError(httpStatus.INTERNAL_SERVER_ERROR, 'AI service failed.');
   }
 };
 
 export const openAIAiServices = {
-  openAiService4o,
+  openAiResponseService,
 };

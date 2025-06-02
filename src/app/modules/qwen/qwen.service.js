@@ -60,12 +60,6 @@ const QwenAiGetResponseService = async (prompt, userId, sessionId) => {
     } catch (error) {
       console.error('Error in incrementPromptsUsed:', error);
 
-      // Send the full error message as a response
-      // return res.status(400).json({
-      //   success: false,
-      //   message:
-      //     error.message || 'An error occurred while updating prompt usage.',
-      // });
       throw new ApiError(
         httpStatus.INTERNAL_SERVER_ERROR,
         error.message || 'An error occurred while updating prompt usage.',
