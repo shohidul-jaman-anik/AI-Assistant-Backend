@@ -6,7 +6,7 @@ import { llamaAiRoutes } from '../modules/groq/groq.route.js';
 import { subscriptionRoutes } from '../modules/payment/payment.route.js';
 import { tavilyAiRoutes } from '../modules/tavily/tavily.route.js';
 import { togetherAiRoutes } from '../modules/togetherAi/togeterAi.route.js';
-import { serperAiRoutes } from '../modules/serper/serper.route.js';
+// import { serperAiRoutes } from '../modules/serper/serper.route.js';
 import { qwenAiRoutes } from '../modules/qwen/qwen.route.js';
 import { aiModelEndpointRoutes } from '../modules/aiModelServices/aiEndpoint.route.js';
 import { openAIAiRoutes } from '../modules/openAi/openAi.route.js';
@@ -70,10 +70,10 @@ const moduleRoutes = [
     path: '/deepseek',
     route: deepseekAiRoutes,
   },
-  {
-    path: '/serper',
-    route: serperAiRoutes,
-  },
+  // {
+  //   path: '/serper',
+  //   route: serperAiRoutes,
+  // },
   {
     path: '/qwen',
     route: qwenAiRoutes,
