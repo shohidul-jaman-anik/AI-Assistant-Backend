@@ -169,6 +169,16 @@
             "date": 1749042011419,
             "name": "C:\\Fiverr\\ASON\\ASON Backends\\ASON-Core-Service\\logs\\errors\\RH-2025-06-04-19-error.log",
             "hash": "25d99ef077ec7d13ab21c4b99b1239ea419e649938767abdaec041b108e7ce50"
+        },
+        {
+            "date": 1749051930386,
+            "name": "C:\\Fiverr\\ASON\\ASON Backends\\ASON-Core-Service\\logs\\errors\\RH-2025-06-04-21-error.log",
+            "hash": "3a4a5349729405ae0d730d5f4dd6a753ea14435285f60e3541bfbdad36a3cafa"
+        },
+        {
+            "date": 1749053623058,
+            "name": "C:\\Fiverr\\ASON\\ASON Backends\\ASON-Core-Service\\logs\\errors\\RH-2025-06-04-22-error.log",
+            "hash": "8f1a22025582e28e1a5a35e58795963ad434e0b1d68b7c5deffe525137c2a457"
         }
     ],
     "hashType": "sha256"

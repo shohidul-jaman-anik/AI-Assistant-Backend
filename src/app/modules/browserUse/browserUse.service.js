@@ -27,7 +27,12 @@ const browserUseRunTaskService = async (prompt, userId, sessionId) => {
       },
     );
     console.log('Browser Use Response:', response);
-    return response.data;
+    const data = {
+      taskId: response.data,
+      prompt,
+      sessionId,
+    };
+    return data;
   } catch (error) {
     logger.info(
       'Error in browserUseRunTaskService:',
