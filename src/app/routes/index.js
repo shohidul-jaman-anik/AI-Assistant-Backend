@@ -17,6 +17,7 @@ import { notificationRoutes } from '../modules/notification/notification.route.j
 import { socialLoginRotes } from '../modules/social-login/social-login.route.js';
 import { supportRoutes } from '../modules/support/support.route.js';
 import { composioRoutes } from '../modules/composio/composio.route.js';
+import { browserUseAiRoutes } from '../modules/browserUse/browserUse.route.js';
 
 const router = express.Router();
 
@@ -92,6 +93,10 @@ const moduleRoutes = [
   {
     path: '/composio',
     route: composioRoutes,
+  },
+  {
+    path: '/browser-use',
+    route: browserUseAiRoutes,
   }
 ];
 
