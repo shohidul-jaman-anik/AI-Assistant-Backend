@@ -6,6 +6,7 @@ import config from '../../../../config/index.js';
 import { logger } from '../../../shared/logger.js';
 import Llama from '../groq/groq.model.js';
 import { paymentController } from '../payment/payment.controller.js';
+import ApiError from '../../../errors/ApiError.js';
 
 const client = new GoogleGenerativeAI(config.gemini_secret_key);
 const model = client.getGenerativeModel({ model: 'gemini-1.5-flash' });

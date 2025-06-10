@@ -8,6 +8,7 @@ import { logger } from '../../../shared/logger.js';
 import UserModel from '../auth/auth.model.js';
 import Llama from '../groq/groq.model.js';
 import { paymentController } from '../payment/payment.controller.js';
+import ApiError from '../../../errors/ApiError.js';
 
 const openaiClient = new OpenAI({ apiKey: config.openai_secret_key });
 const sessionMemoryStore = {};
