@@ -50,6 +50,12 @@ const UserSchema = new mongoose.Schema(
     llamaAiSessions: [
       { type: mongoose.Schema.Types.ObjectId, ref: 'Chat-History' },
     ],
+    browserSessions: [
+      {
+        type: mongoose.Schema.Types.ObjectId,
+        ref: 'BrowserSession',
+      },
+    ],
     notifications: [
       {
         type: mongoose.Schema.Types.ObjectId,

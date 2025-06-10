@@ -10,5 +10,10 @@ router.post(
   auth(ENUM_USER_ROLE.ADMIN, ENUM_USER_ROLE.USER),
   GeminiAiController.GeminiAiGetResponse,
 );
+router.post(
+  '/flash/get-response',
+  auth(ENUM_USER_ROLE.ADMIN, ENUM_USER_ROLE.USER),
+  GeminiAiController.Gemini25PreviewAiGetResponse,
+);
 
 export const geminiAiRoutes = router;

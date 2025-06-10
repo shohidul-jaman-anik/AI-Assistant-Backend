@@ -2,47 +2,70 @@ import httpStatus from 'http-status';
 import ApiError from '../../../errors/ApiError.js';
 import catchAsync from '../../../shared/catchAsync.js';
 import sendResponse from '../../../shared/sendResponse.js';
-import validatePromptRequest from '../../../shared/validatePromptRequest.js';
 import { BrowserUseServices } from './browserUse.service.js';
 
-const browserUseRunTask = catchAsync(async (req, res) => {
-  const { prompt, userId, sessionId } = await validatePromptRequest(req);
-  const result = await BrowserUseServices.browserUseRunTaskService(
-    prompt,
+const runTaskController = catchAsync(async (req, res) => {
+  const { prompt, userId, sessionId, structured_output_json } = req.body;
+
+  if (!prompt || !userId) {
+    throw new ApiError(httpStatus.BAD_REQUEST, 'Missing required fields: prompt, userId');
+  }
+
+  const result = await BrowserUseServices.initiateTaskInSessionService(
     userId,
-    sessionId,
+    sessionId, // This will be null/undefined for a new session
+    prompt,
+    structured_output_json,
   );
 
   sendResponse(res, {
     statusCode: httpStatus.OK,
     success: true,
-    message: 'Successfully.',
+    message: 'Task initiated successfully.',
+    data: result, // Send the whole session object back
+  });
+});
+
+const getTaskStatusController = catchAsync(async (req, res) => {
+  const { sessionId, taskId } = req.params;
+  const result = await BrowserUseServices.updateTaskStatusService(sessionId, taskId);
+
+  sendResponse(res, {
+    statusCode: httpStatus.OK,
+    success: true,
+    message: `Task status updated.`,
     data: result,
   });
 });
 
-const getBrowserUseTaskByID = catchAsync(async (req, res) => {
-  const taskId = req.params.taskId;
-  const result =
-    await BrowserUseServices.browserUseGetTaskStatusService(taskId);
 
-  if (result.status === 'completed') {
-    // send normal response
-  } else if (result.status === 'stopped') {
-    // maybe return partial data with a warning
-    sendResponse(res, {
-      statusCode: httpStatus.OK,
-      success: false,
-      message: 'Task was stopped before completion.',
-      data: result,
-    });
-    return;
-  } else {
-    throw new ApiError(httpStatus.BAD_REQUEST, 'Task is not completed yet.');
-  }
+const getUserSessionsController = catchAsync(async (req, res) => {
+  // const userId = req.user._id; // Assuming auth middleware places user object on req
+  const {userId} = req.params; // Assuming auth middleware places user object on req
+  const result = await BrowserUseServices.getSessionsForUserService(userId);
+  sendResponse(res, {
+    statusCode: httpStatus.OK,
+    success: true,
+    message: 'Sessions retrieved successfully.',
+    data: result,
+  });
+});
+
+const getSessionByIdController = catchAsync(async (req, res) => {
+  const { sessionId, userId } = req.params;
+  // const userId = req.user._id; // From auth middleware
+  const result = await BrowserUseServices.getSessionByIdService(sessionId, userId);
+  sendResponse(res, {
+    statusCode: httpStatus.OK,
+    success: true,
+    message: 'Session retrieved successfully.',
+    data: result,
+  });
 });
 
 export const BrowserUseController = {
-  browserUseRunTask,
-  getBrowserUseTaskByID,
+  runTaskController,
+  getTaskStatusController,
+  getUserSessionsController,
+  getSessionByIdController,
 };

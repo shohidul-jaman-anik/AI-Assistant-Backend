@@ -1,20 +1,19 @@
 import express from 'express';
 import { BrowserUseController } from './browserUse.controller.js';
-import { ENUM_USER_ROLE } from '../../../shared/enum.js';
-import auth from '../../middlewares/auth/auth.js';
+// import auth from '../../middlewares/auth/auth.js';
+
 
 const router = express.Router();
 
-router.post(
-  '/task',
-  auth(ENUM_USER_ROLE.ADMIN, ENUM_USER_ROLE.USER),
-  BrowserUseController.browserUseRunTask,
-);
+router.post('/task', BrowserUseController.runTaskController);
+router.get('/status/:sessionId/:taskId', BrowserUseController.getTaskStatusController);
 
-router.get(
-  '/get-task/:taskId',
-  // auth(ENUM_USER_ROLE.ADMIN, ENUM_USER_ROLE.USER),
-  BrowserUseController.getBrowserUseTaskByID,
-);
+// --- NEW HISTORY ROUTES ---
+
+router.get('/sessions/:userId', BrowserUseController.getUserSessionsController);
+router.get('/session/:sessionId/:userId', BrowserUseController.getSessionByIdController);
+
+
+
 
 export const browserUseAiRoutes = router;

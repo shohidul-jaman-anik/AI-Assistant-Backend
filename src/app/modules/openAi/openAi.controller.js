@@ -22,6 +22,24 @@ const Gpt4oMiniGetResponse = catchAsync(async (req, res) => {
   });
 });
 
+const Gpt4NanoGetResponse = catchAsync(async (req, res) => {
+  const { prompt, userId, sessionId } = await validatePromptRequest(req);
+
+  const result = await openAIAiServices.openAi4NanoResponseService(
+    prompt,
+    userId,
+    sessionId,
+  );
+
+  sendResponse(res, {
+    statusCode: httpStatus.OK,
+    success: true,
+    message: 'Response processed successfully.',
+    data: result,
+  });
+});
+
 export const openAIAiController = {
   Gpt4oMiniGetResponse,
+  Gpt4NanoGetResponse
 };
