@@ -8,6 +8,7 @@ import Llama from '../groq/groq.model.js';
 import { paymentController } from '../payment/payment.controller.js';
 import ApiError from '../../../errors/ApiError.js';
 import httpStatus from 'http-status';
+import UserModel from '../auth/auth.model.js';
 
 
 const client = new GoogleGenerativeAI(config.gemini_secret_key);
