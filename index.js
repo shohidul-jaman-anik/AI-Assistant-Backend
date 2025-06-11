@@ -3,21 +3,15 @@ import dotenv from 'dotenv';
 import express from 'express';
 import helmet from 'helmet';
 import httpStatus from 'http-status';
-import mongoose from 'mongoose';
 import toobusy from 'toobusy-js';
 // import config from './config';
 import globalErrorHandler from './src/app/middlewares/globalErrorHandler/globalErrorHandler.js';
 import router from './src/app/routes/index.js';
 // import { logger } from './src/shared/logger';
-import bodyParser from 'body-parser';
+import cookieParser from 'cookie-parser';
 import passport from 'passport';
-import config from './config/index.js';
 import './src/app/middlewares/resetUsage/resetUsage.js';
 import passportConfig from './src/app/modules/social-login/config/passport.js';
-import { logger } from './src/shared/logger.js';
-import cookieParser from 'cookie-parser';
-
-
 
 // Load environment variables
 dotenv.config();
@@ -35,10 +29,8 @@ app.use(cors());
 app.use(express.json());
 app.use(cookieParser());
 app.use(express.urlencoded({ extended: true }));
-app.use(bodyParser.urlencoded({ extended: true }));
+// app.use(bodyParser.urlencoded({ extended: true }));
 app.disable('x-powered-by');
-
-
 
 // Enable trust proxy (For Rate-Limit)
 app.set('trust proxy', 'loopback');
@@ -67,7 +59,13 @@ app.use(
   helmet.contentSecurityPolicy({
     directives: {
       defaultSrc: ["'self'"],
-      scriptSrc: ["'self'", "'unsafe-inline'", 'cdnjs.cloudflare.com'],
+      scriptSrc: [
+        "'self'",
+        "'unsafe-inline'",
+        'cdnjs.cloudflare.com',
+        'js.stripe.com',
+        'cdn.jsdelivr.net',
+      ],
       styleSrc: ["'self'", "'unsafe-inline'", 'fonts.googleapis.com'],
       fontSrc: ["'self'", 'fonts.gstatic.com'],
       imgSrc: ["'self'", 'data:'],
@@ -94,15 +92,6 @@ app.use((req, res, next) => {
     next();
   }
 });
-
-// MongoDB connection
-mongoose
-  .connect(config.database_local)
-  .then(() => logger.info('✅ Database connection successfully'))
-  .catch(err => {
-    logger.error('❌ Error connecting to the database:', err);
-    process.exit(1); // Exit the application on database connection error
-  });
 
 // Initialize passport (no session)
 passportConfig(passport);
@@ -136,12 +125,6 @@ app.use((req, res) => {
       },
     ],
   });
-});
-
-// Start server
-const port = config.port || 8080;
-app.listen(port, () => {
-  logger.info(`App is running on port ${port}`);
 });
 
 export default app;

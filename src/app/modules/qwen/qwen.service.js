@@ -8,9 +8,14 @@ import httpStatus from 'http-status';
 import config from '../../../../config/index.js';
 import ApiError from '../../../errors/ApiError.js';
 import { logger } from '../../../shared/logger.js';
+import { RedisClient } from '../../../shared/redis.js';
 import UserModel from '../auth/auth.model.js';
 import Llama from '../groq/groq.model.js';
 import { paymentController } from '../payment/payment.controller.js';
+import {
+  QWEN_QWQ_RESPONSE_SERVICE_POST,
+  QWEN_RESPONSE_SERVICE_POST,
+} from './qwen.constant.js';
 
 const sessionMemoryStore = {}; // Stores session memory for each user session
 
@@ -96,13 +101,20 @@ const QwenAiGetResponseService = async (prompt, userId, sessionId) => {
         $push: { llamaAiSessions: llamaSession._id },
       });
     }
-    const data = {
+    const payload = {
       sessionId,
       prompt,
       reply,
     };
 
-    return data;
+    if (payload) {
+      await RedisClient.publish(
+        QWEN_RESPONSE_SERVICE_POST,
+        JSON.stringify(payload),
+      );
+    }
+
+    return payload;
   } catch (error) {
     logger.error('Error in QwenAiGetResponseService:', error);
     throw new ApiError(httpStatus.INTERNAL_SERVER_ERROR, 'AI service failed.');
@@ -186,12 +198,19 @@ const QwenQWQAiGetResponseService = async (prompt, userId, sessionId) => {
       });
     }
 
-    const data = {
+    const payload = {
       sessionId,
       prompt,
       reply,
     };
-    return data;
+
+    if (payload) {
+      await RedisClient.publish(
+        QWEN_QWQ_RESPONSE_SERVICE_POST,
+        JSON.stringify(payload),
+      );
+    }
+    return payload;
   } catch (error) {
     logger.error('Error in QwenQWQAiGetResponseService:', error);
     throw new ApiError(httpStatus.INTERNAL_SERVER_ERROR, 'AI service failed.');

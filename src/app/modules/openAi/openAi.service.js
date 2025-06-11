@@ -4,11 +4,13 @@ import httpStatus from 'http-status';
 import { BufferMemory } from 'langchain/memory';
 import { OpenAI } from 'openai';
 import config from '../../../../config/index.js';
+import ApiError from '../../../errors/ApiError.js';
 import { logger } from '../../../shared/logger.js';
+import { RedisClient } from '../../../shared/redis.js';
 import UserModel from '../auth/auth.model.js';
 import Llama from '../groq/groq.model.js';
 import { paymentController } from '../payment/payment.controller.js';
-import ApiError from '../../../errors/ApiError.js';
+import { OPENAI_RESPONSE_SERVICE_POST } from './openAi.constant.js';
 
 const openaiClient = new OpenAI({ apiKey: config.openai_secret_key });
 const sessionMemoryStore = {};
@@ -75,6 +77,13 @@ const openAiResponseService = async (prompt, userId, sessionId) => {
       });
     }
     const payload = { prompt, sessionId, reply };
+
+    if (payload) {
+      await RedisClient.publish(
+        OPENAI_RESPONSE_SERVICE_POST,
+        JSON.stringify(payload),
+      );
+    }
     return payload;
   } catch (error) {
     logger.error('Error in openAiResponseService:', error);
@@ -98,7 +107,6 @@ const openAi4NanoResponseService = async (prompt, userId, sessionId) => {
   try {
     await memory.chatHistory.addMessage(new HumanMessage(prompt));
 
-    
     const response = await openaiClient.chat.completions.create({
       model: 'gpt-4.1-nano',
       messages: [{ role: 'user', content: prompt }],

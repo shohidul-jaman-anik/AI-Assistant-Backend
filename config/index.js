@@ -27,6 +27,10 @@ export default {
   cloud_storage_secret_key: process.env.CLOUD_STORAGE_SECRET_KEY,
   cloud_storage_access_key: process.env.CLOUD_STORAGE_ACCESS_KEY,
   cloud_storage_bucket: process.env.CLOUD_STORAGE_BUCKET,
+  redis: {
+    url: process.env.REDIS_URL,
+    expires_in: process.env.REDIS_TOKEN_EXPIRES_IN,
+  },
   mailgun: {
     mailgun_domain: process.env.MAILGUN_DOMAIN,
     mailgun_key: process.env.MAILGUN_KEY,

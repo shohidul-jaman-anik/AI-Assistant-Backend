@@ -1,7 +1,7 @@
 import redis from 'redis';
-import { logger } from './logger';
+import config from '../../config/index.js';
+import { logger } from './logger.js';
 const { createClient } = redis;
-const config = require('../config');
 
 const redisClient = createClient({
   url: config.redis.url,
@@ -57,7 +57,7 @@ const disconnect = async () => {
   await redisSubClient.quit();
 };
 
-export default {
+export const RedisClient = {
   connect,
   publish: redisPubClient.publish.bind(redisPubClient),
   subscribe: redisSubClient.subscribe.bind(redisSubClient),
@@ -69,4 +69,3 @@ export default {
   getAccessToken,
   delAccessToken,
 };
-

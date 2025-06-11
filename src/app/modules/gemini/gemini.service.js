@@ -1,15 +1,16 @@
 import { GoogleGenerativeAI } from '@google/generative-ai';
 import { InMemoryChatMessageHistory } from '@langchain/core/chat_history';
 import { AIMessage, HumanMessage } from '@langchain/core/messages';
+import httpStatus from 'http-status';
 import { BufferMemory } from 'langchain/memory';
 import config from '../../../../config/index.js';
+import ApiError from '../../../errors/ApiError.js';
 import { logger } from '../../../shared/logger.js';
+import UserModel from '../auth/auth.model.js';
 import Llama from '../groq/groq.model.js';
 import { paymentController } from '../payment/payment.controller.js';
-import ApiError from '../../../errors/ApiError.js';
-import httpStatus from 'http-status';
-import UserModel from '../auth/auth.model.js';
-
+import { GEMINI_RESPONSE_SERVICE_POST } from './gemini.constant.js';
+import { RedisClient } from '../../../shared/redis.js';
 
 const client = new GoogleGenerativeAI(config.gemini_secret_key);
 const model = client.getGenerativeModel({ model: 'gemini-1.5-flash' });
@@ -77,6 +78,12 @@ const geminiService = async (sessionId, prompt, userId) => {
     }
 
     const payload = { prompt, sessionId, reply };
+    if (payload) {
+      await RedisClient.publish(
+        GEMINI_RESPONSE_SERVICE_POST,
+        JSON.stringify(payload),
+      );
+    }
     return payload;
   } catch (err) {
     logger.error('Gemini Service Error:', err);
@@ -166,5 +173,5 @@ const gemini25PreviewService = async (sessionId, prompt, userId) => {
 
 export const GeminiAiService = {
   geminiService,
-  gemini25PreviewService
+  gemini25PreviewService,
 };

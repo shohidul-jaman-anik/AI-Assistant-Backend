@@ -1,5 +1,6 @@
 import { InMemoryChatMessageHistory } from '@langchain/core/chat_history';
 import { AIMessage, HumanMessage } from '@langchain/core/messages';
+import Groq from 'groq-sdk';
 import httpStatus from 'http-status';
 import { BufferMemory } from 'langchain/memory';
 import ApiError from '../../../errors/ApiError.js';
@@ -7,8 +8,8 @@ import { logger } from '../../../shared/logger.js';
 import UserModel from '../auth/auth.model.js';
 import Llama from '../groq/groq.model.js';
 import { paymentController } from '../payment/payment.controller.js';
-import Groq from 'groq-sdk';
-
+import { DEEPSEEK_RESPONSE_SERVICE_POST } from './deepseek.constatn.js';
+import { RedisClient } from '../../../shared/redis.js';
 
 const groq = new Groq(); // Initialize the Groq SDK
 
@@ -88,6 +89,13 @@ const deepseekResponseService = async (prompt, userId, sessionId) => {
       });
     }
     const payload = { prompt, sessionId, reply };
+
+    if (payload) {
+      await RedisClient.publish(
+        DEEPSEEK_RESPONSE_SERVICE_POST,
+        JSON.stringify(payload),
+      );
+    }
     return payload;
   } catch (error) {
     logger.error('Error in openAiResponseService:', error);

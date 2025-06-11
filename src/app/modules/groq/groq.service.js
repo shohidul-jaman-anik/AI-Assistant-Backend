@@ -13,8 +13,10 @@ import mongoose from 'mongoose';
 import config from '../../../../config/index.js';
 import ApiError from '../../../errors/ApiError.js';
 import { logger } from '../../../shared/logger.js';
+import { RedisClient } from '../../../shared/redis.js';
 import UserModel from '../auth/auth.model.js';
 import { paymentController } from '../payment/payment.controller.js';
+import { GROQ_RESPONSE_SERVICE_POST } from './groq.constant.js';
 import Llama from './groq.model.js';
 import { fetchSearchResults } from './groq.utilities.js';
 
@@ -196,11 +198,19 @@ export const getAiResponsesGroqService = async (prompt, userId, sessionId) => {
       });
     }
 
-    return {
+    const payload = {
       sessionId,
       prompt,
       reply,
     };
+
+    if (payload) {
+      await RedisClient.publish(
+        GROQ_RESPONSE_SERVICE_POST,
+        JSON.stringify(payload),
+      );
+    }
+    return payload;
   } catch (err) {
     logger.error('Error in getAiResponsesGroqService:', err);
     throw new ApiError(httpStatus.INTERNAL_SERVER_ERROR, 'AI service failed.');
