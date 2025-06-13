@@ -1,136 +1,116 @@
+
 import { Router } from 'express';
-import jwt from 'jsonwebtoken';
 import passport from 'passport';
+import jwt from 'jsonwebtoken';
 import config from '../../../../config/index.js';
-import { twitterAuth } from './config/strategies/twitter.js';
-import { getUser, getUserByEmail } from './social-login.utils.js';
 
 const router = Router();
 
+const FRONTEND_URL = process.env.CLIENT_URL || 'http://localhost:3000';
+const FAILURE_REDIRECT_URL = `${FRONTEND_URL}?showLogin=true&error=authentication_cancelled`;
+
 function sendTokenResponse(user, res) {
-  const token = jwt.sign(
-    {
+  if (!user || !user._id) {
+    console.error('Token generation error: Invalid user object received.', user);
+     const errorRedirectUrl = `${FRONTEND_URL}/?showLogin=true&error=invalid_user_data`;
+    return res.redirect(errorRedirectUrl);
+  }
+
+  try {
+    const payload = {
       role: user.role,
       _id: user._id,
-    },
-    config.jwt.access_token,
-    config.jwt.access_expires_in,
-  );
-  // return res.redirect(process.env.CLIENT_URL + '/auth/callback#token=' + token);
-  // return res.status(200).redirect('https://www.asonai.com');
-  const responsePayload = {
-    statusCode: 200,
-    success: true,
-    message: 'Authentication successful',
-    data: {
-      _id: user._id,
-      accessToken: token,
-    },
-  };
+    };
 
-  // ✅ Log the entire return payload
-  console.log('Sending response:', responsePayload);
+    const secret = config.jwt.access_token;
+    const options = {
+      expiresIn: config.jwt.access_expires_in || '7d',
+    };
 
-  return res.status(200).json(responsePayload);
+    const token = jwt.sign(payload, secret, options);
+
+    const redirectUrl = `${FRONTEND_URL}/auth/social-callback?token=${token}`;
+    return res.redirect(redirectUrl);
+
+  } catch (error) {
+    console.error('Token generation error:', error);
+     const errorRedirectUrl = `${FRONTEND_URL}/?showLogin=true&error=token_generation_failed`;
+    return res.redirect(errorRedirectUrl);
+  }
 }
 
-router.route('/user/single-user/:userId').get(getUser); // user with id
-router.route('/user/:userEmail').get(getUserByEmail); // user with email
+// // Google
+// router.get(
+//   '/google',
+//   passport.authenticate('google', { scope: ['profile', 'email'], session: false })
+// );
+// router.get(
+//   '/google/callback',
+//   passport.authenticate('google', { session: false, failureRedirect: FAILURE_REDIRECT_URL }),
+//   (req, res) => sendTokenResponse(req.user.user, res) // Use req.user.user
+// );
+
+function handleSocialAuthCallback(strategy) {
+  return (req, res, next) => {
+    passport.authenticate(strategy, { session: false }, (err, user, info) => {
+      
+      // ✅ ADD THIS CHECK for your new password error rule
+      if (err && err.message && err.message.includes('This email is registered with a password')) {
+        const errorRedirectUrl = `${FRONTEND_URL}/?showLogin=true&error=email_has_password`;
+        return res.redirect(errorRedirectUrl);
+      }
+
+      // This is the existing check for social-vs-social conflicts
+      if (err && err.message && err.message.includes('This email is already linked to a')) {
+        const providerInError = err.message.split('a ')[1].split(' account')[0];
+        const errorCode = `email_exists_${providerInError}`;
+        const errorRedirectUrl = `${FRONTEND_URL}/?showLogin=true&error=${errorCode}`;
+        return res.redirect(errorRedirectUrl);
+      }
+
+      // ... The rest of the function remains the same ...
+      if (err) {
+        console.error('PASSPORT AUTHENTICATION ERROR:', err);
+        const errorRedirectUrl = `${FRONTEND_URL}/?showLogin=true&error=server_error`;
+        return res.redirect(errorRedirectUrl);
+      }
+      if (!user) {
+        return res.redirect(FAILURE_REDIRECT_URL);
+      }
+      return sendTokenResponse(user.user, res);
+      
+    })(req, res, next);
+  };
+}
 
 // Google
-router.get(
-  '/google',
-  passport.authenticate('google', {
-    scope: ['profile', 'email'],
-    session: false,
-  }),
-);
-router.get(
-  '/google/callback',
-  passport.authenticate('google', {
-    session: false,
-    failureRedirect: '/api/v1/auth-social/login',
-  }),
-  (req, res) => sendTokenResponse(req.user, res),
-);
+router.get('/google', passport.authenticate('google', { scope: ['profile', 'email'], session: false }));
+router.get('/google/callback', handleSocialAuthCallback('google'));
 
-// Facebook
-router.get(
-  '/facebook',
-  passport.authenticate('facebook', { scope: ['email'], session: false }),
-);
-router.get(
-  '/facebook/callback',
-  passport.authenticate('facebook', {
-    session: false,
-    failureRedirect: '/api/v1/auth-social/login',
-  }),
-  (req, res) => sendTokenResponse(req.user, res),
-);
-
-// Twitter
-router.get('/twitter', twitterAuth.authenticate);
-router.get('/twitter/callback', twitterAuth.callback);
-
-// GitHub
-router.get(
-  '/github',
-  passport.authenticate('github', { scope: ['user:email'], session: false }),
-);
-router.get(
-  '/github/callback',
-  passport.authenticate('github', {
-    session: false,
-    failureRedirect: '/api/v1/auth-social/login',
-  }),
-  (req, res) => sendTokenResponse(req.user, res),
-);
+// Apple (Note: Apple often uses POST for callbacks)
+router.get('/apple', passport.authenticate('apple', { session: false, scope: ['name', 'email'] }));
+router.post('/apple/callback', handleSocialAuthCallback('apple'));
 
 // Microsoft
-router.get(
-  '/microsoft',
-  passport.authenticate('microsoft', { scope: ['user.read'], session: false }),
-);
-router.post(
-  '/microsoft/callback',
-  passport.authenticate('microsoft', {
-    session: false,
-    failureRedirect: '/api/v1/auth-social/login',
-  }),
-  (req, res) => sendTokenResponse(req.user, res),
-);
+router.get('/microsoft', passport.authenticate('microsoft', { scope: ['user.read'], session: false }));
+router.get('/microsoft/callback', handleSocialAuthCallback('microsoft'));
 
-// Apple
-router.get(
-  '/apple',
-  passport.authenticate('apple', { session: false, scope: ['name', 'email'] }),
-);
-router.post(
-  '/apple/callback',
-  passport.authenticate('apple', {
-    session: false,
-    failureRedirect: '/api/v1/auth-social/login',
-  }),
-  (req, res) => sendTokenResponse(req.user, res),
-);
+// Facebook
+router.get('/facebook', passport.authenticate('facebook', { scope: ['email'], session: false }));
+router.get('/facebook/callback', handleSocialAuthCallback('facebook'));
+
+// Twitter
+router.get('/twitter', passport.authenticate('twitter', { session: false }));
+router.get('/twitter/callback', handleSocialAuthCallback('twitter'));
 
 // Discord
-router.get(
-  '/discord',
-  passport.authenticate('discord', { scope: ['email'], session: false }),
-);
-router.get(
-  '/discord/callback',
-  passport.authenticate('discord', {
-    session: false,
-    failureRedirect: '/api/v1/auth-social/login',
-  }),
-  (req, res) => sendTokenResponse(req.user, res),
-);
+router.get('/discord', passport.authenticate('discord', { scope: ['identify', 'email'], session: false }));
+router.get('/discord/callback', handleSocialAuthCallback('discord'));
 
-// Logout (no-op since stateless)
-router.get('/logout', (req, res) => {
-  return res.status(200).send({ msg: 'Logged out' });
-});
+// GitHub
+router.get('/github', passport.authenticate('github', { scope: ['user:email'], session: false }));
+router.get('/github/callback', handleSocialAuthCallback('github'));
+
+
 
 export const socialLoginRotes = router;

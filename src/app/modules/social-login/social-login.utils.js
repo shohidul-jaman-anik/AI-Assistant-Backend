@@ -1,103 +1,74 @@
-import { logger } from '../../../shared/logger.js';
 import UserModel from '../auth/auth.model.js';
-async function findOrCreateUserModel(profile, provider) {
+
+export async function findOrCreateUserModel(profile, provider) {
   try {
-    logger.info(provider, 'providerrrrrrrrrrrrrrrrrrrrr');
-    logger.info(profile, 'profileeeeeeeeeeeeeeeeeeeeeee');
-    // 1. First check by provider ID
-    let user = await UserModel.findOne({
-      provider: provider,
-      providerId: profile.id,
-    });
+    // --- Step 1: Find the user by their unique provider ID ---
+    let user = await UserModel.findOne({ provider: provider, providerId: profile.id });
 
-    if (user) return user;
+    if (user) {
+      // The user has logged in with this social account before. Welcome back.
+      return { user, status: 'existing', message: 'Logged in successfully.' };
+    }
 
-    // 2. Check by email if exists in profile
+    // --- Step 2: If no user is found, check for an account with the same email ---
     const email = profile.emails?.[0]?.value;
+
     if (email) {
-      user = await UserModel.findOne({
-        email: email,
-        provider: provider,
-      });
+      user = await UserModel.findOne({ email: email });
 
       if (user) {
-        // Update existing record with new provider ID
+        // A user with this email already exists.
+
+        // ✅ YOUR NEW SECURITY RULE IS IMPLEMENTED HERE:
+        // Check if the existing user has a password.
+        if (user.password) {
+          // This account was created with a password. BLOCK the social login attempt.
+          // Throw a new, specific error that we will handle in the routes file.
+          throw new Error('This email is registered with a password. Please sign in using your email and password.');
+        }
+
+        // --- If there is NO password, then it's a social account. ---
+        // The rest of the logic handles conflicts between different social providers.
+        if (user.provider && user.provider !== provider) {
+          throw new Error(`This email is already linked to a ${user.provider} account. Please sign in using ${user.provider}.`);
+        }
+
+        // This is an edge case for linking, which is now prevented by the password check above for credential-based users.
+        user.provider = provider;
         user.providerId = profile.id;
-        return await user.save();
+        if (!user.avatar) {
+          user.avatar = profile.photos?.[0]?.value || '';
+        }
+        await user.save();
+        return { user, status: 'linked', message: `Successfully linked ${provider} to your existing account.` };
       }
     }
-    // 3. Create new social user with required fields
-    return await UserModel.create({
-      role: 'user',
+
+    // --- Step 3: If no user exists by providerId or email, create a new user ---
+    const newUser = await UserModel.create({
       provider: provider,
-      providerId: profile.id || 'some',
-      email: email || `${provider}_${profile.id}@social.user`, // Fallback email
-      name: profile.displayName || profile.username || 'pranplaceholder',
-      avatar: profile.photos?.[0]?.value || '',
+      providerId: profile.id,
+      email: email ?? `${provider}_${profile.id}@noemail.social`,
+      role: 'user',
+      name: profile.displayName ?? profile.username ?? 'Unnamed User',
+      avatar: profile.photos?.[0]?.value ?? '',
     });
-  } catch (error) {
-    throw new Error(`Social auth failed: ${error.message}`);
+
+    return { user: newUser, status: 'created', message: 'User created and logged in successfully.' };
+
+  } catch (err) {
+    console.error(`[Social Auth Error] Provider: ${provider}, Profile ID: ${profile.id} - ${err.message}`);
+    throw err;
   }
 }
 
-async function getUser(req, res, next) {
-  try {
-    const userId = req.params?.userId;
-    logger.info(userId, 'userId');
 
-    if (!userId) {
-      return res.status(501).send({ error: 'Require Id' });
-    }
 
-    const user = await UserModel.findOne({ providerId: userId });
 
-    if (!user) {
-      return res
-        .status(httpStatus.NOT_FOUND)
-        .send({ error: "Couldn't Find the User" });
-    }
 
-    // Remove password from user
-    const { llamaAiSessions, notes, password, ...rest } = Object.assign(
-      {},
-      user.toJSON(),
-    );
 
-    return res.status(201).send(rest);
-  } catch (error) {
-    console.error(error); // Log the error for debugging purposes
-    return res.status(404).send({ error: 'Cannot Find User Data' });
-  }
-}
 
-async function getUserByEmail(req, res, next) {
-  try {
-    const userEmail = req.params?.userEmail;
-    logger.info(userEmail, 'userId');
 
-    if (!userEmail) {
-      return res.status(501).send({ error: 'Require Id' });
-    }
 
-    const user = await UserModel.findOne({ email: userEmail });
 
-    if (!user) {
-      return res
-        .status(httpStatus.NOT_FOUND)
-        .send({ error: "Couldn't Find the User" });
-    }
 
-    // Remove password, notes, and llamaAiSessions from user
-    const { llamaAiSessions, notes, password, ...rest } = Object.assign(
-      {},
-      user.toJSON(),
-    );
-
-    return res.status(201).send(rest);
-  } catch (error) {
-    console.error(error); // Log the error for debugging purposes
-    return res.status(404).send({ error: 'Cannot Find User Data' });
-  }
-}
-
-export { findOrCreateUserModel, getUser, getUserByEmail };
