@@ -17,7 +17,6 @@ dotenv.config();
 
 const app = express();
 
-
 // Middleware
 // ✅ Use body-parser raw() FIRST for Stripe webhook before any JSON parsing
 app.use(
@@ -25,9 +24,13 @@ app.use(
   express.raw({ type: 'application/json' }),
 );
 
-
 const corsConfig = {
-  origin: ['https://ason-web.netlify.app', 'https://asonai.com','http://localhost:3000'],
+  origin: [
+    'https://ason-web.netlify.app',
+    'https://www.asonai.com',
+    'https://asonai.com',
+    'http://localhost:3000',
+  ],
   credentials: true,
   methods: ['GET', 'POST', 'DELETE', 'PUT', 'PATCH'],
   allowedHeaders: [

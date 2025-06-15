@@ -6,26 +6,6 @@
     "auditLog": "C:\\Fiverr\\ASON\\ASON Backends\\ASON-Core-Service\\logs\\errors\\.3736322e9d5649e0a135e95a5d5dfd60d37f219c-audit.json",
     "files": [
         {
-            "date": 1748639718841,
-            "name": "C:\\Fiverr\\ASON\\ASON Backends\\ASON-Core-Service\\logs\\errors\\RH-2025-05-31-03-error.log",
-            "hash": "3165842906f5060c7ed6238f8e9f12eaa464fa54dcf010215e96a7f20e0704a1"
-        },
-        {
-            "date": 1748643074137,
-            "name": "C:\\Fiverr\\ASON\\ASON Backends\\ASON-Core-Service\\logs\\errors\\RH-2025-05-31-04-error.log",
-            "hash": "1ace10d0c18b5d59c4c83451f9935a0e9e3de37c0f9cb665baab3ab450b04c6d"
-        },
-        {
-            "date": 1748780734863,
-            "name": "C:\\Fiverr\\ASON\\ASON Backends\\ASON-Core-Service\\logs\\errors\\RH-2025-06-01-18-error.log",
-            "hash": "0b15b1eca90b9bff60e25ff1988c243b47530c4842d585e9e4ee995babf73e3e"
-        },
-        {
-            "date": 1748782828200,
-            "name": "C:\\Fiverr\\ASON\\ASON Backends\\ASON-Core-Service\\logs\\errors\\RH-2025-06-01-19-error.log",
-            "hash": "f07a8b4ee8db6af6278b37aedb8441681c339a6bd9f59e6de9bc10f3295a7619"
-        },
-        {
             "date": 1748803619269,
             "name": "C:\\Fiverr\\ASON\\ASON Backends\\ASON-Core-Service\\logs\\errors\\RH-2025-06-02-00-error.log",
             "hash": "bd19f32f41c3ecc7141eb168497cf5438bcd7647c287a0b21fe49cbba3b03e63"
@@ -149,6 +129,21 @@
             "date": 1749845037986,
             "name": "C:\\Fiverr\\ASON\\ASON Backends\\ASON-Core-Service\\logs\\errors\\RH-2025-06-14-02-error.log",
             "hash": "ead677cdcfed9293d626771a061e3a793e77b9906c7e146ae6ff0b9156f4e09e"
+        },
+        {
+            "date": 1749920998879,
+            "name": "C:\\Fiverr\\ASON\\ASON Backends\\ASON-Core-Service\\logs\\errors\\RH-2025-06-14-23-error.log",
+            "hash": "41ca2a4e9901b4842c9ba23bfc977f0495164dae4edd2343d3a64040d6d5d9ea"
+        },
+        {
+            "date": 1749976208250,
+            "name": "C:\\Fiverr\\ASON\\ASON Backends\\ASON-Core-Service\\logs\\errors\\RH-2025-06-15-14-error.log",
+            "hash": "032166d16ba0a69588e6087e30d71503f02771e9f97ad7a4b8162ea3538e7e30"
+        },
+        {
+            "date": 1750001597441,
+            "name": "C:\\Fiverr\\ASON\\ASON Backends\\ASON-Core-Service\\logs\\errors\\RH-2025-06-15-21-error.log",
+            "hash": "a7ee7d4457677331834291cbfe98ee96c42e294ced69f097d8d091e80909482d"
         }
     ],
     "hashType": "sha256"

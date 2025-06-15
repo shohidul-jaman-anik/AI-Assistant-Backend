@@ -68,7 +68,7 @@ const deepseekResponseService = async (prompt, userId, sessionId) => {
 
     const responseData = {
       prompt,
-      model: 'deepseek-r1-distill-qwen-32b',
+      model: 'DeepSeek-R1-Distill-Llama-70B',
       reply,
       total_time: totalTime, // Add total time to response data
     };

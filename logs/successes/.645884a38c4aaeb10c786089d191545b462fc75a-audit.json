@@ -6,49 +6,9 @@
     "auditLog": "/app/ason-core-service/logs/successes/.645884a38c4aaeb10c786089d191545b462fc75a-audit.json",
     "files": [
         {
-            "date": 1746969437780,
-            "name": "/app/ason-core-service/logs/successes/RH-2025-05-11-13-success.log",
-            "hash": "df34dfe5313aed170bbeec36981b9033f2ba49664770f695921f9b039674ade4"
-        },
-        {
-            "date": 1746982975435,
-            "name": "/app/ason-core-service/logs/successes/RH-2025-05-11-17-success.log",
-            "hash": "f34d4ff8e64d0e83307698fd3e1de662328c58c42c12ddd3a27d2ca62d465336"
-        },
-        {
-            "date": 1746986850560,
-            "name": "/app/ason-core-service/logs/successes/RH-2025-05-11-18-success.log",
-            "hash": "7b6a5929179cd376ede63f53179c2afc8d46f65df4dae1d727fa1fe694905396"
-        },
-        {
-            "date": 1746997167870,
-            "name": "/app/ason-core-service/logs/successes/RH-2025-05-11-20-success.log",
-            "hash": "558ce9590a82bb425f60f755c45b6cce815d0cf76b6fee9275dd7f0ba0f6ef60"
-        },
-        {
-            "date": 1746997206284,
-            "name": "/app/ason-core-service/logs/successes/RH-2025-05-11-21-success.log",
-            "hash": "ef652a3e601ad47f6c4003b221a2c97ac07de80ed606b5a69bf70ce209bab405"
-        },
-        {
-            "date": 1747050413174,
-            "name": "/app/ason-core-service/logs/successes/RH-2025-05-12-11-success.log",
-            "hash": "1fbf7deb571356e22de0ca95869fcb73e56fde3cdb0057543fb013bb4c3a2b0a"
-        },
-        {
-            "date": 1747150674806,
-            "name": "/app/ason-core-service/logs/successes/RH-2025-05-13-15-success.log",
-            "hash": "400d4fe5632b82f6b1278dd565345152fe52009e9196cdd1ace58a5bbce074a1"
-        },
-        {
-            "date": 1748116657817,
-            "name": "/app/ason-core-service/logs/successes/RH-2025-05-24-19-success.log",
-            "hash": "43fe68e9854e80ef6cf7ba40b5dc932d90b5ec835b54f502d5939f353ed3dc35"
-        },
-        {
-            "date": 1748116829825,
-            "name": "/app/ason-core-service/logs/successes/RH-2025-05-24-20-success.log",
-            "hash": "b0e3e6e6259e1199060b952b805956f1c324e02f43ab345d2522bb9b3e0a6d38"
+            "date": 1749868828405,
+            "name": "/app/ason-core-service/logs/successes/RH-2025-06-14-02-success.log",
+            "hash": "ea7a3793744995d1c21af3facbc571c7ac99d46fa888ed3551575ca713a06417"
         }
     ],
     "hashType": "sha256"

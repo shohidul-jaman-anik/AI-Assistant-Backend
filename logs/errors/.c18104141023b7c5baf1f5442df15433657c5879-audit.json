@@ -6,44 +6,9 @@
     "auditLog": "/app/ason-core-service/logs/errors/.c18104141023b7c5baf1f5442df15433657c5879-audit.json",
     "files": [
         {
-            "date": 1746969437798,
-            "name": "/app/ason-core-service/logs/errors/RH-2025-05-11-13-error.log",
-            "hash": "1be4a7d9f8db086d6a870ff413b46b5a7a40d6e19ab38881ba95b47518d1b8ea"
-        },
-        {
-            "date": 1746987298067,
-            "name": "/app/ason-core-service/logs/errors/RH-2025-05-11-18-error.log",
-            "hash": "584457f0243fd480ed737ee38313b2a5436b860ce639441d323d6528b0aaf2f4"
-        },
-        {
-            "date": 1746997167887,
-            "name": "/app/ason-core-service/logs/errors/RH-2025-05-11-20-error.log",
-            "hash": "7db2949d8e64390d146f3666b2e0fbfc2569e2c613cd55e1b386253ed45314af"
-        },
-        {
-            "date": 1746997206297,
-            "name": "/app/ason-core-service/logs/errors/RH-2025-05-11-21-error.log",
-            "hash": "52505cc6c6e7027f9135bf43b4d2979dae8eef0e053baae3542b683d2a110bda"
-        },
-        {
-            "date": 1747050413194,
-            "name": "/app/ason-core-service/logs/errors/RH-2025-05-12-11-error.log",
-            "hash": "2efdd83c2c81695ba2076e191395ce777708d806f481c42132b52477640fbebe"
-        },
-        {
-            "date": 1747150674829,
-            "name": "/app/ason-core-service/logs/errors/RH-2025-05-13-15-error.log",
-            "hash": "3aaf2f0249a57b7b8e2cfdda985d1e1cf91e3398734e79a7bf5b6faea14426d8"
-        },
-        {
-            "date": 1748116657900,
-            "name": "/app/ason-core-service/logs/errors/RH-2025-05-24-19-error.log",
-            "hash": "5b4b2ea4a783ac4f6f9f2418d33492e516a246d1e9a6a89e059e92229b54946c"
-        },
-        {
-            "date": 1748117115485,
-            "name": "/app/ason-core-service/logs/errors/RH-2025-05-24-20-error.log",
-            "hash": "7d3c9daf2060b069a05f7a828c47418ec7980fd6fd3d8eea6e2099abd24cb84e"
+            "date": 1749868828482,
+            "name": "/app/ason-core-service/logs/errors/RH-2025-06-14-02-error.log",
+            "hash": "50318526c2a093d2e747318d08fcec566b3b09d73de58338f09e0a368f9faebf"
         }
     ],
     "hashType": "sha256"
