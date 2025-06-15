@@ -43,11 +43,18 @@ const corsConfig = {
   preflightContinue: false,
   optionsSuccessStatus: 204,
 };
+
 app.use(cors(corsConfig));
+app.options('*', cors(corsConfig));
 app.use(express.json());
 app.use(cookieParser());
 app.use(express.urlencoded({ extended: true }));
 app.disable('x-powered-by');
+
+app.use((req, res, next) => {
+  console.log('Incoming Origin:', req.headers.origin);
+  next();
+});
 
 // Enable trust proxy (For Rate-Limit)
 app.set('trust proxy', 'loopback');
