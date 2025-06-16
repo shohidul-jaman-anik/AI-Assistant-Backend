@@ -14,4 +14,8 @@ router.get(
 );
 router.post('/linkedin/post', composioController.postToLinkedIn);
 
+router.get('/integration', composioController.getGmailIntegration);
+router.post('/connect', composioController.initiateGmailConnection);
+router.post('/send-email', composioController.sendEmailViaGmail);
+
 export const composioRoutes = router;

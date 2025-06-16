@@ -25,12 +25,13 @@ app.use(
 );
 
 const corsConfig = {
-  origin: [
-    'https://ason-web.netlify.app',
-    'https://www.asonai.com',
-    'https://asonai.com',
-    'http://localhost:3000',
-  ],
+  // origin: [
+  //   'https://ason-web.netlify.app',
+  //   'https://www.asonai.com',
+  //   'https://asonai.com',
+  //   'http://localhost:3000',
+  // ],
+  origin: true, // Allow all origins
   credentials: true,
   methods: ['GET', 'POST', 'DELETE', 'PUT', 'PATCH'],
   allowedHeaders: [

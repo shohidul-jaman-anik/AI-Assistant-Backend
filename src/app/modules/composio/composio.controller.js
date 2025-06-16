@@ -1,6 +1,12 @@
+import { OpenAIToolSet } from 'composio-core';
 import httpStatus from 'http-status';
+import config from '../../../../config/index.js';
 import sendResponse from '../../../shared/sendResponse.js';
 import { composioService } from './composio.service.js';
+// import { ChatOpenAI } from "@langchain/openai";
+// import { AgentExecutor, createOpenAIFunctionsAgent } from "langchain/agents";
+// import { pull } from "langchain/hub";
+// import { LangchainToolSet } from "@composio/langchain";
 
 const integrationId = '5c9834e1-14b3-4c06-9262-606bce538a9f'; // Put your Composio Gmail integration ID here
 const linkedInIntegrationId = 'ff2c1c00-03ca-4135-9fe7-afa775098c26'; // Put your Composio Gmail integration ID here
@@ -125,6 +131,182 @@ const postToLinkedIn = async (req, res) => {
   }
 };
 
+const toolset = new OpenAIToolSet({
+  apiKey: config.composio.apiKey,
+});
+
+const getGmailIntegration = async (req, res) => {
+  try {
+    const integration = await toolset.integrations.get({
+      integrationId: '9716ebb0-5dfa-420c-9033-2cae4f5b61ae',
+    });
+
+    const inputFields = await toolset.integrations.getRequiredParams({
+      integrationId: integration.id,
+    });
+    res.json({ integration, inputFields });
+  } catch (err) {
+    console.error('🔥 Composio error:', err);
+    return res.status(500).json({
+      error: err.message,
+      details: err?.response?.data || err.stack,
+    });
+  }
+};
+
+const initiateGmailConnection = async (req, res) => {
+  try {
+    const connectedAccount = await toolset.connectedAccounts.initiate({
+      integrationId: '9716ebb0-5dfa-420c-9033-2cae4f5b61ae', // Gmail
+      entityId: 'default', // or user ID if multi-user
+    });
+
+    res.json({
+      redirectUrl: connectedAccount.redirectUrl, // 🔁 Send user to this URL to authorize
+      connectedAccountId: connectedAccount.connectedAccountId,
+      connectionStatus: connectedAccount.connectionStatus,
+    });
+  } catch (err) {
+    console.error('🔥 Composio error:', err);
+    return res.status(500).json({
+      error: err.message,
+      details: err?.response?.data || err.stack,
+    });
+  }
+};
+
+// const sendEmailViaGmail = async (req, res) => {
+//   const apiKey = config.composio.apiKey;
+//   const integrationId = '9716ebb0-5dfa-420c-9033-2cae4f5b61ae';
+//   const connectedAccountId = '4a4b2384-e251-46f4-ad8d-413e8eab16e2';
+//   const connectorId = 'gmail';
+
+//   const payload = {
+//     integrationId,
+//     connectedAccountId,
+//     connectorId,
+//     action: 'GMAIL_SEND_EMAIL',
+//     input: {
+//       to: 'anikh561460@gmail.com',
+//       subject: 'Hello from Composio',
+//       body: 'This email was sent using Composio Gmail integration!',
+//       is_html: false,
+//     },
+//   };
+
+//   try {
+//     const response = await axios.post(
+//       'https://api.composio.dev/v1/actions/execute',
+//       payload,
+//       {
+//         headers: {
+//           Authorization: `Bearer ${apiKey}`,
+//           'Content-Type': 'application/json',
+//         },
+//       },
+//     );
+//     console.log('Email sent:', response.data);
+//     return res.status(200).json(response.data);
+//   } catch (err) {
+//     console.error('🔥 Composio error:', err);
+//     return res.status(500).json({
+//       error: err.message,
+//       details: err?.response?.data || err.stack || err.message,
+//     });
+//   }
+// };
+
+// const sendEmailViaGmail = async (req, res) => {
+//   try {
+//     // 1. Initialize LLM
+//     const llm = new ChatOpenAI({
+//       model: 'gpt-4-turbo',
+//       temperature: 0,
+//     });
+
+//     // 2. Get the pre-defined agent prompt
+//     const prompt = await pull('hwchase17/openai-functions-agent');
+
+//     // 3. Set up Composio tools
+//     const toolset = new LangchainToolSet({
+//       apiKey: config.composio.apiKey, // Use from config, not hardcoded
+//       integrationId: '9716ebb0-5dfa-420c-9033-2cae4f5b61ae',
+//       connectedAccountId: '4a4b2384-e251-46f4-ad8d-413e8eab16e2',
+//     });
+
+//     // 4. Get specific tools you need
+//     const tools = await toolset.getTools({
+//       actions: ['GMAIL_SEND_EMAIL'],
+//     });
+
+//     // 5. Create agent
+//     const agent = await createOpenAIFunctionsAgent({
+//       llm,
+//       tools,
+//       prompt,
+//     });
+
+//     // 6. Execute agent
+//     const agentExecutor = new AgentExecutor({
+//       agent,
+//       tools,
+//       verbose: true,
+//     });
+
+//     // 7. Invoke with your email task
+//     const response = await agentExecutor.invoke({
+//       input: `Send email to anikh561460@gmail.com with subject "Hello from Composio" and body "This email was sent using Composio LangChain integration!"`,
+//     });
+
+//     console.log('Email sent successfully:', response);
+//     return res.status(200).json(response);
+//   } catch (error) {
+//     console.error('Error in Composio LangChain integration:', error);
+//     return res.status(500).json({
+//       error: 'Failed to send email',
+//       details: error.message,
+//       stack: error.stack,
+//     });
+//   }
+// };
+
+const sendEmailViaGmail = async (req, res) => {
+  try {
+    const { connectedAccountId, to, subject, message } = req.body;
+
+    // Validation
+    if (!connectedAccountId || !to || !subject || !message) {
+      return res.status(400).json({
+        error:
+          'Missing required fields: connectedAccountId, to, subject, message',
+      });
+    }
+    console.log(Object.keys(toolset.actions));
+    // Invoke Gmail send email action
+    const response = await toolset.client.actions.invokeAction({
+      connectedAccountId,
+      integrationId: '9716ebb0-5dfa-420c-9033-2cae4f5b61ae', // Gmail integration ID
+      operationId: 'sendEmail',
+      params: {
+        to,
+        subject,
+        message,
+      },
+    });
+
+    res.json({
+      success: true,
+      response,
+    });
+  } catch (err) {
+    console.error('🔥 Composio error:', err);
+    return res.status(500).json({
+      error: err.message,
+      details: err?.response?.data || err.stack,
+    });
+  }
+};
+
 export const composioController = {
   startOAuth,
   handleCallback,
@@ -132,4 +314,7 @@ export const composioController = {
   startLinkedInOAuth,
   handleLinkedInCallback,
   postToLinkedIn,
+  getGmailIntegration,
+  initiateGmailConnection,
+  sendEmailViaGmail,
 };
