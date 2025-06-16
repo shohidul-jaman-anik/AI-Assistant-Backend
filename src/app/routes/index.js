@@ -16,7 +16,7 @@ import { llama4AiRoutes } from '../modules/Llama4/llama4.route.js';
 import { notificationRoutes } from '../modules/notification/notification.route.js';
 import { socialLoginRotes } from '../modules/social-login/social-login.route.js';
 import { supportRoutes } from '../modules/support/support.route.js';
-// import { composioRoutes } from '../modules/composio/composio.route.js';
+import { composioRoutes } from '../modules/composio/composio.route.js';
 import { browserUseAiRoutes } from '../modules/browserUse/browserUse.route.js';
 
 const router = express.Router();
@@ -90,10 +90,10 @@ const moduleRoutes = [
     path: '/api-endpoint',
     route: aiModelEndpointRoutes,
   },
-  // {
-  //   path: '/composio',
-  //   route: composioRoutes,
-  // },
+  {
+    path: '/composio',
+    route: composioRoutes,
+  },
   {
     path: '/browser-use',
     route: browserUseAiRoutes,

@@ -281,16 +281,29 @@ const sendEmailViaGmail = async (req, res) => {
           'Missing required fields: connectedAccountId, to, subject, message',
       });
     }
+    console.log(toolset, 'toolset');
     console.log(Object.keys(toolset.actions));
+    const actions = await toolset.actions.list();
+    console.log(actions);
     // Invoke Gmail send email action
-    const response = await toolset.client.actions.invokeAction({
+    // const response = await toolset.client.actions.invokeAction({
+    //   connectedAccountId,
+    //   integrationId: '9716ebb0-5dfa-420c-9033-2cae4f5b61ae', // Gmail integration ID
+    //   operationId: 'sendEmail',
+    //   params: {
+    //     to,
+    //     subject,
+    //     body: message,
+    //   },
+    // });
+    const response = await toolset.performAction({
       connectedAccountId,
-      integrationId: '9716ebb0-5dfa-420c-9033-2cae4f5b61ae', // Gmail integration ID
-      operationId: 'sendEmail',
+      integrationId: '9716ebb0-5dfa-420c-9033-2cae4f5b61ae', // Gmail
+      operationId: 'sendEmail', // This must match what Composio defines
       params: {
         to,
         subject,
-        message,
+        body: message, // ✅ Use "body" not "message"
       },
     });
 

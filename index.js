@@ -61,7 +61,7 @@ app.use((req, res, next) => {
 app.set('trust proxy', 'loopback');
 
 // Apply all security-related middleware
-applySecurityMiddleware(app);
+// applySecurityMiddleware(app);
 
 // Initialize passport (no session)
 passportConfig(passport);
