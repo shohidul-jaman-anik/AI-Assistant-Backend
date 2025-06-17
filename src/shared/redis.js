@@ -59,7 +59,12 @@ const disconnect = async () => {
 
 export const RedisClient = {
   connect,
-  publish: redisPubClient.publish.bind(redisPubClient),
+  publish: async (channel, message) => {
+    if (!redisPubClient.isOpen) {
+      await redisPubClient.connect(); // reconnects Redis if disconnected
+    }
+    return redisPubClient.publish(channel, message);
+  },
   subscribe: redisSubClient.subscribe.bind(redisSubClient),
   set,
   get,

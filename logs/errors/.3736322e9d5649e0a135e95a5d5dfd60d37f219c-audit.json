@@ -139,6 +139,11 @@
             "date": 1750172749774,
             "name": "C:\\Fiverr\\ASON\\ASON Backends\\ASON-Core-Service\\logs\\errors\\RH-2025-06-17-21-error.log",
             "hash": "a0976ef0252545e2adc12d89bfeefddbbab9c9827df7986e26d531220dafe9e4"
+        },
+        {
+            "date": 1750180928534,
+            "name": "C:\\Fiverr\\ASON\\ASON Backends\\ASON-Core-Service\\logs\\errors\\RH-2025-06-17-23-error.log",
+            "hash": "c9df36d722b7a05e6d412181b521e65e8e1fcd5c8855fe46768639e882239067"
         }
     ],
     "hashType": "sha256"

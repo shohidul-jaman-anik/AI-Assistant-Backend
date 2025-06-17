@@ -117,7 +117,7 @@ const sessionMemoryStore = {}; // In-memory session store
 //   }
 // };
 
-export const getAiResponsesGroqService = async (prompt, userId, sessionId) => {
+ const getAiResponsesGroqService = async (prompt, userId, sessionId) => {
   let memory = sessionMemoryStore[sessionId];
   if (!memory) {
     memory = new BufferMemory({
