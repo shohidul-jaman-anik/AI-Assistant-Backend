@@ -129,9 +129,21 @@ app.use(
   express.raw({ type: 'application/json' }),
 );
 
-app.use(cors({
-  origin: '*',
-}))
+// app.use(cors({
+//   origin: '*',
+// }))
+
+app.use(
+  cors({
+    origin: [
+      'https://asonai.com',
+      'https://www.asonai.com',
+      'https://ason-web.netlify.app',
+      'http://localhost:3000',
+    ],
+    credentials: true,
+  }),
+);
 
 // Middleware
 app.use(express.json());
