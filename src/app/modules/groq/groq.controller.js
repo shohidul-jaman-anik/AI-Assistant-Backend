@@ -182,7 +182,7 @@ const GroqAiGetResponse = catchAsync(async (req, res) => {
     userId,
     sessionId,
   );
-  logger.info('✅ Service result:', result); // log result
+  // logger.info('✅ Service result:', result); // log result
   sendResponse(res, {
     statusCode: httpStatus.OK,
     success: true,
@@ -226,7 +226,7 @@ const LlamaAiGetResponseFromDbByUserId = catchAsync(async (req, res) => {
 
 const LlamaAiGetResponseFromDbBySessionId = catchAsync(async (req, res) => {
   const id = req.params?.sessionId;
-  logger.info(id, 'session');
+  // logger.info(id, 'session');
 
   const responseData = await LlamaAiService.getAiResponsesBySession(id);
 
@@ -241,7 +241,7 @@ const LlamaAiGetResponseFromDbBySessionId = catchAsync(async (req, res) => {
 const deleteOneAiSession = catchAsync(async (req, res) => {
   const id = req.params?.objectId;
   const result = await LlamaAiService.deleteOneLlamaAiSession(id);
-  logger.info(result, 'resultttt');
+  // logger.info(result, 'resultttt');
   if (!result.success) {
     return res.status(httpStatus.INTERNAL_SERVER_ERROR).json({
       status: 'fail',
@@ -262,7 +262,7 @@ const deleteAllAiSessions = catchAsync(async (req, res) => {
   const userId = req.user?._id;
   console.log(userId, 'userId from token in controller');
   const result = await LlamaAiService.deleteAllAiSessionsService(userId);
-  logger.info(result, 'resultttt');
+  // logger.info(result, 'resultttt');
 
   if (!result.success) {
     return res.status(httpStatus.INTERNAL_SERVER_ERROR).json({

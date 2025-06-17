@@ -303,7 +303,7 @@ const getAiResponsesByUserIdService = async userId => {
     .populate({
       path: 'llamaAiSessions',
     });
-  logger.info(sessionData, 'sessionData');
+  // logger.info(sessionData, 'sessionData');
   if (!sessionData) {
     return {
       statusCode: httpStatus.NOT_FOUND,
@@ -319,7 +319,7 @@ const getAiResponsesBySession = async id => {
   const sessionData = await Llama.findOne({
     sessionId: id,
   });
-  logger.info(sessionData, 'sessionData');
+  // logger.info(sessionData, 'sessionData');
 
   if (!sessionData) {
     return {
@@ -384,14 +384,14 @@ const deleteAllAiSessionsService = async userId => {
     }
 
     const aiSessionIds = user.llamaAiSessions.map(id => id.toString());
-    logger.info('AI Session IDs to delete:', aiSessionIds);
+    // logger.info('AI Session IDs to delete:', aiSessionIds);
 
     // Delete the AI sessions
     const deleteResults = await Promise.all(
       aiSessionIds.map(id => Llama.deleteOne({ _id: id }).session(session)),
     );
 
-    logger.info('Delete Results:', deleteResults);
+    // logger.info('Delete Results:', deleteResults);
 
     // Check if all AI sessions were successfully deleted
     const allDeleted = deleteResults.every(result => result.deletedCount === 1);
@@ -405,7 +405,7 @@ const deleteAllAiSessionsService = async userId => {
       { $pull: { llamaAiSessions: { $in: aiSessionIds } } },
     ).session(session);
 
-    logger.info('User update result:', userUpdateResult);
+    // logger.info('User update result:', userUpdateResult);
 
     if (userUpdateResult.acknowledged && userUpdateResult.modifiedCount > 0) {
       await session.commitTransaction();
