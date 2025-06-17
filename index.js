@@ -130,7 +130,6 @@ app.use(
 );
 
 // Middleware
-app.use(cors());
 app.use(express.json());
 app.use(cookieParser());
 app.use(express.urlencoded({ extended: true }));
@@ -142,14 +141,22 @@ app.set('trust proxy', 'loopback');
 
 // Helmet middleware for security headers
 app.use(helmet());
+const allowedOrigins = [
+  'https://ason-web.netlify.app',
+  'https://www.asonai.com',
+  'https://asonai.com',
+  'http://localhost:3000',
+];
 
 const corsConfig = {
-  origin: [
-    'https://ason-web.netlify.app',
-    'https://www.asonai.com',
-    'https://asonai.com',
-    'http://localhost:3000',
-  ],
+  origin: function (origin, callback) {
+    if (!origin) return callback(null, true); // Allow non-browser requests like curl
+    if (allowedOrigins.includes(origin)) {
+      callback(null, origin);
+    } else {
+      callback(new Error('Not allowed by CORS'));
+    }
+  },
   credentials: true,
   methods: ['GET', 'POST', 'DELETE', 'PUT', 'PATCH'],
   allowedHeaders: [
