@@ -129,6 +129,10 @@ app.use(
   express.raw({ type: 'application/json' }),
 );
 
+app.use(cors({
+  origin: '*',
+}))
+
 // Middleware
 app.use(express.json());
 app.use(cookieParser());
@@ -141,35 +145,6 @@ app.set('trust proxy', 'loopback');
 
 // Helmet middleware for security headers
 app.use(helmet());
-const allowedOrigins = [
-  'https://ason-web.netlify.app',
-  'https://www.asonai.com',
-  'https://asonai.com',
-  'http://localhost:3000',
-];
-
-const corsConfig = {
-  origin: function (origin, callback) {
-    if (!origin) return callback(null, true); // Allow non-browser requests like curl
-    if (allowedOrigins.includes(origin)) {
-      callback(null, origin);
-    } else {
-      callback(new Error('Not allowed by CORS'));
-    }
-  },
-  credentials: true,
-  methods: ['GET', 'POST', 'DELETE', 'PUT', 'PATCH'],
-  allowedHeaders: [
-    'Origin',
-    'X-Requested-With',
-    'Content-Type',
-    'Accept',
-    'Authorization',
-  ],
-  preflightContinue: false,
-  optionsSuccessStatus: 204,
-};
-app.use(cors(corsConfig));
 
 // Additional Helmet security configurations
 app.use(
