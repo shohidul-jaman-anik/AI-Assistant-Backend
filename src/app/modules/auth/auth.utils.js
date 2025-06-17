@@ -18,9 +18,10 @@ export const registrationOtpTemplate = async (email, token) => {
                   <h2 style="color: #333333;">Email Verification</h2>
                   <p style="color: #666666; font-size: 18px;">Dear user,</p>
                   <p style="color: #666666; font-size: 18px;">Thank you for signing up on ASON Ai! To complete your registration, please click the link below to verify your email address:</p>
-                  <button  style="margin-bottom: 20px; background-color: #242C36; color: #FFFFFF; border: none; display: inline-block; border-radius: 8px; transition: background-color 0.3s; padding: 8px 15px; cursor: pointer;  text-align: center; ">
-                  <a href="https://ason-backend.onrender.com/api/v1/auth/register/confirmation/${token}" style="text-decoration: none; color: #FFFFFF; font-size: 18px;">Verify Email</a>
-                  </button>
+                    <a href="https://ason-backend.onrender.com/api/v1/auth/register/confirmation/${token}" 
+                     style="display: inline-block; margin-bottom: 20px; background-color: #242C36; color: #FFFFFF; border: none; border-radius: 8px; padding: 10px 20px; text-decoration: none; font-size: 18px;">
+                    Verify Email
+                  </a>
                   <p style="color: #666666; font-size: 18px;">If you didn't sign up for our service, you can ignore this email.</p>
                 </div>
                 <p style="color: #999999; margin-top: 20px;">This email was sent by ASON Ai.</p>

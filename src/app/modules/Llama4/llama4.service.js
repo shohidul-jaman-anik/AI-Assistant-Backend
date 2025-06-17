@@ -92,6 +92,7 @@ const Llama4AiGetResponseService = async (prompt, userId, sessionId) => {
     }
 
     const payload = { prompt, sessionId, reply };
+    console.log('Payloadddddddddddddddd:', payload);
     return payload;
   } catch (error) {
     logger.error('Error in openAiResponseService:', error);

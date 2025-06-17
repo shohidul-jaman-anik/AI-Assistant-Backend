@@ -6,7 +6,7 @@ import config from '../../../../config/index.js';
 
 const router = Router();
 
-const FRONTEND_URL = process.env.CLIENT_URL || 'http://localhost:3000';
+const FRONTEND_URL = config.client_url || 'https://www.asonai.com';
 const FAILURE_REDIRECT_URL = `${FRONTEND_URL}?showLogin=true&error=authentication_cancelled`;
 
 function sendTokenResponse(user, res) {
