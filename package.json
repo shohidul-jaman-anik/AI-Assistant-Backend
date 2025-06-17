@@ -6,8 +6,8 @@
   "description": "",
   "main": "index.js",
   "scripts": {
-    "start": "node server.js",
-    "dev": "nodemon server.js",
+    "start": "node index.js",
+    "dev": "nodemon index.js",
     "test": "echo \"Error: no test specified\" && exit 1",
     "lint": "eslint . --fix --max-warnings=0",
     "format": "prettier . --write"
@@ -38,6 +38,7 @@
     "composio-core": "^0.5.39",
     "cookie-parser": "^1.4.7",
     "cors": "^2.8.5",
+    "cyberdesk": "^0.2.1",
     "dotenv": "^16.3.2",
     "email-validator": "^2.0.4",
     "eslint": "^8.56.0",

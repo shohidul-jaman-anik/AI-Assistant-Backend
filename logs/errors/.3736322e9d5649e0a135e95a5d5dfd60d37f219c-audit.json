@@ -6,16 +6,6 @@
     "auditLog": "C:\\Fiverr\\ASON\\ASON Backends\\ASON-Core-Service\\logs\\errors\\.3736322e9d5649e0a135e95a5d5dfd60d37f219c-audit.json",
     "files": [
         {
-            "date": 1748872815609,
-            "name": "C:\\Fiverr\\ASON\\ASON Backends\\ASON-Core-Service\\logs\\errors\\RH-2025-06-02-20-error.log",
-            "hash": "866dc0c7934f2378736400c54a4ad3be8bfbde7c26b5056fe92b59c3ec9f45c3"
-        },
-        {
-            "date": 1748881733795,
-            "name": "C:\\Fiverr\\ASON\\ASON Backends\\ASON-Core-Service\\logs\\errors\\RH-2025-06-02-22-error.log",
-            "hash": "5873e0be49ef158f958c736c622b6affc0173c5b51b6be43a7af85e25dd35f02"
-        },
-        {
             "date": 1749041129090,
             "name": "C:\\Fiverr\\ASON\\ASON Backends\\ASON-Core-Service\\logs\\errors\\RH-2025-06-04-18-error.log",
             "hash": "ebd093ac8e9e1ebb19941cace2d7f61bb3e6e1853e2788aee64d71513feda804"
@@ -129,6 +119,21 @@
             "date": 1750080571613,
             "name": "C:\\Fiverr\\ASON\\ASON Backends\\ASON-Core-Service\\logs\\errors\\RH-2025-06-16-19-error.log",
             "hash": "7bd7149cb0784d71d9a9732971726d4d2029e3f6df42dc3de6dde186535e7f01"
+        },
+        {
+            "date": 1750150812929,
+            "name": "C:\\Fiverr\\ASON\\ASON Backends\\ASON-Core-Service\\logs\\errors\\RH-2025-06-17-15-error.log",
+            "hash": "5875c6add67353ce29e527adf75d16bdb14130c390b8283e8c21c1ac6c3100e7"
+        },
+        {
+            "date": 1750163428782,
+            "name": "C:\\Fiverr\\ASON\\ASON Backends\\ASON-Core-Service\\logs\\errors\\RH-2025-06-17-18-error.log",
+            "hash": "aae49ff096ef4709456f0c43912af7531a65fa60411c94da15bb5084ca00874e"
+        },
+        {
+            "date": 1750171144368,
+            "name": "C:\\Fiverr\\ASON\\ASON Backends\\ASON-Core-Service\\logs\\errors\\RH-2025-06-17-20-error.log",
+            "hash": "10d4391a769ef4b22dfc7765172690e4b2d9ebfa7d10d173a793a9ef67a33319"
         }
     ],
     "hashType": "sha256"

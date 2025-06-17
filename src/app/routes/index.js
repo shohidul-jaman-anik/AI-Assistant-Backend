@@ -18,6 +18,7 @@ import { socialLoginRotes } from '../modules/social-login/social-login.route.js'
 import { supportRoutes } from '../modules/support/support.route.js';
 import { composioRoutes } from '../modules/composio/composio.route.js';
 import { browserUseAiRoutes } from '../modules/browserUse/browserUse.route.js';
+import { cyberdeskRoutes } from '../modules/cyberdesk/cyberdesk.route.js';
 
 const router = express.Router();
 
@@ -93,6 +94,10 @@ const moduleRoutes = [
   {
     path: '/composio',
     route: composioRoutes,
+  },
+  {
+    path: '/cyberdesk',
+    route: cyberdeskRoutes,
   },
   {
     path: '/browser-use',
