@@ -144,7 +144,12 @@ app.set('trust proxy', 'loopback');
 app.use(helmet());
 
 const corsConfig = {
-  origin: ['https://ason-web.netlify.app', 'http://localhost:3000'],
+  origin: [
+    'https://ason-web.netlify.app',
+    'https://www.asonai.com',
+    'https://asonai.com',
+    'http://localhost:3000',
+  ],
   credentials: true,
   methods: ['GET', 'POST', 'DELETE', 'PUT', 'PATCH'],
   allowedHeaders: [
