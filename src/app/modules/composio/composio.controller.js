@@ -1,6 +1,5 @@
-import { OpenAIToolSet } from 'composio-core';
 import httpStatus from 'http-status';
-import config from '../../../../config/index.js';
+import catchAsync from '../../../shared/catchAsync.js';
 import sendResponse from '../../../shared/sendResponse.js';
 import { composioService } from './composio.service.js';
 // import { ChatOpenAI } from "@langchain/openai";
@@ -12,66 +11,91 @@ const integrationId = '5c9834e1-14b3-4c06-9262-606bce538a9f'; // Put your Compos
 const linkedInIntegrationId = 'ff2c1c00-03ca-4135-9fe7-afa775098c26'; // Put your Composio Gmail integration ID here
 const entityId = 'default';
 
-// Start OAuth flow: redirect user to Google's consent page
-const startOAuth = async (req, res) => {
-  try {
-    const redirectUrl = await composioService.getOAuthRedirectUrlService(
-      integrationId,
-      entityId,
-    );
-    res.redirect(redirectUrl);
-  } catch (err) {
-    console.error('Error starting OAuth:', err);
-    res.status(500).send('Failed to start OAuth flow');
-  }
-};
+const getGmailIntegration = catchAsync(async (req, res) => {
+  const result = await composioService.getGmailIntegrationService();
 
-// Handle OAuth callback: exchange code for tokens and get connected account
-const handleCallback = async (req, res) => {
-  try {
-    const { code } = req.query;
-    if (!code) return res.status(400).send('Missing code in callback');
+  sendResponse(res, {
+    statusCode: httpStatus.OK,
+    success: true,
+    message: 'Successfully Get all Support Requests',
+    data: result,
+  });
+});
+const initiateGmailConnection = catchAsync(async (req, res) => {
+  const { integrationId } = req.body;
+  const result =
+    await composioService.initiateGmailConnectionService(integrationId);
 
-    const connectedAccount = await composioService.exchangeCodeService(
-      code,
-      integrationId,
-      entityId,
-    );
+  sendResponse(res, {
+    statusCode: httpStatus.OK,
+    success: true,
+    message: 'Successfully Get all Support Requests',
+    data: result,
+  });
+});
+const sendEmail = catchAsync(async (req, res) => {
+  const result = await composioService.sendEmailService(req);
 
-    // Save connectedAccount.connectedAccountId to DB/session in production
-    res.send(
-      `Connected! Your account ID: ${connectedAccount.connectedAccountId}`,
-    );
-  } catch (err) {
-    console.error('Error handling OAuth callback:', err);
-    res.status(500).send('Failed to complete OAuth callback');
-  }
-};
+  sendResponse(res, {
+    statusCode: httpStatus.OK,
+    success: true,
+    message: 'Successfully Get all Support Requests',
+    data: result,
+  });
+});
 
-// Send email via Composio with connected Gmail account
-const sendEmail = async (req, res) => {
-  try {
-    const { connectedAccountId, to, subject, body } = req.body;
-    if (!connectedAccountId || !to || !subject || !body) {
-      return res.status(400).send('Missing required fields');
-    }
+// =============================
+//      Youtub Controller
+// =============================
 
-    const result = await composioService.sendEmailService(
-      connectedAccountId,
-      entityId,
-      {
-        to,
-        subject,
-        body,
-      },
-    );
+const getYouTubeIntegration = catchAsync(async (req, res) => {
+  const result = await composioService.getYouTubeIntegrationService();
 
-    res.json({ success: true, result });
-  } catch (err) {
-    console.error('Error sending email:', err);
-    res.status(500).send('Failed to send email');
-  }
-};
+  sendResponse(res, {
+    statusCode: httpStatus.OK,
+    success: true,
+    message: 'Successfully fetched YouTube integration info',
+    data: result,
+  });
+});
+
+const initiateYouTubeConnection = catchAsync(async (req, res) => {
+  const result = await composioService.initiateYouTubeConnectionService();
+
+  sendResponse(res, {
+    statusCode: httpStatus.OK,
+    success: true,
+    message: 'Successfully initiated YouTube connection',
+    data: result,
+  });
+});
+
+const searchYouTube = catchAsync(async (req, res) => {
+  const result = await composioService.searchYouTubeService(req);
+
+  sendResponse(res, {
+    statusCode: httpStatus.OK,
+    success: true,
+    message: 'Successfully searched YouTube videos',
+    data: result,
+  });
+});
+const disconnectYouTubeAccount = catchAsync(async (req, res) => {
+  const youtubConnectId = req.params.id;
+  const result =
+    await composioService.disconnectYouTubeAccountService(youtubConnectId);
+
+  sendResponse(res, {
+    statusCode: httpStatus.OK,
+    success: true,
+    message: 'Successfully searched YouTube videos',
+    data: result,
+  });
+});
+
+// =============================
+//      LinkedIn Controller
+// =============================
 
 const startLinkedInOAuth = async (req, res) => {
   try {
@@ -131,203 +155,140 @@ const postToLinkedIn = async (req, res) => {
   }
 };
 
-const toolset = new OpenAIToolSet({
-  apiKey: config.composio.apiKey,
+// =============================
+//   Google Calender Services
+// =============================
+
+const initiateGoogleCalendarConnection = catchAsync(async (req, res) => {
+  const result =
+    await composioService.initiateGoogleCalendarConnectionService();
+
+  sendResponse(res, {
+    statusCode: httpStatus.OK,
+    success: true,
+    message: 'Google Calendar connection URL generated',
+    data: result,
+  });
 });
 
-const getGmailIntegration = async (req, res) => {
-  try {
-    const integration = await toolset.integrations.get({
-      integrationId: '9716ebb0-5dfa-420c-9033-2cae4f5b61ae',
-    });
+const createCalendarEvent = catchAsync(async (req, res) => {
+  const result = await composioService.createCalendarEventService(req);
 
-    const inputFields = await toolset.integrations.getRequiredParams({
-      integrationId: integration.id,
-    });
-    res.json({ integration, inputFields });
-  } catch (err) {
-    console.error('🔥 Composio error:', err);
-    return res.status(500).json({
-      error: err.message,
-      details: err?.response?.data || err.stack,
-    });
-  }
-};
+  sendResponse(res, {
+    statusCode: httpStatus.OK,
+    success: true,
+    message: 'Event created successfully',
+    data: result,
+  });
+});
 
-const initiateGmailConnection = async (req, res) => {
-  try {
-    const connectedAccount = await toolset.connectedAccounts.initiate({
-      integrationId: '9716ebb0-5dfa-420c-9033-2cae4f5b61ae', // Gmail
-      entityId: 'default', // or user ID if multi-user
-    });
+const getCalendarEvents = catchAsync(async (req, res) => {
+  const result = await composioService.getCalendarEventsService(req);
 
-    res.json({
-      redirectUrl: connectedAccount.redirectUrl, // 🔁 Send user to this URL to authorize
-      connectedAccountId: connectedAccount.connectedAccountId,
-      connectionStatus: connectedAccount.connectionStatus,
-    });
-  } catch (err) {
-    console.error('🔥 Composio error:', err);
-    return res.status(500).json({
-      error: err.message,
-      details: err?.response?.data || err.stack,
-    });
-  }
-};
+  sendResponse(res, {
+    statusCode: httpStatus.OK,
+    success: true,
+    message: 'Fetched upcoming events',
+    data: result,
+  });
+});
+const deleteCalendarEvent = catchAsync(async (req, res) => {
+  const result = await composioService.deleteCalendarEventService(req);
 
-// const sendEmailViaGmail = async (req, res) => {
-//   const apiKey = config.composio.apiKey;
-//   const integrationId = '9716ebb0-5dfa-420c-9033-2cae4f5b61ae';
-//   const connectedAccountId = '4a4b2384-e251-46f4-ad8d-413e8eab16e2';
-//   const connectorId = 'gmail';
+  sendResponse(res, {
+    statusCode: httpStatus.OK,
+    success: true,
+    message: 'Event deleted successfully',
+    data: result,
+  });
+});
+const updateCalendarEvent = catchAsync(async (req, res) => {
+  const result = await composioService.updateCalendarEventService(req);
+  sendResponse(res, {
+    statusCode: httpStatus.OK,
+    success: true,
+    message: 'Event updated successfully',
+    data: result,
+  });
+});
 
-//   const payload = {
-//     integrationId,
-//     connectedAccountId,
-//     connectorId,
-//     action: 'GMAIL_SEND_EMAIL',
-//     input: {
-//       to: 'anikh561460@gmail.com',
-//       subject: 'Hello from Composio',
-//       body: 'This email was sent using Composio Gmail integration!',
-//       is_html: false,
-//     },
-//   };
+const getGithubIntegration = catchAsync(async (req, res) => {
+  const result = await composioService.getGithubIntegrationService();
+  sendResponse(res, {
+    statusCode: httpStatus.OK,
+    success: true,
+    message: 'Fetched GitHub integration',
+    data: result,
+  });
+});
 
-//   try {
-//     const response = await axios.post(
-//       'https://api.composio.dev/v1/actions/execute',
-//       payload,
-//       {
-//         headers: {
-//           Authorization: `Bearer ${apiKey}`,
-//           'Content-Type': 'application/json',
-//         },
-//       },
-//     );
-//     console.log('Email sent:', response.data);
-//     return res.status(200).json(response.data);
-//   } catch (err) {
-//     console.error('🔥 Composio error:', err);
-//     return res.status(500).json({
-//       error: err.message,
-//       details: err?.response?.data || err.stack || err.message,
-//     });
-//   }
-// };
+const initiateGithubConnection = catchAsync(async (req, res) => {
+  const { integrationId } = req.body;
+  const result =
+    await composioService.initiateGithubConnectionService(integrationId);
+  sendResponse(res, {
+    statusCode: httpStatus.OK,
+    success: true,
+    message: 'Initiated GitHub connection',
+    data: result,
+  });
+});
 
-// const sendEmailViaGmail = async (req, res) => {
-//   try {
-//     // 1. Initialize LLM
-//     const llm = new ChatOpenAI({
-//       model: 'gpt-4-turbo',
-//       temperature: 0,
-//     });
+const createGithubIssue = catchAsync(async (req, res) => {
+  const result = await composioService.createGithubIssueService(req);
+  sendResponse(res, {
+    statusCode: httpStatus.OK,
+    success: true,
+    message: 'GitHub issue created',
+    data: result,
+  });
+});
 
-//     // 2. Get the pre-defined agent prompt
-//     const prompt = await pull('hwchase17/openai-functions-agent');
+// =============================
+//     Amazon Controller
+// =============================
 
-//     // 3. Set up Composio tools
-//     const toolset = new LangchainToolSet({
-//       apiKey: config.composio.apiKey, // Use from config, not hardcoded
-//       integrationId: '9716ebb0-5dfa-420c-9033-2cae4f5b61ae',
-//       connectedAccountId: '4a4b2384-e251-46f4-ad8d-413e8eab16e2',
-//     });
+const initiateAmazonConnection = catchAsync(async (req, res) => {
+  const { integrationId } = req.body;
+  const result = await composioService.initiateAmazonConnectionService(integrationId);
 
-//     // 4. Get specific tools you need
-//     const tools = await toolset.getTools({
-//       actions: ['GMAIL_SEND_EMAIL'],
-//     });
+  sendResponse(res, {
+    statusCode: httpStatus.OK,
+    success: true,
+    message: 'Amazon connection initiated',
+    data: result,
+  });
+});
 
-//     // 5. Create agent
-//     const agent = await createOpenAIFunctionsAgent({
-//       llm,
-//       tools,
-//       prompt,
-//     });
+const searchAmazonProduct = catchAsync(async (req, res) => {
+  const result = await composioService.searchAmazonProductService(req);
 
-//     // 6. Execute agent
-//     const agentExecutor = new AgentExecutor({
-//       agent,
-//       tools,
-//       verbose: true,
-//     });
-
-//     // 7. Invoke with your email task
-//     const response = await agentExecutor.invoke({
-//       input: `Send email to anikh561460@gmail.com with subject "Hello from Composio" and body "This email was sent using Composio LangChain integration!"`,
-//     });
-
-//     console.log('Email sent successfully:', response);
-//     return res.status(200).json(response);
-//   } catch (error) {
-//     console.error('Error in Composio LangChain integration:', error);
-//     return res.status(500).json({
-//       error: 'Failed to send email',
-//       details: error.message,
-//       stack: error.stack,
-//     });
-//   }
-// };
-
-const sendEmailViaGmail = async (req, res) => {
-  try {
-    const { connectedAccountId, to, subject, message } = req.body;
-
-    // Validation
-    if (!connectedAccountId || !to || !subject || !message) {
-      return res.status(400).json({
-        error:
-          'Missing required fields: connectedAccountId, to, subject, message',
-      });
-    }
-    console.log(toolset, 'toolset');
-    console.log(Object.keys(toolset.actions));
-    const actions = await toolset.actions.list();
-    console.log(actions);
-    // Invoke Gmail send email action
-    // const response = await toolset.client.actions.invokeAction({
-    //   connectedAccountId,
-    //   integrationId: '9716ebb0-5dfa-420c-9033-2cae4f5b61ae', // Gmail integration ID
-    //   operationId: 'sendEmail',
-    //   params: {
-    //     to,
-    //     subject,
-    //     body: message,
-    //   },
-    // });
-    const response = await toolset.performAction({
-      connectedAccountId,
-      integrationId: '9716ebb0-5dfa-420c-9033-2cae4f5b61ae', // Gmail
-      operationId: 'sendEmail', // This must match what Composio defines
-      params: {
-        to,
-        subject,
-        body: message, // ✅ Use "body" not "message"
-      },
-    });
-
-    res.json({
-      success: true,
-      response,
-    });
-  } catch (err) {
-    console.error('🔥 Composio error:', err);
-    return res.status(500).json({
-      error: err.message,
-      details: err?.response?.data || err.stack,
-    });
-  }
-};
-
+  sendResponse(res, {
+    statusCode: httpStatus.OK,
+    success: true,
+    message: 'Amazon product search successful',
+    data: result,
+  });
+});
 export const composioController = {
-  startOAuth,
-  handleCallback,
+  getGmailIntegration,
+  initiateGmailConnection,
   sendEmail,
+  getYouTubeIntegration,
+  initiateYouTubeConnection,
+  searchYouTube,
+  disconnectYouTubeAccount,
   startLinkedInOAuth,
   handleLinkedInCallback,
   postToLinkedIn,
-  getGmailIntegration,
-  initiateGmailConnection,
-  sendEmailViaGmail,
+  initiateGoogleCalendarConnection,
+  createCalendarEvent,
+  getCalendarEvents,
+  deleteCalendarEvent,
+  updateCalendarEvent,
+  getGithubIntegration,
+  initiateGithubConnection,
+  createGithubIssue,
+  initiateAmazonConnection,
+  searchAmazonProduct
 };

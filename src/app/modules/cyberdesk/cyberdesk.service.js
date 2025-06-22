@@ -1,6 +1,7 @@
 import { createCyberdeskClient } from 'cyberdesk';
-import httpStatus from 'http-status';
 import config from '../../../../config/index.js';
+
+import httpStatus from 'http-status';
 import ApiError from '../../../errors/ApiError.js';
 
 const cyberdesk = createCyberdeskClient({
@@ -41,7 +42,13 @@ const clickMouse = async (desktopId, x, y) => {
       button: 'left',
     },
   });
-  if ('error' in result) throw new Error(result.error);
+  if ('error' in result) {
+    console.error(
+      'Cyberdesk Action Error:',
+      JSON.stringify(result.error, null, 2),
+    );
+    throw new Error(result.error.message || 'Unknown Cyberdesk Error');
+  }
   return result;
 };
 
@@ -51,7 +58,13 @@ const executeBash = async (desktopId, command) => {
     path: { id: desktopId },
     body: { command },
   });
-  if ('error' in result) throw new Error(result.error);
+  // if ('error' in result) {
+  //   console.error(
+  //     'Cyberdesk Action Error:',
+  //     JSON.stringify(result.error, null, 2),
+  //   );
+  //   throw new Error(result.error.message || 'Unknown Cyberdesk Error');
+  // }
   return result;
 };
 
