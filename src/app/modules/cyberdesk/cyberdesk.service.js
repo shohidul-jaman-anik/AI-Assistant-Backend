@@ -1,5 +1,4 @@
 import { createCyberdeskClient } from 'cyberdesk';
-
 import httpStatus from 'http-status';
 import ApiError from '../../../errors/ApiError.js';
 import config from '../../../../config/index.js';
