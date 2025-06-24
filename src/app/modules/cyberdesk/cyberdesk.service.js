@@ -1,11 +1,10 @@
 import { createCyberdeskClient } from 'cyberdesk';
-import config from '../../../../config/index.js';
 
 import httpStatus from 'http-status';
 import ApiError from '../../../errors/ApiError.js';
 
 const cyberdesk = createCyberdeskClient({
-  apiKey: config.cyberdesk_api_key,
+  apiKey: process.env.cyberdesk_api_key,
 });
 
 // Launch a new desktop

@@ -88,7 +88,7 @@ const sendEmailService = async req => {
 //      Youtub Services
 // =============================
 
-const youtubeIntegrationId = '5c9834e1-14b3-4c06-9262-606bce538a9f';
+const youtubeIntegrationId = 'f16f5b45-f9fa-4d65-b319-e9046564edee';
 const getYouTubeIntegrationService = async () => {
   const integration = await toolset.integrations.get({
     integrationId: youtubeIntegrationId,
@@ -155,6 +155,210 @@ const disconnectYouTubeAccountService = async connectedAccountId => {
     message: 'Disconnected successfully',
     response,
   };
+};
+
+// =============================
+//      Twitter Services
+// =============================
+
+const twitterIntegrationId = '03615643-b71c-4a13-a012-4f7f94d92bc8';
+const initiateTwitterConnectionService = async () => {
+  const connectedAccount = await toolset.connectedAccounts.initiate({
+    integrationId: twitterIntegrationId,
+    entityId: 'default',
+  });
+
+  return {
+    redirectUrl: connectedAccount.redirectUrl,
+    connectedAccountId: connectedAccount.connectedAccountId,
+    connectionStatus: connectedAccount.connectionStatus,
+  };
+};
+
+const postTweetService = async req => {
+  const { connectedAccountId, text } = req.body;
+
+  if (!connectedAccountId || !text) {
+    return { error: 'Missing required fields: connectedAccountId, text' };
+  }
+
+  const actionId = 'TWITTER_CREATION_OF_A_POST';
+  const url = `https://backend.composio.dev/api/v2/actions/${actionId}/execute`;
+
+  const response = await axios.post(
+    url,
+    {
+      integrationId: twitterIntegrationId,
+      connectedAccountId,
+      input: { text },
+    },
+    {
+      headers: {
+        'x-api-key': config.composio.apiKey,
+        'Content-Type': 'application/json',
+      },
+    },
+  );
+
+  return {
+    success: true,
+    data: response.data,
+  };
+};
+const deleteTweetService = async req => {
+  const { connectedAccountId, tweetId } = req.body;
+
+  if (!connectedAccountId || !tweetId) {
+    return { error: 'Missing required fields: connectedAccountId, tweetId' };
+  }
+
+  const actionId = 'TWITTER_POST_DELETE_BY_POST_ID';
+  const url = `https://backend.composio.dev/api/v2/actions/${actionId}/execute`;
+
+  const response = await axios.post(
+    url,
+    {
+      integrationId: twitterIntegrationId,
+      connectedAccountId,
+      input: {
+        post_id: tweetId,
+      },
+    },
+    {
+      headers: {
+        'x-api-key': config.composio.apiKey,
+        'Content-Type': 'application/json',
+      },
+    },
+  );
+
+  return { success: true, data: response.data };
+};
+
+const followTwitterUserService = async req => {
+  const { connectedAccountId, username } = req.body;
+
+  if (!connectedAccountId || !username) {
+    return { error: 'Missing required fields: connectedAccountId, username' };
+  }
+
+  const actionId = 'TWITTER_FOLLOW_USER';
+  const url = `https://backend.composio.dev/api/v2/actions/${actionId}/execute`;
+
+  const response = await axios.post(
+    url,
+    {
+      integrationId: twitterIntegrationId,
+      connectedAccountId,
+      input: { username },
+    },
+    {
+      headers: {
+        'x-api-key': config.composio.apiKey,
+        'Content-Type': 'application/json',
+      },
+    },
+  );
+
+  return { success: true, data: response.data };
+};
+const getTwitterUserByUsernameService = async req => {
+  const { connectedAccountId, username } = req.body;
+
+  if (!connectedAccountId || !username) {
+    return { error: 'Missing required fields: connectedAccountId, username' };
+  }
+
+  const actionId = 'TWITTER_USER_LOOKUP_BY_USERNAMES';
+  const url = `https://backend.composio.dev/api/v2/actions/${actionId}/execute`;
+
+  const response = await axios.post(
+    url,
+    {
+      integrationId: twitterIntegrationId,
+      connectedAccountId,
+      input: { usernames: [username] }, // note: array of usernames expected
+    },
+    {
+      headers: {
+        'x-api-key': config.composio.apiKey,
+        'Content-Type': 'application/json',
+      },
+    },
+  );
+
+  return { success: true, data: response.data };
+};
+
+const getUserIdFromUsername = async (connectedAccountId, username) => {
+  const actionId = 'TWITTER_USER_LOOKUP_BY_USERNAMES';
+  const url = `https://backend.composio.dev/api/v2/actions/${actionId}/execute`;
+
+  const response = await axios.post(
+    url,
+    {
+      integrationId: twitterIntegrationId,
+      connectedAccountId,
+      input: { usernames: [username] },
+    },
+    {
+      headers: {
+        'x-api-key': config.composio.apiKey,
+        'Content-Type': 'application/json',
+      },
+    }
+  );
+console.log('Response from Twitter API:', JSON.stringify(response.data, null, 2));
+
+
+  const users = response.data.data.data;
+  if (users && users.length > 0) {
+    return users[0].id;
+  }
+  throw new Error('User not found');
+};
+
+// Step 2: Send DM by user ID (participant_id)
+const sendDMByUsernameService = async req => {
+  const { connectedAccountId, username, text } = req.body;
+
+  if (!connectedAccountId || !username || !text) {
+    return {
+      error: 'Missing required fields: connectedAccountId, username, text',
+    };
+  }
+
+  try {
+    const participant_id = await getUserIdFromUsername(
+      connectedAccountId,
+      username,
+    );
+
+    const actionId = 'TWITTER_SEND_A_NEW_MESSAGE_TO_A_USER';
+    const url = `https://backend.composio.dev/api/v2/actions/${actionId}/execute`;
+
+    const response = await axios.post(
+      url,
+      {
+        integrationId: twitterIntegrationId,
+        connectedAccountId,
+        input: {
+          participant_id, // Use participant_id instead of target_user_id
+          text,
+        },
+      },
+      {
+        headers: {
+          'x-api-key': config.composio.apiKey,
+          'Content-Type': 'application/json',
+        },
+      },
+    );
+
+    return { success: true, data: response.data };
+  } catch (error) {
+    return { error: error.message };
+  }
 };
 // =============================
 //      LinkedIn Services
@@ -368,7 +572,7 @@ const updateCalendarEventService = async req => {
 //      GItHub Services
 // =============================
 
-const githubIntegrationId = 'YOUR_GITHUB_INTEGRATION_ID'; // Replace this with your actual ID
+const githubIntegrationId = '394bc42b-5fa8-4777-8e08-6fed12510deb';
 
 const getGithubIntegrationService = async () => {
   const integration = await toolset.integrations.get({
@@ -452,7 +656,7 @@ const initiateAmazonConnectionService = async () => {
   return {
     redirectUrl: connectionRequest.redirectUrl,
     connectedAccountId: connectionRequest.connectedAccountId,
-    connectionStatus: connectionRequest.connectionStatus, 
+    connectionStatus: connectionRequest.connectionStatus,
   };
 };
 
@@ -505,4 +709,10 @@ export const composioService = {
   createGithubIssueService,
   initiateAmazonConnectionService,
   searchAmazonProductService,
+  initiateTwitterConnectionService,
+  postTweetService,
+  deleteTweetService,
+  followTwitterUserService,
+  getTwitterUserByUsernameService,
+  sendDMByUsernameService ,
 };

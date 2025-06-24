@@ -250,7 +250,8 @@ const createGithubIssue = catchAsync(async (req, res) => {
 
 const initiateAmazonConnection = catchAsync(async (req, res) => {
   const { integrationId } = req.body;
-  const result = await composioService.initiateAmazonConnectionService(integrationId);
+  const result =
+    await composioService.initiateAmazonConnectionService(integrationId);
 
   sendResponse(res, {
     statusCode: httpStatus.OK,
@@ -270,6 +271,71 @@ const searchAmazonProduct = catchAsync(async (req, res) => {
     data: result,
   });
 });
+
+const initiateTwitterConnection = catchAsync(async (req, res) => {
+  const result = await composioService.initiateTwitterConnectionService();
+
+  sendResponse(res, {
+    statusCode: httpStatus.OK,
+    success: true,
+    message: 'Twitter connection URL generated',
+    data: result,
+  });
+});
+
+const postTweet = catchAsync(async (req, res) => {
+  const result = await composioService.postTweetService(req);
+
+  sendResponse(res, {
+    statusCode: httpStatus.OK,
+    success: true,
+    message: 'Tweet posted successfully',
+    data: result,
+  });
+});
+
+const deleteTweet = catchAsync(async (req, res) => {
+  const result = await composioService.deleteTweetService(req);
+
+  sendResponse(res, {
+    statusCode: httpStatus.OK,
+    success: true,
+    message: 'Tweet deleted successfully',
+    data: result,
+  });
+});
+
+const followTwitterUser = catchAsync(async (req, res) => {
+  const result = await composioService.followTwitterUserService(req);
+
+  sendResponse(res, {
+    statusCode: httpStatus.OK,
+    success: true,
+    message: 'Followed user successfully',
+    data: result,
+  });
+});
+const getTwitterUserByUsername = catchAsync(async (req, res) => {
+  const result = await composioService.getTwitterUserByUsernameService(req);
+
+  sendResponse(res, {
+    statusCode: httpStatus.OK,
+    success: true,
+    message: 'Twitter user info retrieved successfully',
+    data: result,
+  });
+});
+const sendDMByUsername = catchAsync(async (req, res) => {
+  const result = await composioService.sendDMByUsernameService (req);
+
+  sendResponse(res, {
+    statusCode: httpStatus.OK,
+    success: true,
+    message: 'Message sent successfully',
+    data: result,
+  });
+});
+
 export const composioController = {
   getGmailIntegration,
   initiateGmailConnection,
@@ -290,5 +356,11 @@ export const composioController = {
   initiateGithubConnection,
   createGithubIssue,
   initiateAmazonConnection,
-  searchAmazonProduct
+  searchAmazonProduct,
+  initiateTwitterConnection,
+  postTweet,
+  deleteTweet,
+  followTwitterUser,
+  getTwitterUserByUsername,
+  sendDMByUsername,
 };

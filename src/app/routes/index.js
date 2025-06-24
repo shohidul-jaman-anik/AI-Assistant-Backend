@@ -10,7 +10,7 @@ import { togetherAiRoutes } from '../modules/togetherAi/togeterAi.route.js';
 import { qwenAiRoutes } from '../modules/qwen/qwen.route.js';
 import { aiModelEndpointRoutes } from '../modules/aiModelServices/aiEndpoint.route.js';
 import { openAIAiRoutes } from '../modules/openAi/openAi.route.js';
-// import { wishperAiRoutes } from '../modules/wishper/wishper.route.js';
+import { wishperAiRoutes } from '../modules/wishper/wishper.route.js';
 import { adminRoutes } from '../modules/admin/admin.route.js';
 import { llama4AiRoutes } from '../modules/Llama4/llama4.route.js';
 import { notificationRoutes } from '../modules/notification/notification.route.js';
@@ -79,10 +79,10 @@ const moduleRoutes = [
     path: '/qwen',
     route: qwenAiRoutes,
   },
-  // {
-  //   path: '/wishper',
-  //   route: wishperAiRoutes,
-  // },
+  {
+    path: '/wishper',
+    route: wishperAiRoutes,
+  },
   {
     path: '/openai',
     route: openAIAiRoutes,
