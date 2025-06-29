@@ -156,7 +156,7 @@ const postToLinkedIn = async (req, res) => {
 };
 
 // =============================
-//   Google Calender Services
+//   Google Calender Controller
 // =============================
 
 const initiateGoogleCalendarConnection = catchAsync(async (req, res) => {
@@ -212,6 +212,9 @@ const updateCalendarEvent = catchAsync(async (req, res) => {
   });
 });
 
+// =============================
+//     GitHub Controller
+// =============================
 const getGithubIntegration = catchAsync(async (req, res) => {
   const result = await composioService.getGithubIntegrationService();
   sendResponse(res, {
@@ -233,6 +236,36 @@ const initiateGithubConnection = catchAsync(async (req, res) => {
     data: result,
   });
 });
+const createGitHubRepo = catchAsync(async (req, res) => {
+  const result = await composioService.createGitHubRepoService(req);
+
+  sendResponse(res, {
+    statusCode: httpStatus.OK,
+    success: true,
+    message: 'Repository created successfully',
+    data: result,
+  });
+});
+const listGitHubPullRequests = catchAsync(async (req, res) => {
+  const result = await composioService.getAPullRequestsService(req);
+
+  sendResponse(res, {
+    statusCode: httpStatus.OK,
+    success: true,
+    message: 'Pull requests fetched successfully',
+    data: result,
+  });
+});
+const listGitHubBranches = catchAsync(async (req, res) => {
+  const result = await composioService.listGitHubBranchesService(req);
+
+  sendResponse(res, {
+    statusCode: httpStatus.OK,
+    success: true,
+    message: 'Branches fetched successfully',
+    data: result,
+  });
+});
 
 const createGithubIssue = catchAsync(async (req, res) => {
   const result = await composioService.createGithubIssueService(req);
@@ -243,7 +276,66 @@ const createGithubIssue = catchAsync(async (req, res) => {
     data: result,
   });
 });
+const followGitHubUser = catchAsync(async (req, res) => {
+  const result = await composioService.followGitHubUserService(req);
 
+  sendResponse(res, {
+    statusCode: httpStatus.OK,
+    success: true,
+    message: 'Successfully fetched GitHub repositories',
+    data: result,
+  });
+});
+const unfollowGitHubUser = catchAsync(async (req, res) => {
+  const result = await composioService.unfollowGitHubUserService(req);
+  sendResponse(res, {
+    statusCode: 200,
+    success: true,
+    message: 'Successfully unfollowed GitHub user',
+    data: result,
+  });
+});
+
+const listFollowingGitHubUsers = catchAsync(async (req, res) => {
+  const result = await composioService.listFollowingGitHubUsersService(req);
+  sendResponse(res, {
+    statusCode: 200,
+    success: true,
+    message: 'Fetched followed GitHub users',
+    data: result,
+  });
+});
+
+const listGitHubFollowers = catchAsync(async (req, res) => {
+  const result = await composioService.listGitHubFollowersService(req);
+  sendResponse(res, {
+    statusCode: 200,
+    success: true,
+    message: 'Fetched followers of authenticated GitHub user',
+    data: result,
+  });
+});
+
+const listGitHubRepos = catchAsync(async (req, res) => {
+  const result = await composioService.listGitHubReposService(req);
+
+  sendResponse(res, {
+    statusCode: httpStatus.OK,
+    success: true,
+    message: 'Successfully fetched GitHub repositories',
+    data: result,
+  });
+});
+const listOfOtherGitHubRepos = catchAsync(async (req, res) => {
+  const result = await composioService.listOfOthersGitHubReposService(req);
+
+  sendResponse(res, {
+    statusCode: httpStatus.OK,
+    success: true,
+    message: 'Successfully fetched GitHub repositories',
+    data: result,
+  });
+});
 // =============================
 //     Amazon Controller
 // =============================
@@ -326,7 +418,7 @@ const getTwitterUserByUsername = catchAsync(async (req, res) => {
   });
 });
 const sendDMByUsername = catchAsync(async (req, res) => {
-  const result = await composioService.sendDMByUsernameService (req);
+  const result = await composioService.sendDMByUsernameService(req);
 
   sendResponse(res, {
     statusCode: httpStatus.OK,
@@ -354,7 +446,16 @@ export const composioController = {
   updateCalendarEvent,
   getGithubIntegration,
   initiateGithubConnection,
+  createGitHubRepo,
+  listGitHubPullRequests,
+  listGitHubBranches,
   createGithubIssue,
+  followGitHubUser,
+  unfollowGitHubUser,
+  listFollowingGitHubUsers,
+  listGitHubFollowers,
+  listGitHubRepos,
+  listOfOtherGitHubRepos,
   initiateAmazonConnection,
   searchAmazonProduct,
   initiateTwitterConnection,

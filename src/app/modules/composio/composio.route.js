@@ -38,7 +38,16 @@ router.patch('/calendar/update-event', composioController.updateCalendarEvent);
 // GitHub routes
 router.get('/github/integration', composioController.getGithubIntegration);
 router.post('/github/connect', composioController.initiateGithubConnection);
+router.post('/github/create-repo', composioController.createGitHubRepo);
+router.post('/github/pull-requests', composioController.listGitHubPullRequests);
+router.post('/github/branches', composioController.listGitHubBranches);
 router.post('/github/create-issue', composioController.createGithubIssue);
+router.post('/github/follow-user', composioController.followGitHubUser);
+router.post('/github/unfollow', composioController.unfollowGitHubUser);
+router.post('/github/following', composioController.listFollowingGitHubUsers);
+router.post('/github/followers', composioController.listGitHubFollowers);
+router.post('/github/myself-repos', composioController.listGitHubRepos);
+router.post('/github/another-repos', composioController.listOfOtherGitHubRepos);
 
 // Amazon Routes
 router.post('/amazon/connect', composioController.initiateAmazonConnection);
@@ -49,8 +58,10 @@ router.post('/twitter/connect', composioController.initiateTwitterConnection);
 router.post('/twitter/post', composioController.postTweet);
 router.post('/twitter/follow-user', composioController.followTwitterUser);
 router.post('/twitter/delete-tweet', composioController.deleteTweet);
-router.post('/twitter/user-lookup', composioController.getTwitterUserByUsername);
+router.post(
+  '/twitter/user-lookup',
+  composioController.getTwitterUserByUsername,
+);
 router.post('/twitter/send-message', composioController.sendDMByUsername);
-
 
 export const composioRoutes = router;

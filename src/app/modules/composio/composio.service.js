@@ -631,16 +631,137 @@ const getGithubIntegrationService = async () => {
 
 const initiateGithubConnectionService = async integrationId => {
   const connectedAccount = await toolset.connectedAccounts.initiate({
-    integrationId,
-    entityId: 'default',
+    integrationId: integrationId,
+    entityId: 'default', // Ideally use a real user ID here
   });
-
   return {
     redirectUrl: connectedAccount.redirectUrl,
     connectedAccountId: connectedAccount.connectedAccountId,
     connectionStatus: connectedAccount.connectionStatus,
   };
 };
+
+// const createGitHubRepoService = async req => {
+//   const { connectedAccountId, name, owner, repo, body } = req.body;
+
+//   if (!connectedAccountId || !name || !owner || !repo) {
+//     throw new ApiError(
+//       400,
+//       'Missing required fields: connectedAccountId, name, owner, repo',
+//     );
+//   }
+
+//   const actionId = 'GITHUB_CREATE_A_REPOSITORY_PROJECT';
+
+//   const response = await axios.post(
+//     `https://backend.composio.dev/api/v2/actions/${actionId}/execute`,
+//     {
+//       integrationId: githubIntegrationId,
+//       connectedAccountId,
+//       input: {
+//         name,
+//         owner,
+//         repo,
+//         body: body ?? '', // optional field
+//       },
+//     },
+//     {
+//       headers: {
+//         'x-api-key': config.composio.apiKey,
+//         'Content-Type': 'application/json',
+//       },
+//     },
+//   );
+
+//   return response.data;
+// };
+const createGitHubRepoService = async req => {
+  const { integrationId, connectedAccountId, name, auto_init } = req.body;
+
+  if (!connectedAccountId || !name) {
+    throw new Error('Missing required fields');
+  }
+
+  const actionId = 'GITHUB_CREATE_A_REPOSITORY_FOR_THE_AUTHENTICATED_USER';
+
+  const response = await axios.post(
+    `https://backend.composio.dev/api/v2/actions/${actionId}/execute`,
+    {
+      integrationId,
+      connectedAccountId,
+      input: {
+        name,
+        private: false,
+        auto_init,
+      },
+    },
+    {
+      headers: { 'x-api-key': config.composio.apiKey },
+    },
+  );
+
+  return response.data;
+};
+
+const getAPullRequestsService = async req => {
+  const { integrationId, connectedAccountId, owner, repo, pull_number } =
+    req.body;
+
+  if (!connectedAccountId || !owner || !repo) {
+    throw new ApiError(
+      400,
+      'Missing required fields: connectedAccountId, owner, repo',
+    );
+  }
+  // const actionId = 'GITHUB_PULLS_GET';
+  const actionId = 'GITHUB_LIST_PULL_REQUESTS';
+  const response = await axios.post(
+    `https://backend.composio.dev/api/v2/actions/${actionId}/execute`,
+    {
+      integrationId: integrationId,
+      connectedAccountId,
+      input: { owner, repo, pull_number },
+    },
+    {
+      headers: {
+        'x-api-key': config.composio.apiKey,
+        'Content-Type': 'application/json',
+      },
+    },
+  );
+  console.log(response, 'Response from GitHub API:');
+  return response.data;
+};
+
+const listGitHubBranchesService = async req => {
+  const { connectedAccountId, owner, repo } = req.body;
+
+  if (!connectedAccountId || !owner || !repo) {
+    throw new ApiError(
+      400,
+      'Missing required fields: connectedAccountId, owner, repo',
+    );
+  }
+
+  const response = await axios.post(
+    `https://backend.composio.dev/api/v2/actions/GITHUB_REPO_S_LIST_BRANCHES/execute`,
+    {
+      integrationId: githubIntegrationId,
+      connectedAccountId,
+      input: { owner, repo },
+    },
+    {
+      headers: {
+        'x-api-key': config.composio.apiKey,
+        'Content-Type': 'application/json',
+      },
+    },
+  );
+  console.log(response, 'Response from GitHub API:');
+
+  return response.data;
+};
+
 const createGithubIssueService = async req => {
   const { connectedAccountId, owner, repo, title, body } = req.body;
 
@@ -673,6 +794,187 @@ const createGithubIssueService = async req => {
 
   return response.data;
 };
+
+const listGitHubReposService = async req => {
+  const { connectedAccountId } = req.body;
+
+  if (!connectedAccountId) {
+    throw new ApiError(400, 'Missing required field: connectedAccountId');
+  }
+
+  // const actionId = 'GITHUB_LIST_REPOSITORIES_FOR_A_USER';
+  const actionId = 'GITHUB_LIST_REPOSITORIES_FOR_THE_AUTHENTICATED_USER';
+  const url = `https://backend.composio.dev/api/v2/actions/${actionId}/execute`;
+
+  const response = await axios.post(
+    url,
+    {
+      integrationId: githubIntegrationId,
+      connectedAccountId,
+      input: {}, // GitHub repo list may not require input, or pass `{ visibility: 'all' }`, etc.
+    },
+    {
+      headers: {
+        'x-api-key': config.composio.apiKey,
+        'Content-Type': 'application/json',
+      },
+    },
+  );
+
+  return response.data;
+};
+
+const listOfOthersGitHubReposService = async req => {
+  const { connectedAccountId, username } = req.body;
+
+  if (!connectedAccountId || !username) {
+    throw new ApiError(
+      400,
+      'Missing required fields: connectedAccountId and username',
+    );
+  }
+
+  const actionId = 'GITHUB_LIST_REPOSITORIES_FOR_A_USER';
+  const url = `https://backend.composio.dev/api/v2/actions/${actionId}/execute`;
+
+  const response = await axios.post(
+    url,
+    {
+      integrationId: githubIntegrationId,
+      connectedAccountId,
+      input: {
+        username, // 👈 required input
+      },
+    },
+    {
+      headers: {
+        'x-api-key': config.composio.apiKey,
+        'Content-Type': 'application/json',
+      },
+    },
+  );
+
+  return response.data;
+};
+const followGitHubUserService = async req => {
+  const { connectedAccountId, username } = req.body;
+
+  if (!connectedAccountId || !username) {
+    throw new ApiError(
+      400,
+      'Missing required fields: connectedAccountId and username',
+    );
+  }
+
+  const actionId = 'GITHUB_FOLLOW_A_USER';
+  const url = `https://backend.composio.dev/api/v2/actions/${actionId}/execute`;
+
+  const response = await axios.post(
+    url,
+    {
+      integrationId: githubIntegrationId,
+      connectedAccountId,
+      input: {
+        username,
+      },
+    },
+    {
+      headers: {
+        'x-api-key': config.composio.apiKey,
+        'Content-Type': 'application/json',
+      },
+    },
+  );
+
+  return response.data;
+};
+const unfollowGitHubUserService = async req => {
+  const { connectedAccountId, username } = req.body;
+
+  if (!connectedAccountId || !username) {
+    throw new ApiError(
+      400,
+      'Missing required fields: connectedAccountId and username',
+    );
+  }
+
+  const actionId = 'GITHUB_UNFOLLOW_A_USER';
+  const url = `https://backend.composio.dev/api/v2/actions/${actionId}/execute`;
+
+  const response = await axios.post(
+    url,
+    {
+      integrationId: githubIntegrationId,
+      connectedAccountId,
+      input: {
+        username,
+      },
+    },
+    {
+      headers: {
+        'x-api-key': config.composio.apiKey,
+        'Content-Type': 'application/json',
+      },
+    },
+  );
+
+  return response.data;
+};
+const listFollowingGitHubUsersService = async req => {
+  const { connectedAccountId } = req.body;
+
+  if (!connectedAccountId) {
+    throw new ApiError(400, 'Missing required field: connectedAccountId');
+  }
+
+  const actionId = 'GITHUB_LIST_THE_PEOPLE_THE_AUTHENTICATED_USER_FOLLOWS';
+  const url = `https://backend.composio.dev/api/v2/actions/${actionId}/execute`;
+
+  const response = await axios.post(
+    url,
+    {
+      integrationId: githubIntegrationId,
+      connectedAccountId,
+      input: {},
+    },
+    {
+      headers: {
+        'x-api-key': config.composio.apiKey,
+        'Content-Type': 'application/json',
+      },
+    },
+  );
+
+  return response.data;
+};
+const listGitHubFollowersService = async req => {
+  const { connectedAccountId } = req.body;
+
+  if (!connectedAccountId) {
+    throw new ApiError(400, 'Missing required field: connectedAccountId');
+  }
+
+  const actionId = 'GITHUB_LIST_FOLLOWERS_OF_THE_AUTHENTICATED_USER';
+  const url = `https://backend.composio.dev/api/v2/actions/${actionId}/execute`;
+
+  const response = await axios.post(
+    url,
+    {
+      integrationId: githubIntegrationId,
+      connectedAccountId,
+      input: {},
+    },
+    {
+      headers: {
+        'x-api-key': config.composio.apiKey,
+        'Content-Type': 'application/json',
+      },
+    },
+  );
+
+  return response.data;
+};
+
 // =============================
 //      Amazon Services
 // =============================
@@ -749,7 +1051,16 @@ export const composioService = {
   updateCalendarEventService,
   getGithubIntegrationService,
   initiateGithubConnectionService,
+  createGitHubRepoService,
+  getAPullRequestsService,
+  listGitHubBranchesService,
   createGithubIssueService,
+  listGitHubReposService,
+  followGitHubUserService,
+  unfollowGitHubUserService,
+  listFollowingGitHubUsersService,
+  listGitHubFollowersService,
+  listOfOthersGitHubReposService,
   initiateAmazonConnectionService,
   searchAmazonProductService,
   initiateTwitterConnectionService,
