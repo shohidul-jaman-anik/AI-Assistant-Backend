@@ -64,4 +64,19 @@ router.post(
 );
 router.post('/twitter/send-message', composioController.sendDMByUsername);
 
+// Slack Routes
+router.get('/slack/integration', composioController.getSlackIntegration);
+router.post('/slack/connect', composioController.initiateSlackConnection);
+router.post('/slack/send-channel-message', composioController.sendMessageToChannel);
+router.post('/slack/send-user-message', composioController.sendMessageToUser);
+router.post('/slack/list-channels', composioController.listSlackChannels);
+router.post('/slack/create-channel', composioController.createSlackChannel);
+
+// Googlemeet Routes
+router.get('/googlemeet/integration', composioController.getGooglemeetIntegration);
+router.post('/googlemeet/connect', composioController.initiateGooglemeetConnection);
+router.post('/googlemeet/create-meeting', composioController.createMeetController);
+router.post('/googlemeet/meet-details', composioController.getGoogleMeetDetails);
+
+
 export const composioRoutes = router;

@@ -4,13 +4,18 @@ import config from '../../../../config/index.js';
 import ApiError from '../../../errors/ApiError.js';
 import {
   githubIntegrationId,
+  googlemeetIntegrationId,
+  slackIntegrationId,
   twitterIntegrationId,
   youtubeIntegrationId,
 } from './composio.constant.js';
 import { composioHelper } from './composio.helper.js';
 
 const toolset = new OpenAIToolSet({ apiKey: config.composio.apiKey });
-
+const headers = {
+  'x-api-key': config.composio.apiKey,
+  'Content-Type': 'application/json',
+};
 const getGmailIntegrationService = async () => {
   const integration = await toolset.integrations.get({
     integrationId: '9716ebb0-5dfa-420c-9033-2cae4f5b61ae',
@@ -75,10 +80,7 @@ const sendEmailService = async req => {
       },
     },
     {
-      headers: {
-        'x-api-key': config.composio.apiKey,
-        'Content-Type': 'application/json',
-      },
+      headers,
     },
   );
 
@@ -140,10 +142,7 @@ const searchYouTubeService = async req => {
       },
     },
     {
-      headers: {
-        'x-api-key': config.composio.apiKey,
-        'Content-Type': 'application/json',
-      },
+      headers,
     },
   );
 
@@ -196,10 +195,7 @@ const postTweetService = async req => {
       input: { text },
     },
     {
-      headers: {
-        'x-api-key': config.composio.apiKey,
-        'Content-Type': 'application/json',
-      },
+      headers,
     },
   );
 
@@ -228,10 +224,7 @@ const deleteTweetService = async req => {
       },
     },
     {
-      headers: {
-        'x-api-key': config.composio.apiKey,
-        'Content-Type': 'application/json',
-      },
+      headers,
     },
   );
 
@@ -251,10 +244,7 @@ const getTwitterUserId = async (connectedAccountId, username) => {
       },
     },
     {
-      headers: {
-        'x-api-key': config.composio.apiKey,
-        'Content-Type': 'application/json',
-      },
+      headers,
     },
   );
   console.log(response, 'Response from Twitter API:');
@@ -296,10 +286,7 @@ const followTwitterUserService = async req => {
       },
     },
     {
-      headers: {
-        'x-api-key': config.composio.apiKey,
-        'Content-Type': 'application/json',
-      },
+      headers,
     },
   );
 
@@ -323,10 +310,7 @@ const getTwitterUserByUsernameService = async req => {
       input: { usernames: [username] }, // note: array of usernames expected
     },
     {
-      headers: {
-        'x-api-key': config.composio.apiKey,
-        'Content-Type': 'application/json',
-      },
+      headers,
     },
   );
 
@@ -345,10 +329,7 @@ const getUserIdFromUsername = async (connectedAccountId, username) => {
       input: { usernames: [username] },
     },
     {
-      headers: {
-        'x-api-key': config.composio.apiKey,
-        'Content-Type': 'application/json',
-      },
+      headers,
     },
   );
   console.log(
@@ -393,10 +374,7 @@ const sendDMByUsernameService = async req => {
         },
       },
       {
-        headers: {
-          'x-api-key': config.composio.apiKey,
-          'Content-Type': 'application/json',
-        },
+        headers,
       },
     );
 
@@ -494,10 +472,7 @@ const createCalendarEventService = async req => {
       },
     },
     {
-      headers: {
-        'x-api-key': config.composio.apiKey,
-        'Content-Type': 'application/json',
-      },
+      headers,
     },
   );
 
@@ -527,10 +502,7 @@ const getCalendarEventsService = async req => {
       },
     },
     {
-      headers: {
-        'x-api-key': config.composio.apiKey,
-        'Content-Type': 'application/json',
-      },
+      headers,
     },
   );
 
@@ -559,10 +531,7 @@ const deleteCalendarEventService = async req => {
       },
     },
     {
-      headers: {
-        'x-api-key': config.composio.apiKey,
-        'Content-Type': 'application/json',
-      },
+      headers,
     },
   );
 
@@ -723,16 +692,12 @@ const getAPullRequestsService = async req => {
       input: { owner, repo, pull_number },
     },
     {
-      headers: {
-        'x-api-key': config.composio.apiKey,
-        'Content-Type': 'application/json',
-      },
+      headers,
     },
   );
   console.log(response, 'Response from GitHub API:');
   return response.data;
 };
-
 const listGitHubBranchesService = async req => {
   const { connectedAccountId, owner, repo } = req.body;
 
@@ -751,10 +716,7 @@ const listGitHubBranchesService = async req => {
       input: { owner, repo },
     },
     {
-      headers: {
-        'x-api-key': config.composio.apiKey,
-        'Content-Type': 'application/json',
-      },
+      headers,
     },
   );
   console.log(response, 'Response from GitHub API:');
@@ -785,10 +747,7 @@ const createGithubIssueService = async req => {
       },
     },
     {
-      headers: {
-        'x-api-key': config.composio.apiKey,
-        'Content-Type': 'application/json',
-      },
+      headers,
     },
   );
 
@@ -814,10 +773,7 @@ const listGitHubReposService = async req => {
       input: {}, // GitHub repo list may not require input, or pass `{ visibility: 'all' }`, etc.
     },
     {
-      headers: {
-        'x-api-key': config.composio.apiKey,
-        'Content-Type': 'application/json',
-      },
+      headers,
     },
   );
 
@@ -847,10 +803,7 @@ const listOfOthersGitHubReposService = async req => {
       },
     },
     {
-      headers: {
-        'x-api-key': config.composio.apiKey,
-        'Content-Type': 'application/json',
-      },
+      headers,
     },
   );
 
@@ -879,10 +832,7 @@ const followGitHubUserService = async req => {
       },
     },
     {
-      headers: {
-        'x-api-key': config.composio.apiKey,
-        'Content-Type': 'application/json',
-      },
+      headers,
     },
   );
 
@@ -911,10 +861,7 @@ const unfollowGitHubUserService = async req => {
       },
     },
     {
-      headers: {
-        'x-api-key': config.composio.apiKey,
-        'Content-Type': 'application/json',
-      },
+      headers,
     },
   );
 
@@ -938,10 +885,7 @@ const listFollowingGitHubUsersService = async req => {
       input: {},
     },
     {
-      headers: {
-        'x-api-key': config.composio.apiKey,
-        'Content-Type': 'application/json',
-      },
+      headers,
     },
   );
 
@@ -965,10 +909,7 @@ const listGitHubFollowersService = async req => {
       input: {},
     },
     {
-      headers: {
-        'x-api-key': config.composio.apiKey,
-        'Content-Type': 'application/json',
-      },
+      headers,
     },
   );
 
@@ -1023,16 +964,195 @@ const searchAmazonProductService = async req => {
       input: { query },
     },
     {
-      headers: {
-        'x-api-key': config.composio.apiKey,
-        'Content-Type': 'application/json',
-      },
+      headers,
     },
   );
 
   return response.data;
 };
+// =============================
+//      Slack  services
+// =============================
 
+const getSlackIntegrationService = async () => {
+  const integration = await toolset.integrations.get({
+    integrationId: slackIntegrationId,
+  });
+
+  const inputFields = await toolset.integrations.getRequiredParams({
+    integrationId: integration.id,
+  });
+
+  return { integration, inputFields };
+};
+
+const initiateSlackConnectionService = async integrationId => {
+  const connectedAccount = await toolset.connectedAccounts.initiate({
+    integrationId: integrationId,
+    entityId: 'default', // Ideally use a real user ID here
+  });
+  return {
+    redirectUrl: connectedAccount.redirectUrl,
+    connectedAccountId: connectedAccount.connectedAccountId,
+    connectionStatus: connectedAccount.connectionStatus,
+  };
+};
+const sendMessageToChannelService = async req => {
+  const { integrationId, connectedAccountId, channel, text } = req.body;
+  if (!integrationId || !connectedAccountId || !channel || !text) {
+    throw new ApiError(400, 'Missing required fields');
+  }
+
+  const actionId = 'SLACK_SENDS_A_MESSAGE_TO_A_SLACK_CHANNEL';
+  const response = await axios.post(
+    `https://backend.composio.dev/api/v2/actions/${actionId}/execute`,
+    { integrationId, connectedAccountId, input: { channel, text } },
+    { headers },
+  );
+  return response.data;
+};
+
+const sendMessageToUserService = async req => {
+  const { integrationId, connectedAccountId, user, text } = req.body;
+  if (!integrationId || !connectedAccountId || !user || !text) {
+    throw new ApiError(400, 'Missing required fields');
+  }
+
+  const actionId = 'SLACK_SEND_MESSAGE_TO_USER';
+  const response = await axios.post(
+    `https://backend.composio.dev/api/v2/actions/${actionId}/execute`,
+    { integrationId, connectedAccountId, input: { user, text } },
+    { headers },
+  );
+  return response.data;
+};
+
+const listSlackChannelsService = async req => {
+  const { integrationId, connectedAccountId } = req.body;
+  if (!integrationId || !connectedAccountId) {
+    throw new ApiError(400, 'Missing required fields');
+  }
+
+  const actionId = 'SLACK_LIST_CHANNELS';
+  const response = await axios.post(
+    `https://backend.composio.dev/api/v2/actions/${actionId}/execute`,
+    { integrationId, connectedAccountId, input: {} },
+    { headers },
+  );
+  return response.data;
+};
+
+const createSlackChannelService = async req => {
+  const { integrationId, connectedAccountId, name, is_private } = req.body;
+  if (!integrationId || !connectedAccountId || !name) {
+    throw new ApiError(400, 'Missing required fields');
+  }
+
+  const actionId = 'SLACK_CREATE_CHANNEL';
+  const response = await axios.post(
+    `https://backend.composio.dev/api/v2/actions/${actionId}/execute`,
+    {
+      integrationId,
+      connectedAccountId,
+      input: { name, is_private: is_private ?? false },
+    },
+    { headers },
+  );
+  return response.data;
+};
+
+// =============================
+//     Googlemeet Services
+// =============================
+
+const getGooglemeetIntegrationService = async () => {
+  const integration = await toolset.integrations.get({
+    integrationId: googlemeetIntegrationId,
+  });
+
+  const inputFields = await toolset.integrations.getRequiredParams({
+    integrationId: integration.id,
+  });
+
+  return { integration, inputFields };
+};
+
+const initiateGooglemeetConnectionService = async integrationId => {
+  const connectedAccount = await toolset.connectedAccounts.initiate({
+    integrationId: integrationId,
+    entityId: 'default', // Ideally use a real user ID here
+  });
+  return {
+    redirectUrl: connectedAccount.redirectUrl,
+    connectedAccountId: connectedAccount.connectedAccountId,
+    connectionStatus: connectedAccount.connectionStatus,
+  };
+};
+const createGoogleMeetService = async req => {
+  const {
+    integrationId,
+    connectedAccountId,
+    title,
+    startTime,
+    endTime,
+    accessType = 'OPEN',
+    entryPointAccess = 'ALL',
+  } = req.body;
+
+  if (
+    !integrationId ||
+    !connectedAccountId ||
+    !title ||
+    !startTime ||
+    !endTime
+  ) {
+    throw new ApiError(400, 'Missing required fields');
+  }
+
+  const actionId = 'GOOGLEMEET_CREATE_MEET';
+
+  try {
+    const response = await axios.post(
+      `https://backend.composio.dev/api/v2/actions/${actionId}/execute`,
+      {
+        connectedAccountId,
+        input: {
+          title,
+          start_time: startTime,
+          end_time: endTime,
+          access_type: accessType || 'OPEN',
+          entry_point_access: entryPointAccess || 'ALL',
+        },
+      },
+      {
+        headers,
+      },
+    );
+    console.log(response, 'Response from Google Meet API:');
+    return response.data;
+  } catch (error) {
+    console.log(error);
+    throw new ApiError(500, 'Failed to create Google Meet');
+  }
+};
+const getGoogleMeetDetailsService = async (req) => {
+  const { integrationId, connectedAccountId,  space_name  } = req.body;
+  if (!integrationId || !connectedAccountId || ! space_name ) {
+    throw new ApiError(400, 'Missing required fields');
+  }
+
+  const actionId = 'GOOGLEMEET_GET_MEET';
+  const response = await axios.post(
+    `https://backend.composio.dev/api/v2/actions/${actionId}/execute`,
+    {
+      integrationId,
+      connectedAccountId,
+     input: { space_name },
+    },
+    { headers }
+  );
+  return response.data;
+};
 export const composioService = {
   getGmailIntegrationService,
   initiateGmailConnectionService,
@@ -1069,4 +1189,14 @@ export const composioService = {
   followTwitterUserService,
   getTwitterUserByUsernameService,
   sendDMByUsernameService,
+  getSlackIntegrationService,
+  initiateSlackConnectionService,
+  sendMessageToChannelService,
+  sendMessageToUserService,
+  listSlackChannelsService,
+  createSlackChannelService,
+  getGooglemeetIntegrationService,
+  initiateGooglemeetConnectionService,
+  createGoogleMeetService,
+  getGoogleMeetDetailsService
 };
