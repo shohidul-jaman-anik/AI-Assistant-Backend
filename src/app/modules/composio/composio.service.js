@@ -4,7 +4,11 @@ import config from '../../../../config/index.js';
 import ApiError from '../../../errors/ApiError.js';
 import {
   githubIntegrationId,
+  gmailIntegrationId,
+  googleCalendarIntegrationId,
   googlemeetIntegrationId,
+  linkedInIntegrationId,
+  notionIntegrationId,
   slackIntegrationId,
   twitterIntegrationId,
   youtubeIntegrationId,
@@ -18,13 +22,15 @@ const headers = {
 };
 const getGmailIntegrationService = async () => {
   const integration = await toolset.integrations.get({
-    integrationId: '9716ebb0-5dfa-420c-9033-2cae4f5b61ae',
+    integrationId: gmailIntegrationId,
   });
 
   const inputFields = await toolset.integrations.getRequiredParams({
     integrationId: integration.id,
   });
-  const data = { integration, inputFields };
+  // const data = { integration, inputFields };
+  // return data;
+  const data = integration.id;
   return data;
 };
 
@@ -106,9 +112,9 @@ const getYouTubeIntegrationService = async () => {
 
   return { integration, inputFields };
 };
-const initiateYouTubeConnectionService = async () => {
+const initiateYouTubeConnectionService = async integrationId => {
   const connectedAccount = await toolset.connectedAccounts.initiate({
-    integrationId: youtubeIntegrationId,
+    integrationId,
     entityId: 'default',
   });
 
@@ -163,10 +169,21 @@ const disconnectYouTubeAccountService = async connectedAccountId => {
 // =============================
 //      Twitter Services
 // =============================
-
-const initiateTwitterConnectionService = async () => {
-  const connectedAccount = await toolset.connectedAccounts.initiate({
+const getTwitterIntegrationService = async () => {
+  const integration = await toolset.integrations.get({
     integrationId: twitterIntegrationId,
+  });
+
+  const inputFields = await toolset.integrations.getRequiredParams({
+    integrationId: integration.id,
+  });
+
+  return { integration, inputFields };
+};
+
+const initiateTwitterConnectionService = async integrationId => {
+  const connectedAccount = await toolset.connectedAccounts.initiate({
+    integrationId,
     entityId: 'default',
   });
 
@@ -387,48 +404,134 @@ const sendDMByUsernameService = async req => {
 //      LinkedIn Services
 // =============================
 
-const getLinkedInOAuthRedirectUrlService = async (integrationId, entityId) => {
+const getLinkedInIntegrationService = async () => {
+  const integration = await toolset.integrations.get({
+    integrationId: linkedInIntegrationId,
+  });
+
+  const inputFields = await toolset.integrations.getRequiredParams({
+    integrationId: integration.id,
+  });
+  const data = integration.id;
+  return data;
+};
+
+const initiateLinkedInConnectionService = async integrationId => {
   const connectedAccount = await toolset.connectedAccounts.initiate({
     integrationId,
-    entityId,
+    entityId: 'default',
   });
-  return connectedAccount.redirectUrl;
-};
 
-const exchangeCodeLinkedInService = async (code, integrationId, entityId) => {
-  const connectedAccount = await toolset.connectedAccounts.exchangeCode({
-    code,
-    integrationId,
-    entityId,
-  });
-  return connectedAccount;
+  return {
+    redirectUrl: connectedAccount.redirectUrl,
+    connectedAccountId: connectedAccount.connectedAccountId,
+    connectionStatus: connectedAccount.connectionStatus,
+  };
 };
+const createLinkedinPostService = async req => {
+  const { integrationId, connectedAccountId, text, visibility } = req.body;
 
-const postToLinkedInService = async (
-  integrationId,
-  connectedAccountId,
-  content,
-) => {
-  const integration = await toolset.integrations.get({
-    integrationId: 'ff2c1c00-03ca-4135-9fe7-afa775098c26',
-  });
-  const expectedInputFields = await toolset.integrations.getRequiredParams(
-    integration.id,
+  const actionId = 'LINKEDIN_CREATE_LINKED_IN_POST';
+
+  const response = await axios.post(
+    `https://backend.composio.dev/api/v2/actions/${actionId}/execute`,
+    {
+      integrationId,
+      connectedAccountId,
+      input: {
+        text,
+        visibility: visibility || 'PUBLIC',
+      },
+    },
+    {
+      headers: { 'x-api-key': config.composio.apiKey },
+    },
   );
-  // Collect auth params from your users
 
-  console.log(expectedInputFields);
-  return expectedInputFields;
+  return response.data;
+};
+
+const deleteLinkedinPostService = async req => {
+  const { integrationId, connectedAccountId, share_id } = req.body;
+
+  const actionId = 'LINKEDIN_DELETE_LINKED_IN_POST';
+
+  const response = await axios.post(
+    `https://backend.composio.dev/api/v2/actions/${actionId}/execute`,
+    {
+      integrationId,
+      connectedAccountId,
+      input: {
+        share_id,
+      },
+    },
+    {
+      headers: { 'x-api-key': config.composio.apiKey },
+    },
+  );
+
+  return response.data;
+};
+
+const getLinkedinProfileService = async req => {
+  const { integrationId, connectedAccountId } = req.body;
+
+  const actionId = 'LINKEDIN_GET_MY_INFO';
+
+  const response = await axios.post(
+    `https://backend.composio.dev/api/v2/actions/${actionId}/execute`,
+    {
+      integrationId,
+      connectedAccountId,
+      input: {},
+    },
+    {
+      headers: { 'x-api-key': config.composio.apiKey },
+    },
+  );
+
+  return response.data;
+};
+
+const getLinkedinCompanyInfoService = async req => {
+  const { integrationId, connectedAccountId } = req.body;
+
+  const actionId = 'LINKEDIN_GET_COMPANY_INFO';
+
+  const response = await axios.post(
+    `https://backend.composio.dev/api/v2/actions/${actionId}/execute`,
+    {
+      integrationId,
+      connectedAccountId,
+      input: {},
+    },
+    {
+      headers: { 'x-api-key': config.composio.apiKey },
+    },
+  );
+
+  return response.data;
 };
 
 // =============================
 //   Google Calender Services
 // =============================
 
-const calendarIntegrationId = '21c69c18-54ef-464b-a181-dc82f3e5b089';
-const initiateGoogleCalendarConnectionService = async () => {
+const getGoogleCalenderIntegrationService = async () => {
+  const integration = await toolset.integrations.get({
+    integrationId: googleCalendarIntegrationId,
+  });
+
+  const inputFields = await toolset.integrations.getRequiredParams({
+    integrationId: integration.id,
+  });
+
+  return { integration, inputFields };
+};
+
+const initiateGoogleCalendarConnectionService = async integrationId => {
   const connectedAccount = await toolset.connectedAccounts.initiate({
-    integrationId: calendarIntegrationId,
+    integrationId,
     entityId: 'default',
   });
 
@@ -440,6 +543,7 @@ const initiateGoogleCalendarConnectionService = async () => {
 };
 const createCalendarEventService = async req => {
   const {
+    integrationId,
     connectedAccountId,
     summary,
     description,
@@ -461,7 +565,7 @@ const createCalendarEventService = async req => {
   const response = await axios.post(
     url,
     {
-      integrationId: calendarIntegrationId,
+      integrationId,
       connectedAccountId,
       input: {
         summary,
@@ -483,7 +587,7 @@ const createCalendarEventService = async req => {
 };
 
 const getCalendarEventsService = async req => {
-  const { connectedAccountId } = req.body;
+  const { integrationId, connectedAccountId } = req.body;
 
   if (!connectedAccountId) {
     return { error: 'Missing required field: connectedAccountId' };
@@ -495,7 +599,7 @@ const getCalendarEventsService = async req => {
   const response = await axios.post(
     url,
     {
-      integrationId: calendarIntegrationId,
+      integrationId,
       connectedAccountId,
       input: {
         calendarId: 'primary', // Use 'primary' for main calendar
@@ -509,9 +613,14 @@ const getCalendarEventsService = async req => {
   return response.data;
 };
 const deleteCalendarEventService = async req => {
-  const { connectedAccountId, eventId, calendarId = 'primary' } = req.body;
+  const {
+    integrationId,
+    connectedAccountId,
+    eventId,
+    calendarId = 'primary',
+  } = req.body;
 
-  if (!connectedAccountId || !eventId) {
+  if (!connectedAccountId || !integrationId || !eventId) {
     return {
       error: 'Missing required fields: connectedAccountId, eventId',
     };
@@ -523,7 +632,7 @@ const deleteCalendarEventService = async req => {
   const response = await axios.post(
     url,
     {
-      integrationId: calendarIntegrationId,
+      integrationId,
       connectedAccountId,
       input: {
         event_id: eventId,
@@ -1135,9 +1244,9 @@ const createGoogleMeetService = async req => {
     throw new ApiError(500, 'Failed to create Google Meet');
   }
 };
-const getGoogleMeetDetailsService = async (req) => {
-  const { integrationId, connectedAccountId,  space_name  } = req.body;
-  if (!integrationId || !connectedAccountId || ! space_name ) {
+const getGoogleMeetDetailsService = async req => {
+  const { integrationId, connectedAccountId, space_name } = req.body;
+  if (!integrationId || !connectedAccountId || !space_name) {
     throw new ApiError(400, 'Missing required fields');
   }
 
@@ -1147,10 +1256,189 @@ const getGoogleMeetDetailsService = async (req) => {
     {
       integrationId,
       connectedAccountId,
-     input: { space_name },
+      input: { space_name },
     },
-    { headers }
+    { headers },
   );
+  return response.data;
+};
+
+// =============================
+//     Notion Services
+// =============================
+
+const getNotionIntegrationService = async () => {
+  const integration = await toolset.integrations.get({
+    integrationId: notionIntegrationId,
+  });
+
+  const inputFields = await toolset.integrations.getRequiredParams({
+    integrationId: integration.id,
+  });
+
+  return { integration, inputFields };
+};
+
+const initiateNotionConnectionService = async integrationId => {
+  const connectedAccount = await toolset.connectedAccounts.initiate({
+    integrationId,
+    entityId: 'default',
+  });
+
+  return {
+    redirectUrl: connectedAccount.redirectUrl,
+    connectedAccountId: connectedAccount.connectedAccountId,
+    connectionStatus: connectedAccount.connectionStatus,
+  };
+};
+
+const createNotionPageService = async req => {
+  const {
+    integrationId,
+    connectedAccountId,
+    parent_page_id,
+    title,
+    icon,
+    cover,
+  } = req.body;
+
+  if (!connectedAccountId || !title || !parent_page_id) {
+    throw new Error('Missing required fields');
+  }
+
+  const actionId = 'NOTION_CREATE_NOTION_PAGE';
+
+  const response = await axios.post(
+    `https://backend.composio.dev/api/v2/actions/${actionId}/execute`,
+    {
+      integrationId,
+      connectedAccountId,
+      input: {
+        parent_id: parent_page_id,
+        title,
+        icon: icon || null,
+        cover: cover || null,
+      },
+    },
+    {
+      headers: { 'x-api-key': config.composio.apiKey },
+    },
+  );
+
+  return response.data;
+};
+const createNotionDatabaseService = async req => {
+  const {
+    integrationId,
+    connectedAccountId,
+    parent_page_id,
+    title,
+    properties,
+  } = req.body;
+  const actionId = 'NOTION_CREATE_DATABASE';
+
+  const response = await axios.post(
+    `https://backend.composio.dev/api/v2/actions/${actionId}/execute`,
+    {
+      integrationId,
+      connectedAccountId,
+      input: {
+        parent_page_id,
+        title,
+        properties,
+      },
+    },
+    {
+      headers: { 'x-api-key': config.composio.apiKey },
+    },
+  );
+
+  return response.data;
+};
+
+const appendToNotionPageService = async req => {
+  const { integrationId, connectedAccountId, page_id, blocks } = req.body;
+  const actionId = 'NOTION_APPEND_BLOCK_CHILDREN_TO_PAGE';
+
+  const response = await axios.post(
+    `https://backend.composio.dev/api/v2/actions/${actionId}/execute`,
+    {
+      integrationId,
+      connectedAccountId,
+      input: {
+        page_id,
+        blocks,
+      },
+    },
+    {
+      headers: { 'x-api-key': config.composio.apiKey },
+    },
+  );
+
+  return response.data;
+};
+
+const createNotionCommentService = async req => {
+  const { integrationId, connectedAccountId, parent_id, rich_text } = req.body;
+  const actionId = 'NOTION_CREATE_COMMENT';
+
+  const response = await axios.post(
+    `https://backend.composio.dev/api/v2/actions/${actionId}/execute`,
+    {
+      integrationId,
+      connectedAccountId,
+      input: {
+        parent_id,
+        rich_text,
+      },
+    },
+    {
+      headers: { 'x-api-key': config.composio.apiKey },
+    },
+  );
+
+  return response.data;
+};
+
+const fetchNotionCommentsService = async req => {
+  const { integrationId, connectedAccountId, block_id } = req.body;
+  const actionId = 'NOTION_FETCH_COMMENTS';
+
+  const response = await axios.post(
+    `https://backend.composio.dev/api/v2/actions/${actionId}/execute`,
+    {
+      integrationId,
+      connectedAccountId,
+      input: {
+        block_id,
+      },
+    },
+    {
+      headers: { 'x-api-key': config.composio.apiKey },
+    },
+  );
+
+  return response.data;
+};
+
+const deleteNotionBlockService = async req => {
+  const { integrationId, connectedAccountId, block_id } = req.body;
+  const actionId = 'NOTION_DELETE_BLOCK';
+
+  const response = await axios.post(
+    `https://backend.composio.dev/api/v2/actions/${actionId}/execute`,
+    {
+      integrationId,
+      connectedAccountId,
+      input: {
+        block_id,
+      },
+    },
+    {
+      headers: { 'x-api-key': config.composio.apiKey },
+    },
+  );
+
   return response.data;
 };
 export const composioService = {
@@ -1161,9 +1449,12 @@ export const composioService = {
   initiateYouTubeConnectionService,
   searchYouTubeService,
   disconnectYouTubeAccountService,
-  getLinkedInOAuthRedirectUrlService,
-  exchangeCodeLinkedInService,
-  postToLinkedInService,
+  getLinkedInIntegrationService,
+  initiateLinkedInConnectionService,
+  createLinkedinPostService,
+  deleteLinkedinPostService,
+  getLinkedinProfileService,
+  getLinkedinCompanyInfoService,
   initiateGoogleCalendarConnectionService,
   createCalendarEventService,
   getCalendarEventsService,
@@ -1183,6 +1474,7 @@ export const composioService = {
   listOfOthersGitHubReposService,
   initiateAmazonConnectionService,
   searchAmazonProductService,
+  getTwitterIntegrationService,
   initiateTwitterConnectionService,
   postTweetService,
   deleteTweetService,
@@ -1196,7 +1488,16 @@ export const composioService = {
   listSlackChannelsService,
   createSlackChannelService,
   getGooglemeetIntegrationService,
+  getGoogleCalenderIntegrationService,
   initiateGooglemeetConnectionService,
   createGoogleMeetService,
-  getGoogleMeetDetailsService
+  getGoogleMeetDetailsService,
+  getNotionIntegrationService,
+  initiateNotionConnectionService,
+  createNotionPageService,
+  createNotionDatabaseService,
+  appendToNotionPageService,
+  createNotionCommentService,
+  fetchNotionCommentsService,
+  deleteNotionBlockService,
 };

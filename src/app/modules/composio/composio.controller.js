@@ -60,7 +60,9 @@ const getYouTubeIntegration = catchAsync(async (req, res) => {
 });
 
 const initiateYouTubeConnection = catchAsync(async (req, res) => {
-  const result = await composioService.initiateYouTubeConnectionService();
+  const { integrationId } = req.body;
+  const result =
+    await composioService.initiateYouTubeConnectionService(integrationId);
 
   sendResponse(res, {
     statusCode: httpStatus.OK,
@@ -97,71 +99,86 @@ const disconnectYouTubeAccount = catchAsync(async (req, res) => {
 //      LinkedIn Controller
 // =============================
 
-const startLinkedInOAuth = async (req, res) => {
-  try {
-    const redirectUrl = await composioService.getOAuthRedirectUrlService(
-      linkedInIntegrationId,
-      entityId,
-    );
-    res.redirect(redirectUrl);
-  } catch (err) {
-    console.error('LinkedIn OAuth Start Error:', err);
-    res.status(500).send('Failed to start LinkedIn OAuth flow');
-  }
-};
+const getLinkedInIntegration = catchAsync(async (req, res) => {
+  const result = await composioService.getLinkedInIntegrationService();
+  sendResponse(res, {
+    statusCode: httpStatus.OK,
+    success: true,
+    message: 'Get LinkedIn integration successfully',
+    data: result,
+  });
+});
+const initiateLinkedInConnection = catchAsync(async (req, res) => {
+  const { integrationId } = req.body;
+  const result =
+    await composioService.initiateLinkedInConnectionService(integrationId);
 
-const handleLinkedInCallback = async (req, res) => {
-  try {
-    const { code } = req.query;
-    if (!code) return res.status(400).send('Missing code in callback');
+  sendResponse(res, {
+    statusCode: httpStatus.OK,
+    success: true,
+    message: 'LinkedIn connection URL generated',
+    data: result,
+  });
+});
+const createLinkedinPost = catchAsync(async (req, res) => {
+  const result = await composioService.createLinkedinPostService(req);
+  sendResponse(res, {
+    statusCode: httpStatus.OK,
+    success: true,
+    message: 'Post created successfully',
+    data: result,
+  });
+});
 
-    const connectedAccount = await composioService.exchangeCodeService(
-      code,
-      linkedInIntegrationId,
-      entityId,
-    );
+const deleteLinkedinPost = catchAsync(async (req, res) => {
+  const result = await composioService.deleteLinkedinPostService(req);
+  sendResponse(res, {
+    statusCode: httpStatus.OK,
+    success: true,
+    message: 'Post deleted successfully',
+    data: result,
+  });
+});
 
-    res.send(
-      `LinkedIn Connected! Account ID: ${connectedAccount.connectedAccountId}`,
-    );
-  } catch (err) {
-    console.error('LinkedIn Callback Error:', err);
-    res.status(500).send('Failed to complete LinkedIn OAuth callback');
-  }
-};
+const getLinkedinProfile = catchAsync(async (req, res) => {
+  const result = await composioService.getLinkedinProfileService(req);
+  sendResponse(res, {
+    statusCode: httpStatus.OK,
+    success: true,
+    message: 'Fetched LinkedIn profile',
+    data: result,
+  });
+});
 
-const postToLinkedIn = async (req, res) => {
-  try {
-    const { connectedAccountId, content } = req.body;
-    if (!connectedAccountId || !content) {
-      return res.status(400).send('Missing required fields');
-    }
-
-    const result = await composioService.postToLinkedInService(
-      linkedInIntegrationId,
-      connectedAccountId,
-      content,
-    );
-
-    sendResponse(res, {
-      statusCode: httpStatus.OK,
-      success: true,
-      message: 'Post created successfully on LinkedIn',
-      data: result,
-    });
-  } catch (err) {
-    console.error('LinkedIn Post Error:', err);
-    res.status(500).send('Failed to post on LinkedIn');
-  }
-};
-
+const getLinkedinCompanyInfo = catchAsync(async (req, res) => {
+  const result = await composioService.getLinkedinCompanyInfoService(req);
+  sendResponse(res, {
+    statusCode: httpStatus.OK,
+    success: true,
+    message: 'Fetched LinkedIn company info',
+    data: result,
+  });
+});
 // =============================
 //   Google Calender Controller
 // =============================
 
+const initiateGoogleCalenderConnection = catchAsync(async (req, res) => {
+  const result = await composioService.getGoogleCalenderIntegrationService();
+
+  sendResponse(res, {
+    statusCode: httpStatus.OK,
+    success: true,
+    message: 'Twitter connection URL generated',
+    data: result,
+  });
+});
 const initiateGoogleCalendarConnection = catchAsync(async (req, res) => {
+  const { integrationId } = req.body;
   const result =
-    await composioService.initiateGoogleCalendarConnectionService();
+    await composioService.initiateGoogleCalendarConnectionService(
+      integrationId,
+    );
 
   sendResponse(res, {
     statusCode: httpStatus.OK,
@@ -366,8 +383,20 @@ const searchAmazonProduct = catchAsync(async (req, res) => {
 // =============================
 //     Twitter Controller
 // =============================
+
+const getTwitterIntegration = catchAsync(async (req, res) => {
+  const result = await composioService.getTwitterIntegrationService();
+  sendResponse(res, {
+    statusCode: httpStatus.OK,
+    success: true,
+    message: 'Fetched Slack integration',
+    data: result,
+  });
+});
 const initiateTwitterConnection = catchAsync(async (req, res) => {
-  const result = await composioService.initiateTwitterConnectionService();
+  const { integrationId } = req.body;
+  const result =
+    await composioService.initiateTwitterConnectionService(integrationId);
 
   sendResponse(res, {
     statusCode: httpStatus.OK,
@@ -529,6 +558,91 @@ const getGoogleMeetDetails = catchAsync(async (req, res) => {
     data: result,
   });
 });
+
+// =============================
+//     Notion Controller
+// =============================
+
+const getNotionIntegration = catchAsync(async (req, res) => {
+  const result = await composioService.getNotionIntegrationService();
+  sendResponse(res, {
+    statusCode: httpStatus.OK,
+    success: true,
+    message: 'Fetched Notion integration',
+    data: result,
+  });
+});
+
+const initiateNotionConnection = catchAsync(async (req, res) => {
+  const { integrationId } = req.body;
+  const result =
+    await composioService.initiateNotionConnectionService(integrationId);
+  sendResponse(res, {
+    statusCode: httpStatus.OK,
+    success: true,
+    message: 'Initiated Notion connection',
+    data: result,
+  });
+});
+
+const createNotionPage = catchAsync(async (req, res) => {
+  const result = await composioService.createNotionPageService(req);
+  sendResponse(res, {
+    statusCode: httpStatus.OK,
+    success: true,
+    message: 'Notion page created successfully',
+    data: result,
+  });
+});
+const createNotionDatabase = catchAsync(async (req, res) => {
+  const result = await composioService.createNotionDatabaseService(req);
+  sendResponse(res, {
+    statusCode: httpStatus.OK,
+    success: true,
+    message: 'Notion database created successfully',
+    data: result,
+  });
+});
+
+const appendToNotionPage = catchAsync(async (req, res) => {
+  const result = await composioService.appendToNotionPageService(req);
+  sendResponse(res, {
+    statusCode: httpStatus.OK,
+    success: true,
+    message: 'Content appended to Notion page',
+    data: result,
+  });
+});
+
+const createNotionComment = catchAsync(async (req, res) => {
+  const result = await composioService.createNotionCommentService(req);
+  sendResponse(res, {
+    statusCode: httpStatus.OK,
+    success: true,
+    message: 'Comment created successfully',
+    data: result,
+  });
+});
+
+const fetchNotionComments = catchAsync(async (req, res) => {
+  const result = await composioService.fetchNotionCommentsService(req);
+  sendResponse(res, {
+    statusCode: httpStatus.OK,
+    success: true,
+    message: 'Fetched comments successfully',
+    data: result,
+  });
+});
+
+const deleteNotionBlock = catchAsync(async (req, res) => {
+  const result = await composioService.deleteNotionBlockService(req);
+  sendResponse(res, {
+    statusCode: httpStatus.OK,
+    success: true,
+    message: 'Block deleted successfully',
+    data: result,
+  });
+});
 export const composioController = {
   getGmailIntegration,
   initiateGmailConnection,
@@ -537,9 +651,13 @@ export const composioController = {
   initiateYouTubeConnection,
   searchYouTube,
   disconnectYouTubeAccount,
-  startLinkedInOAuth,
-  handleLinkedInCallback,
-  postToLinkedIn,
+  getLinkedInIntegration,
+  initiateLinkedInConnection,
+  createLinkedinPost,
+  deleteLinkedinPost,
+  getLinkedinProfile,
+  getLinkedinCompanyInfo,
+  initiateGoogleCalenderConnection,
   initiateGoogleCalendarConnection,
   createCalendarEvent,
   getCalendarEvents,
@@ -559,6 +677,7 @@ export const composioController = {
   listOfOtherGitHubRepos,
   initiateAmazonConnection,
   searchAmazonProduct,
+  getTwitterIntegration,
   initiateTwitterConnection,
   postTweet,
   deleteTweet,
@@ -574,5 +693,13 @@ export const composioController = {
   getGooglemeetIntegration,
   initiateGooglemeetConnection,
   createMeetController,
-  getGoogleMeetDetails
+  getGoogleMeetDetails,
+  getNotionIntegration,
+  initiateNotionConnection,
+  createNotionPage,
+  createNotionDatabase,
+  appendToNotionPage,
+  createNotionComment,
+  fetchNotionComments,
+  deleteNotionBlock,
 };
