@@ -20,6 +20,7 @@ import { composioRoutes } from '../modules/composio/composio.route.js';
 import { browserUseAiRoutes } from '../modules/browserUse/browserUse.route.js';
 import { cyberdeskRoutes } from '../modules/cyberdesk/cyberdesk.route.js';
 import { llamaindexRoutes } from '../modules/llamaindex/llamaindex.route.js';
+import { openRouterRoutes } from '../modules/openRouter/openRouter.route.js';
 
 const router = express.Router();
 
@@ -107,6 +108,10 @@ const moduleRoutes = [
   {
     path: '/browser-use',
     route: browserUseAiRoutes,
+  },
+  {
+    path: '/open-router',
+    route: openRouterRoutes,
   }
 ];
 
