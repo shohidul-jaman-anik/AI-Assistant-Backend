@@ -21,6 +21,7 @@ import { browserUseAiRoutes } from '../modules/browserUse/browserUse.route.js';
 import { cyberdeskRoutes } from '../modules/cyberdesk/cyberdesk.route.js';
 import { llamaindexRoutes } from '../modules/llamaindex/llamaindex.route.js';
 import { openRouterRoutes } from '../modules/openRouter/openRouter.route.js';
+// import { flowiseRoutes } from '../modules/flowise/flowise.route.js';
 
 const router = express.Router();
 
@@ -112,7 +113,11 @@ const moduleRoutes = [
   {
     path: '/open-router',
     route: openRouterRoutes,
-  }
+  },
+  // {
+  //   path: '/flow/flowise',
+  //   route: flowiseRoutes,
+  // },
 ];
 
 moduleRoutes.forEach(route => router.use(route.path, route.route));

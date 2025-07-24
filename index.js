@@ -140,6 +140,7 @@ app.use(
       'https://www.asonai.com',
       'https://ason-web.netlify.app',
       'http://localhost:3000',
+      'http://localhost:3100'
     ],
     credentials: true,
   }),
@@ -171,12 +172,12 @@ app.use(
       objectSrc: ["'none'"],
       upgradeInsecureRequests: [],
       blockAllMixedContent: [],
-      frameAncestors: ["'none'"],
+        frameAncestors: ["'self'", 'http://localhost:3000'], // allow iframe from frontend
     },
   }),
 );
 app.use(helmet.referrerPolicy({ policy: 'same-origin' }));
-app.use(helmet.frameguard({ action: 'deny' }));
+app.use(helmet.frameguard({ action: 'sameorigin' }));
 app.use(helmet.noSniff());
 app.use(helmet.xssFilter());
 app.use(helmet.hidePoweredBy());
