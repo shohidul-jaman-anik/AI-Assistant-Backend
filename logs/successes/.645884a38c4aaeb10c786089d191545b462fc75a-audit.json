@@ -1,0 +1,15 @@
+{
+    "keep": {
+        "days": true,
+        "amount": 14
+    },
+    "auditLog": "/app/ason-core-service/logs/successes/.645884a38c4aaeb10c786089d191545b462fc75a-audit.json",
+    "files": [
+        {
+            "date": 1749868828405,
+            "name": "/app/ason-core-service/logs/successes/RH-2025-06-14-02-success.log",
+            "hash": "ea7a3793744995d1c21af3facbc571c7ac99d46fa888ed3551575ca713a06417"
+        }
+    ],
+    "hashType": "sha256"
+}
