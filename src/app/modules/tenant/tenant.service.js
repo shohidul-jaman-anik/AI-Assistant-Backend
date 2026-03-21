@@ -1,0 +1,487 @@
+import httpStatus from 'http-status';
+import ApiError from '../../../errors/ApiError.js';
+import { logger } from '../../../shared/logger.js';
+import Tenant from './tenant.model.js';
+import TenantMember from './tenantMember.model.js';
+import TenantInvitation from './tenantInvitation.model.js';
+import UserModel from '../auth/auth.model.js';
+import { tenantInvitationService } from './tenantInvitation.service.js';
+import { createCustomerService } from '../stripe/customer/stripe.service.js';
+import SubscriptionModel from '../payment/payment.model.js';
+import mongoose from 'mongoose';
+
+/**
+ * Create a new tenant
+ */
+const createTenant = async (tenantData) => {
+  try {
+    const { name, slug, subdomain, ownerId, plan = 'free' } = tenantData;
+
+    // Check if slug is already taken
+    const existingTenant = await Tenant.findOne({ slug });
+    if (existingTenant) {
+      throw new ApiError(httpStatus.BAD_REQUEST, 'Tenant slug already exists');
+    }
+
+    // Check if subdomain is already taken
+    const existingSubdomain = await Tenant.findOne({ subdomain });
+    if (existingSubdomain) {
+      throw new ApiError(httpStatus.BAD_REQUEST, 'Subdomain is already taken');
+    }
+
+    // Create tenant
+    const tenant = await Tenant.create({
+      name,
+      slug,
+      subdomain,
+      ownerId,
+      plan,
+      status: plan === 'free' ? 'trial' : 'active',
+    });
+
+    // Create TenantMember record for owner
+    await TenantMember.create({
+      userId: ownerId,
+      tenantId: tenant._id,
+      role: 'owner',
+      permissions: ['*'], // Full permissions for owner
+      status: 'active',
+      joinedAt: new Date(),
+    });
+
+    // Update user with tenant info (keep for backward compatibility)
+    const owner = await UserModel.findByIdAndUpdate(
+      ownerId,
+      {
+        tenantId: tenant._id,
+        tenantRole: 'owner',
+        tenantPermissions: ['*'],
+        activeTenantId: tenant._id, // Set as active tenant
+      },
+      { new: true }
+    );
+
+    // Create Stripe customer for the tenant
+    try {
+      const stripeCustomer = await createCustomerService({
+        email: owner.email,
+        name: tenant.name,
+        metadata: {
+          tenantId: tenant._id.toString(),
+          tenantSlug: tenant.slug,
+          ownerId: ownerId.toString(),
+        },
+      });
+
+      // Update tenant with Stripe customer ID
+      tenant.subscription = {
+        ...tenant.subscription,
+        stripeCustomerId: stripeCustomer.id,
+      };
+      await tenant.save();
+
+      logger.info(`Stripe customer created for tenant: ${tenant._id}, customerId: ${stripeCustomer.id}`);
+    } catch (error) {
+      logger.error('Error creating Stripe customer for tenant:', error);
+      // Don't fail tenant creation if Stripe customer creation fails
+    }
+
+    logger.info(`Tenant created: ${tenant._id} by user: ${ownerId}`);
+
+    return {
+      id: tenant._id,
+      name: tenant.name,
+      slug: tenant.slug,
+      subdomain: tenant.subdomain,
+      status: tenant.status,
+      plan: tenant.plan,
+    };
+  } catch (error) {
+    logger.error('Error creating tenant:', error);
+    throw error;
+  }
+};
+
+/**
+ * Get tenant by ID
+ */
+const getTenantById = async (tenantId) => {
+  console.log(`Fetching tenant by ID: ${tenantId}`);
+  const tenant = await Tenant.findById(tenantId).populate('ownerId', 'name email').lean();
+
+  const subscription = await SubscriptionModel.aggregate([
+    { $match: { tenantId: new mongoose.Types.ObjectId(tenantId) } },
+    {
+      $lookup: {
+        from: 'products',
+        localField: 'price',
+        foreignField: 'stripePriceId',
+        as: 'price'
+      }
+    },
+    { $unwind: '$price' },
+    { $sort: { createdAt: -1 } },
+    { $limit: 1 },
+  ]);
+  console.log('Subscription aggregation result:', subscription);
+  if (!tenant) {
+    throw new ApiError(httpStatus.NOT_FOUND, 'Tenant not found');
+  }
+
+  return {
+    ...tenant,
+    subscription: subscription.length > 0 ? subscription[0] : null
+
+  };
+};
+
+/**
+ * Update tenant
+ */
+const updateTenant = async (tenantId, updates) => {
+  const tenant = await Tenant.findById(tenantId);
+
+  if (!tenant) {
+    throw new ApiError(httpStatus.NOT_FOUND, 'Tenant not found');
+  }
+
+  // Only allow certain fields to be updated
+  const allowedUpdates = ['name', 'settings', 'metadata'];
+  const updateKeys = Object.keys(updates);
+
+  const isValidUpdate = updateKeys.every((key) => allowedUpdates.includes(key));
+
+  if (!isValidUpdate) {
+    throw new ApiError(httpStatus.BAD_REQUEST, 'Invalid updates');
+  }
+
+  Object.assign(tenant, updates);
+  await tenant.save();
+
+  logger.info(`Tenant updated: ${tenantId}`);
+
+  return tenant;
+};
+
+/**
+ * Delete tenant (soft delete)
+ */
+const deleteTenant = async (tenantId) => {
+  const tenant = await Tenant.findById(tenantId);
+
+  if (!tenant) {
+    throw new ApiError(httpStatus.NOT_FOUND, 'Tenant not found');
+  }
+
+  await tenant.softDelete();
+
+  logger.info(`Tenant deleted: ${tenantId}`);
+};
+
+/** * Get all tenants/organizations for a user
+ */
+const getUserTenants = async (userId) => {
+  try {
+    // Find all active memberships for the user
+    const tenantMemberships = await TenantMember.find({
+      userId,
+      status: 'active'
+    })
+      .populate('tenantId', 'name slug subdomain status plan')
+      .sort({ joinedAt: -1 });
+
+    if (!tenantMemberships || tenantMemberships.length === 0) {
+      return {
+        tenants: [],
+        total: 0,
+      };
+    }
+
+    // Format the response
+    const tenants = tenantMemberships.map((membership) => ({
+      id: membership.tenantId._id,
+      name: membership.tenantId.name,
+      slug: membership.tenantId.slug,
+      subdomain: membership.tenantId.subdomain,
+      status: membership.tenantId.status,
+      plan: membership.tenantId.plan,
+      role: membership.role,
+      permissions: membership.permissions,
+      joinedAt: membership.joinedAt,
+    }));
+
+    logger.info(`Retrieved ${JSON.stringify(tenants)} tenants for user: ${userId}`);
+
+    return {
+      tenants,
+      total: tenants.length,
+    };
+  } catch (error) {
+    logger.error('Error fetching user tenants:', error);
+    throw error;
+  }
+};
+
+/**
+ * Switch user to a different tenant
+ */
+const switchTenant = async (userId, tenantId) => {
+  try {
+    // Handle personal mode (no organization)
+    if (!tenantId || tenantId === null) {
+      logger.info(`User ${userId} switched to personal mode`);
+      return {
+        tenantId: null,
+        tenantName: 'Personal',
+        mode: 'personal',
+        role: null,
+        permissions: [],
+      };
+    }
+
+    // Verify user is a member of the tenant
+    const tenantMembership = await TenantMember.findOne({
+      userId,
+      tenantId,
+      status: 'active'
+    });
+
+    if (!tenantMembership) {
+      throw new ApiError(httpStatus.FORBIDDEN, 'User is not a member of this tenant');
+    }
+
+    // Get the tenant details
+    const tenant = await Tenant.findById(tenantId);
+    if (!tenant) {
+      throw new ApiError(httpStatus.NOT_FOUND, 'Tenant not found');
+    }
+
+    logger.info(`User ${userId} switched to tenant ${tenantId}`);
+
+    return {
+      tenantId: tenant._id,
+      tenantName: tenant.name,
+      mode: 'organization',
+      role: tenantMembership.role,
+      permissions: tenantMembership.permissions,
+    };
+  } catch (error) {
+    logger.error('Error switching tenant:', error);
+    throw error;
+  }
+};
+
+/**
+ * Get tenant members
+ */
+const getTenantMembers = async (tenantId, options = {}) => {
+  console.log(`Fetching members for tenant ID: ${tenantId} with options:`, options);
+  const { page = 1, limit = 20 } = options;
+  const skip = (page - 1) * limit;
+
+  const members = await TenantMember.find({ tenantId, status: 'active' })
+    .populate('userId', 'name email')
+    .skip(skip)
+    .limit(limit)
+    .lean();
+
+  const total = await TenantMember.countDocuments({ tenantId, status: 'active' });
+
+  return {
+    members,
+    pagination: {
+      page,
+      limit,
+      total,
+      pages: Math.ceil(total / limit),
+    },
+  };
+};
+
+/**
+ * Invite member to tenant
+ */
+const inviteMember = async (invitationData) => {
+  const { tenantId, email, role, invitedBy } = invitationData;
+
+  // Check if tenant exists
+  const tenant = await Tenant.findById(tenantId);
+  if (!tenant) {
+    throw new ApiError(httpStatus.NOT_FOUND, 'Tenant not found');
+  }
+
+  // Check if the tenant's subscription allows team invitations
+  const tenantSubscription = await SubscriptionModel.findOne({
+    tenantId,
+    paymentStatus: 'paid',
+  });
+
+  const canInviteTeam = tenantSubscription?.limits?.canInviteTeam ?? false;
+
+  if (!canInviteTeam) {
+    const currentPlan = tenantSubscription?.plan_name || 'free';
+    throw new ApiError(
+      httpStatus.FORBIDDEN,
+      `Team collaboration requires a paid plan (current: ${currentPlan}). Upgrade to Explore ($20/mo), Execute ($50/mo), or Command ($100/mo) to invite team members.`
+    );
+  }
+
+  // Check if tenant can add more members
+  if (!tenant.canAddMembers()) {
+    throw new ApiError(
+      httpStatus.FORBIDDEN,
+      'Tenant has reached maximum member limit'
+    );
+  }
+
+  // Check if user is already a member
+  const existingMember = await TenantMember.findOne({
+    tenantId,
+    status: 'active',
+  }).populate({
+    path: 'userId',
+    match: { email: email.toLowerCase() },
+  });
+
+  if (existingMember && existingMember.userId) {
+    throw new ApiError(httpStatus.BAD_REQUEST, 'User is already a member of this tenant');
+  }
+
+  // Check for pending invitation
+  const pendingInvitations = await TenantInvitation.findPendingByEmail(email);
+  const hasPendingInvitation = pendingInvitations.some(
+    (inv) => inv.tenantId.toString() === tenantId.toString()
+  );
+
+  if (hasPendingInvitation) {
+    throw new ApiError(httpStatus.BAD_REQUEST, 'User already has a pending invitation');
+  }
+
+  // Create invitation
+  const invitation = await tenantInvitationService.createInvitation({
+    tenantId,
+    email,
+    role,
+    invitedBy,
+  });
+
+  logger.info(`Invitation sent to ${email} for tenant ${tenantId}`);
+
+  return invitation;
+};
+
+/**
+ * Update member role
+ */
+const updateMemberRole = async (tenantId, userId, role) => {
+  const user = await UserModel.findOne({ _id: userId, tenantId });
+
+  if (!user) {
+    throw new ApiError(httpStatus.NOT_FOUND, 'Member not found');
+  }
+
+  if (user.tenantRole === 'owner') {
+    throw new ApiError(httpStatus.FORBIDDEN, 'Cannot change owner role');
+  }
+
+  user.tenantRole = role;
+  await user.save();
+
+  logger.info(`Member role updated: ${userId} to ${role}`);
+
+  return user;
+};
+
+/**
+ * Remove member from tenant
+ */
+const removeMember = async (tenantId, userId) => {
+  const user = await UserModel.findOne({ _id: userId, tenantId });
+
+  if (!user) {
+    throw new ApiError(httpStatus.NOT_FOUND, 'Member not found');
+  }
+
+  if (user.tenantRole === 'owner') {
+    throw new ApiError(httpStatus.FORBIDDEN, 'Cannot remove tenant owner');
+  }
+
+  user.tenantId = null;
+  user.tenantRole = null;
+  user.tenantPermissions = [];
+  await user.save();
+
+  // Update tenant user count
+  const tenant = await Tenant.findById(tenantId);
+  if (tenant) {
+    tenant.usage.usersCount = Math.max(0, tenant.usage.usersCount - 1);
+    await tenant.save();
+  }
+
+  logger.info(`Member removed: ${userId} from tenant ${tenantId}`);
+};
+
+/**
+ * Get tenant usage statistics
+ */
+const getTenantUsage = async (tenantId) => {
+  const tenant = await Tenant.findById(tenantId);
+
+  if (!tenant) {
+    throw new ApiError(httpStatus.NOT_FOUND, 'Tenant not found');
+  }
+
+  return tenant.usage;
+};
+
+/**
+ * Get tenant limits
+ */
+const getTenantLimits = async (tenantId) => {
+  const tenant = await Tenant.findById(tenantId);
+
+  if (!tenant) {
+    throw new ApiError(httpStatus.NOT_FOUND, 'Tenant not found');
+  }
+
+  return {
+    limits: tenant.limits,
+    usage: tenant.usage,
+    percentageUsed: {
+      apiCalls: (tenant.usage.apiCallsUsed / tenant.limits.maxApiCalls) * 100,
+      storage: (tenant.usage.storageUsed / tenant.limits.maxStorage) * 100,
+      users: (tenant.usage.usersCount / tenant.limits.maxUsers) * 100,
+    },
+  };
+};
+
+/**
+ * Check if subdomain is available
+ */
+const checkSubdomainAvailability = async (subdomain) => {
+  const existingTenant = await Tenant.findOne({ subdomain: subdomain.toLowerCase() });
+
+  return {
+    subdomain: subdomain.toLowerCase(),
+    available: !existingTenant,
+    message: existingTenant
+      ? 'Subdomain is already taken'
+      : 'Subdomain is available',
+  };
+};
+
+export const tenantService = {
+  createTenant,
+  getTenantById,
+  updateTenant,
+  deleteTenant,
+  getUserTenants,
+  switchTenant,
+  getTenantMembers,
+  inviteMember,
+  updateMemberRole,
+  removeMember,
+  getTenantUsage,
+  getTenantLimits,
+  checkSubdomainAvailability,
+};

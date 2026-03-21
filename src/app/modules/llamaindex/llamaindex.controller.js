@@ -3,23 +3,20 @@ import { ragService } from './llamaindex.service.js';
 
 export const uploadAndIndexDocument = async (req, res) => {
   try {
-    if (!req.files || req.files.length === 0)
-      return res.status(400).json({ error: 'No files uploaded' });
+    if (!req.file) return res.status(400).json({ error: 'No file uploaded' });
 
-    const filePaths = req.files.map(f => f.path);
-    const result = await ragService.uploadAndIndexDocumentService(filePaths);
+    const filePath = req.file.path;
+    const result = await ragService.uploadAndIndexDocumentService(filePath);
 
-    // Optional: delete files after indexing
-    await Promise.all(filePaths.map(p => fs.unlink(p)));
+    // Optional: delete temp file
+    await fs.unlink(filePath);
 
-    res.status(200).json({ message: result.message, result });
+    res.status(200).json({ message: 'Document indexed', result });
   } catch (error) {
     if (error.code === 'LIMIT_FILE_SIZE') {
       return res
         .status(413)
-        .json({
-          error: 'One or more files are too large. Max size is 1MB each.',
-        });
+        .json({ error: 'File too large. Maximum allowed size is 1MB.' });
     }
     res.status(500).json({ error: error.message });
   }

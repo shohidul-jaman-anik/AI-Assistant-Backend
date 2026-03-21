@@ -1,0 +1,82 @@
+services:
+  alti-backend:
+    image: us-central1-docker.pkg.dev/alti-assistant-prod/alti-assistant-core-backend-repo/alti-assistant-backend:latest
+    container_name: alti-backend
+    restart: unless-stopped
+    ports:
+      - "5100:5100"
+    env_file:
+      - .env
+    environment:
+      # Override Presenton URL to use internal container network
+      - PRESENTON_API_URL=http://presenton:80
+      # Override RAG PostgreSQL to use local container
+      - RAG_DB_HOST=postgres
+      - RAG_DB_PORT=5432
+      - RAG_DB_NAME=rag_database
+      - RAG_DB_USER=postgres
+      - RAG_DB_PASSWORD=Em0nd4r0ck@2
+    volumes:
+      # Shared volume with Presenton - Presenton's /app_data mounted to backend's /app/presenton_files
+      - presenton_data:/app/presenton_files
+      # Your application logs and uploads
+      - ./logs:/app/ason-core-service/logs
+      - ./uploads:/app/ason-core-service/uploads
+    networks:
+      - app-network
+    depends_on:
+      postgres:
+        condition: service_healthy
+      presenton:
+        condition: service_started
+
+  postgres:
+    image: pgvector/pgvector:pg17
+    container_name: postgres-rag
+    restart: unless-stopped
+    environment:
+      - POSTGRES_DB=rag_database
+      - POSTGRES_USER=postgres
+      - POSTGRES_PASSWORD=Em0nd4r0ck@2
+      - POSTGRES_INITDB_ARGS=--encoding=UTF8
+    ports:
+      - "5432:5432"
+    volumes:
+      - postgres_data:/var/lib/postgresql/data
+      - ./init-pgvector.sql:/docker-entrypoint-initdb.d/01-init-pgvector.sql
+    networks:
+      - app-network
+    healthcheck:
+      test: ["CMD-SHELL", "pg_isready -U postgres -d rag_database || exit 1"]
+      interval: 15s
+      timeout: 10s
+      retries: 10
+      start_period: 60s
+
+  presenton:
+    image: ghcr.io/presenton/presenton:latest
+    container_name: presenton
+    restart: unless-stopped
+    environment:
+      - LLM=google
+      - GOOGLE_API_KEY=AIzaSyATOQRmcM0DMO83Z9jEuuC4DIgna60TSJQ
+      - IMAGE_PROVIDER=gemini_flash
+      - CAN_CHANGE_KEYS=false
+    volumes:
+      # Presenton stores files in /app_data
+      - presenton_data:/app_data
+    networks:
+      - app-network
+    # Optionally expose Presenton port for debugging
+    ports:
+      - "5200:80"
+
+networks:
+  app-network:
+    driver: bridge
+
+volumes:
+  presenton_data:
+    driver: local
+  postgres_data:
+    driver: local

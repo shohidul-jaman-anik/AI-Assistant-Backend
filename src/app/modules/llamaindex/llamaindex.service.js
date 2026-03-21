@@ -1,7 +1,7 @@
 import * as llama from './llamaindex.indexer.js';
 
-const uploadAndIndexDocumentService = async filePath => {
-  return await llama.createIndexFromFiles(filePath);
+const uploadAndIndexDocumentService = async (filePath) => {
+  return await llama.createIndexFromFile(filePath);
 };
 
 const queryDocument = async query => {

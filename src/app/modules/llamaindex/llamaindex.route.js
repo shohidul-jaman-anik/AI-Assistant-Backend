@@ -46,7 +46,7 @@ const upload = multer({
   },
 });
 
-router.post('/index-doc', upload.array('files', 3), uploadAndIndexDocument);
+router.post('/index-doc', upload.single('file'), uploadAndIndexDocument);
 router.post('/query', queryIndex);
 
 export const llamaindexRoutes = router;

@@ -1,4 +1,5 @@
 import dotenv from 'dotenv';
+import { google } from 'googleapis';
 import path from 'path';
 
 dotenv.config({ path: path.join(process.cwd(), '.env') });
@@ -8,6 +9,9 @@ export default {
   database_local: process.env.DATABASE_LOCAL,
   port: process.env.PORT,
   client_url: process.env.CLIENT_URL,
+  youtube_api_key: process.env.YOUTUBE_API_KEY,
+  google_search_api_key: process.env.GOOGLE_SEARCH_API_KEY,
+  google_engine_id: process.env.GOOGLE_CSE_ID,
   jwt: {
     access_token: process.env.JWT_ACCESS_TOKEN,
     access_expires_in: process.env.JWT_ACCESS_EXPIRES_IN,
@@ -41,6 +45,17 @@ export default {
     clientId: process.env.COMPOSIO_CLIENT_ID,
     clientSecret: process.env.COMPOSIO_CLIENT_SECRET,
     apiKey: process.env.COMPOSIO_API_KEY,
+    orgApiKey: process.env.COMPOSIO_ORG_API_KEY,
+    gmailAuthConfigId: process.env.COMPOSIO_GMAIL_AUTH_CONFIG_ID,
+    useSimplified: process.env.USE_SIMPLIFIED_COMPOSIO === 'true', // Feature flag to toggle between v2 and simple
+  },
+  openMemory: {
+    enabled: process.env.OPENMEMORY_ENABLED === 'true',
+    baseUrl: process.env.OPENMEMORY_BASE_URL || 'http://localhost:8080',
+    apiKey: process.env.OPENMEMORY_API_KEY || '',
+    defaultNamespace: process.env.OPENMEMORY_NAMESPACE || 'default',
+    defaultTopK: Number(process.env.OPENMEMORY_TOP_K || 5),
+    timeoutMs: Number(process.env.OPENMEMORY_TIMEOUT_MS || 8000),
   },
   groq_api_key: process.env.GROQ_API_KEY,
   tavily_api_key: process.env.TAVILY_API_KEY,
@@ -54,5 +69,46 @@ export default {
   stripe: {
     stripe_secret_key: process.env.STRIPE_SECRET_KEY,
     stripe_webhook_secret_key: process.env.STRIPE_WEBHOOK_SECRET,
+  },
+  openai: {
+    openai_api_key: process.env.OPENAI_API_KEY,
+  },
+  anthropic: {
+    anthropic_api_key: process.env.ANTHROPIC_API_KEY,
+  },
+  claude: {
+    modelName: process.env.CLAUDE_MODEL_NAME || 'claude-sonnet-4-5-20250929',
+    maxTokens: parseInt(process.env.CLAUDE_MAX_TOKENS) || 4096,
+    temperature: parseFloat(process.env.CLAUDE_TEMPERATURE) || 0.7,
+  },
+  routing: {
+    enableSmartRouting: process.env.ENABLE_SMART_ROUTING === 'true',
+    codeQueryThreshold: parseFloat(process.env.CODE_QUERY_CONFIDENCE_THRESHOLD) || 0.7,
+  },
+  google: {
+    google_application_credentials: process.env.GOOGLE_APPLICATION_CREDENTIALS,
+    gcp_project_id: process.env.GCP_PROJECT_ID,
+    gcp_location: process.env.GCP_LOCATION,
+    vertex_ai_endpoint: process.env.VERTEX_AI_ENDPOINT,
+    vertex_ai_region: process.env.VERTEX_AI_LOCATION,
+    model_id: process.env.MODEL_ID,
+  },
+  gcs: {
+    knowledge_bank_bucket: process.env.GCS_KNOWLEDGE_BANK_BUCKET || 'alti_knowledge_bank_files',
+    knowledgebot_bucket: process.env.GCS_KNOWLEDGEBOT_BUCKET || 'alti_assistant_knowledge_bot_files',
+    presentation_bucket: process.env.GCS_PRESENTATION_BUCKET || 'alti_assistant_presentation',
+  },
+  mail: {
+    google_smtp_password: process.env.GOOGLE_SMTP_PASSWORD,
+    google_smtp_user: process.env.GOOGLE_SMTP_USER,
+    google_smtp_host: process.env.GOOGLE_SMTP_HOST,
+    google_smtp_port: process.env.GOOGLE_SMTP_PORT,
+  },
+  rag_db: {
+    host: process.env.RAG_DB_HOST,
+    port: parseInt(process.env.RAG_DB_PORT) || 5432,
+    database: process.env.RAG_DB_NAME,
+    username: process.env.RAG_DB_USER,
+    password: process.env.RAG_DB_PASSWORD,
   },
 };

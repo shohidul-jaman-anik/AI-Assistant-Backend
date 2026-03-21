@@ -5,9 +5,15 @@ import config from '../../../../config/index.js';
 import ApiError from '../../../errors/ApiError.js';
 import { logger } from '../../../shared/logger.js';
 import { jwtHelpers } from '../../helpers/jwtHelpers.js';
-import { sendMailWithMailGun } from '../../middlewares/sendEmail/sendMailWithMailGun.js';
+import { sendMailWithNodeMailer } from '../../middlewares/sendEmail/sendMailWithMailGun.js';
 import UserModel from './auth.model.js';
 import { registrationOtpTemplate } from './auth.utils.js';
+import Token from './token.model.js';
+import crypto from 'crypto';
+import { createCustomerService } from '../stripe/customer/stripe.service.js';
+import TenantInvitation from '../tenant/tenantInvitation.model.js';
+import TenantMember from '../tenant/tenantMember.model.js';
+import Tenant from '../tenant/tenant.model.js';
 
 const deleteUserAccountService = async userId => {
   const result = await UserModel.deleteOne({ _id: userId });
@@ -19,7 +25,7 @@ const registerService = async req => {
   try {
     session.startTransaction();
 
-    const { password, email } = req.body;
+    const { password, email, tenantId, invitationToken } = req.body;
 
     const existingEmail = await UserModel.findOne({ email }).session(session);
     if (existingEmail) {
@@ -30,24 +36,95 @@ const registerService = async req => {
     if (password) {
       const hashedPassword = await bcrypt.hash(password, 10);
 
+      const userData = { email, password: hashedPassword };
+
+      // If tenantId provided (from invitation), add it to user data
+      if (tenantId) {
+        userData.activeTenantId = tenantId;
+      }
+
       const user = await UserModel.create(
-        [{ email, password: hashedPassword }],
+        [userData],
         { session },
       );
 
-      const token = user[0].generateConfirmationToken();
-      await user[0].save({ session, validateBeforeSave: false });
+      let invitationAccepted = false;
 
-      const mailData = await registrationOtpTemplate(email, token);
-      await sendMailWithMailGun(mailData);
+      // Auto-accept invitation if token provided
+      if (invitationToken) {
+        try {
+          const invitation = await TenantInvitation.findOne({ token: invitationToken });
+
+          if (invitation && invitation.email.toLowerCase() === email.toLowerCase()) {
+            if (!invitation.isExpired() && invitation.status === 'pending') {
+              // Create TenantMember record
+              await TenantMember.create([{
+                userId: user[0]._id,
+                tenantId: invitation.tenantId,
+                role: invitation.role,
+                permissions: invitation.role === 'admin' ? ['manage_members', 'manage_content'] : ['view_content'],
+                status: 'active',
+                invitedBy: invitation.invitedBy,
+                joinedAt: new Date(),
+              }], { session });
+
+              // Update user with tenant info and auto-verify
+              user[0].tenantId = invitation.tenantId;
+              user[0].tenantRole = invitation.role;
+              user[0].activeTenantId = invitation.tenantId;
+              user[0].tenantPermissions = invitation.role === 'admin' ? ['manage_members', 'manage_content'] : ['view_content'];
+              user[0].role = 'user'; // Auto-verify user with invitation
+              await user[0].save({ session });
+
+              // Update tenant user count
+              await Tenant.findByIdAndUpdate(
+                invitation.tenantId,
+                { $inc: { 'usage.usersCount': 1 } },
+                { session }
+              );
+
+              // Mark invitation as accepted
+              invitation.status = 'accepted';
+              invitation.acceptedAt = new Date();
+              invitation.acceptedBy = user[0]._id;
+              await invitation.save({ session });
+
+              invitationAccepted = true;
+              logger.info(`Invitation auto-accepted during registration: ${invitation._id}`);
+            }
+          }
+        } catch (inviteError) {
+          logger.error('Error auto-accepting invitation during registration:', inviteError);
+          // Don't fail registration if invitation accept fails
+        }
+      }
+
+      // Only send verification email if not registered via invitation
+      if (!invitationAccepted) {
+        //Generate 6 digit token only numbers
+        const token = crypto.randomInt(100000, 999999).toString();
+
+        const newToken = new Token({
+          userId: user[0]._id,
+          token: token,
+          expiresAt: Date.now() + 24 * 60 * 60 * 1000, // 24 hours
+          type: 'emailVerification',
+        })
+
+        await newToken.save({ newToken });
+
+        const mailData = await registrationOtpTemplate(email, token);
+        await sendMailWithNodeMailer(mailData);
+      }
 
       await session.commitTransaction();
       session.endSession();
 
-      // ✅ Instead of throwing, return a success response
+      // ✅ Return appropriate message based on invitation status
       return {
-        message: 'Please verify your E-mail.',
+        message: invitationAccepted ? 'Registration successful. You can now login.' : 'Please verify your E-mail.',
         statusCode: httpStatus.CREATED,
+        autoVerified: invitationAccepted,
       };
     }
 
@@ -56,13 +133,14 @@ const registerService = async req => {
     session.endSession();
     throw new ApiError(httpStatus.BAD_REQUEST, 'Password is required.');
   } catch (error) {
-    await session.abortTransaction().catch(() => {});
+    await session.abortTransaction().catch(() => { });
     session.endSession();
 
     // Only rethrow if it's already an ApiError
     if (error instanceof ApiError) {
       throw error;
     }
+    console.error('Registration Error:', error);
 
     throw new ApiError(
       httpStatus.INTERNAL_SERVER_ERROR,
@@ -71,14 +149,43 @@ const registerService = async req => {
   }
 };
 
-const confirmEmailService = async token => {
-  const user = await UserModel.findOne({ confirmationToken: token });
-
+const resendEmailConfirmationService = async email => {
+  const user = await UserModel.findOne({ email });
   if (!user) {
     throw new ApiError(httpStatus.NOT_FOUND, 'User not found');
   }
+  if (user.role !== 'unauthorized') {
+    throw new ApiError(httpStatus.BAD_REQUEST, 'Email is already verified');
+  }
+  const token = crypto.randomInt(100000, 999999).toString();
 
-  const expired = new Date() > new Date(user.confirmationTokenExpires);
+  const newToken = new Token({
+    userId: user._id,
+    token: token,
+    expiresAt: Date.now() + 24 * 60 * 60 * 1000, // 24 hours
+    type: 'emailVerification',
+  })
+  await newToken.save({ newToken });
+
+  const mailData = await registrationOtpTemplate(email, token);
+  await sendMailWithNodeMailer(mailData);
+  return { message: 'Verification email resent successfully' };
+}
+
+const confirmEmailService = async confirmationCode => {
+  const token = await Token.findOne({ token: confirmationCode, type: 'emailVerification' });
+  if (!token) {
+    throw new ApiError(httpStatus.NOT_FOUND, 'Invalid or expired token');
+  }
+  console.log(token, 'token');
+
+  const user = await UserModel.findById(token.userId);
+  if (!user) {
+    throw new ApiError(httpStatus.NOT_FOUND, 'User not found');
+  }
+  console.log(user, 'user');
+
+  const expired = new Date() > new Date(token.expiresAt);
 
   if (expired) {
     throw new ApiError(
@@ -92,11 +199,12 @@ const confirmEmailService = async token => {
   user.confirmationTokenExpires = undefined;
 
   await user.save({ validateBeforeSave: false });
+  await Token.deleteOne({ _id: token._id });
 
   return { success: true };
 };
 
-const loginService = async (email, password) => {
+const loginService = async (email, password, invitationToken = null) => {
   if (!email || !password) {
     throw new ApiError(
       httpStatus.BAD_REQUEST,
@@ -131,27 +239,110 @@ const loginService = async (email, password) => {
     throw new ApiError(httpStatus.UNAUTHORIZED, 'Invalid credentials');
   }
 
+  // Auto-accept invitation if token provided
+  if (invitationToken) {
+    try {
+      const invitation = await TenantInvitation.findOne({ token: invitationToken });
+
+      if (invitation && invitation.email.toLowerCase() === email.toLowerCase()) {
+        if (!invitation.isExpired() && invitation.status === 'pending') {
+          // Check if user is already a member
+          const existingMember = await TenantMember.findOne({
+            userId: user._id,
+            tenantId: invitation.tenantId
+          });
+
+          if (!existingMember) {
+            // Create TenantMember record
+            await TenantMember.create({
+              userId: user._id,
+              tenantId: invitation.tenantId,
+              role: invitation.role,
+              permissions: invitation.role === 'admin' ? ['manage_members', 'manage_content'] : ['view_content'],
+              status: 'active',
+              invitedBy: invitation.invitedBy,
+              joinedAt: new Date(),
+            });
+
+            // Update user with tenant info
+            user.tenantId = invitation.tenantId;
+            user.tenantRole = invitation.role;
+            user.activeTenantId = invitation.tenantId;
+            user.tenantPermissions = invitation.role === 'admin' ? ['manage_members', 'manage_content'] : ['view_content'];
+            await user.save();
+
+            // Update tenant user count
+            await Tenant.findByIdAndUpdate(
+              invitation.tenantId,
+              { $inc: { 'usage.usersCount': 1 } }
+            );
+
+            logger.info(`Invitation auto-accepted during login: ${invitation._id}`);
+          } else {
+            // User already member, just set as active tenant
+            user.activeTenantId = invitation.tenantId;
+            await user.save();
+          }
+
+          // Mark invitation as accepted
+          invitation.status = 'accepted';
+          invitation.acceptedAt = new Date();
+          invitation.acceptedBy = user._id;
+          await invitation.save();
+        }
+      }
+    } catch (inviteError) {
+      logger.error('Error auto-accepting invitation during login:', inviteError);
+      // Don't fail login if invitation accept fails
+    }
+  }
+
+  // Fetch all tenantIds for the user from TenantMember collection
+  const tenantMemberships = await TenantMember.find({
+    userId: user._id,
+    status: 'active'
+  }).select('tenantId role');
+
+  const tenantIds = tenantMemberships.map(membership => ({
+    tenantId: membership.tenantId,
+    role: membership.role
+  }));
+
+  // Include tenants in JWT token payload
+  const tokenPayload = {
+    _id: user._id,
+    role: user.role,
+    tenants: tenantIds,
+  };
+
   const accessToken = jwtHelpers.createToken(
-    {
-      _id: user._id,
-      role: user.role,
-    },
+    tokenPayload,
     config.jwt.access_token,
     config.jwt.access_expires_in,
   );
   const refreshToken = jwtHelpers.createToken(
-    {
-      _id: user._id,
-      role: user.role,
-    },
+    tokenPayload,
     config.jwt.refresh_token,
     config.jwt.refresh_expires_in,
   );
-
+  const isStripeAccountConnected = user?.stripeAccountId;
+  if (!isStripeAccountConnected) {
+    try {
+      const stripeAccountId = await createCustomerService({
+        email: user.email,
+        name: user.username || 'No Name',
+      });
+      user.stripeAccountId = stripeAccountId.id;
+      await user.save();
+    } catch (error) {
+      logger.error('Error creating Stripe customer:', error);
+    }
+  }
   return {
     _id: user._id,
     accessToken,
     refreshToken,
+    tenants: tenantIds,
   };
 };
 
@@ -170,17 +361,31 @@ const refreshToken = async token => {
   if (!isUserExist) {
     throw new ApiError(httpStatus.NOT_FOUND, 'User does not exist');
   }
+
+  // Fetch all tenantIds for the user from TenantMember collection
+  const tenantMemberships = await TenantMember.find({
+    userId: isUserExist._id,
+    status: 'active'
+  }).select('tenantId role');
+
+  const tenantIds = tenantMemberships.map(membership => ({
+    tenantId: membership.tenantId,
+    role: membership.role
+  }));
+
   //generate new token;
   const newAccessToken = jwtHelpers.createToken(
     {
       id: isUserExist._id,
       role: isUserExist.role,
+      tenants: tenantIds,
     },
     config.jwt.access_token,
     config.jwt.access_expires_in,
   );
   return {
     accessToken: newAccessToken,
+    tenants: tenantIds,
   };
 };
 
@@ -215,6 +420,7 @@ export const authService = {
   deleteUserAccountService,
   registerService,
   confirmEmailService,
+  resendEmailConfirmationService,
   loginService,
   refreshToken,
   updateUserService,

@@ -40,10 +40,15 @@ const UserSchema = new mongoose.Schema(
       imagesUsed: { type: Number, default: 0 },
       lastResetAt: { type: Date, default: Date.now }, // Track when the usage was last reset
     },
+    dailyRequestLimit: {
+      requestsUsed: { type: Number, default: 0 },
+      maxRequests: { type: Number, default: 10 }, // 10 requests per day limit
+      lastResetAt: { type: Date, default: Date.now }, // Track when the daily limit was last reset
+    },
     role: {
       type: String,
       enum: {
-        values: ['user', 'buyer', 'admin', 'unauthorized'],
+        values: ['user', 'buyer', 'admin', 'super_admin', 'unauthorized'],
       },
       default: 'unauthorized',
     },
@@ -68,6 +73,35 @@ const UserSchema = new mongoose.Schema(
     resetPasswordExpires: Date,
     deleteAccountOTP: String,
     deleteAccountExpires: Date,
+    stripeAccountId: { type: String },
+
+    // Multi-tenant fields
+    tenantId: {
+      type: mongoose.Schema.Types.ObjectId,
+      ref: 'Tenant',
+      default: null,
+      index: true,
+      // DEPRECATED: Use TenantMember collection for multi-tenant support
+      // Kept for backward compatibility
+    },
+    tenantRole: {
+      type: String,
+      enum: ['owner', 'admin', 'member'],
+      default: null,
+      // DEPRECATED: Use TenantMember collection for role management
+    },
+    tenantPermissions: {
+      type: [String],
+      default: [],
+      // DEPRECATED: Use TenantMember collection for permissions
+    },
+    activeTenantId: {
+      type: mongoose.Schema.Types.ObjectId,
+      ref: 'Tenant',
+      default: null,
+      index: true,
+      // Current working tenant for users with multiple tenants
+    },
   },
   {
     timestamps: true,
