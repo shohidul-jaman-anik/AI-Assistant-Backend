@@ -1,10 +1,10 @@
-# 🌐 ASON AI Core Service
+# 🌐 ALTI Assistant Core Service
 
 
 🚀 **Overview**  
-ASON AI is a powerful AI-driven platform designed to revolutionize content creation, task automation, and intelligent interactions. From generating high-quality audio and video to engaging in prompt-based AI conversations and deploying specialized AI agents, ASON AI brings a wide array of advanced artificial intelligence technologies into a single, user-friendly platform.
+ALTI Assistant is a powerful AI-driven platform designed to revolutionize content creation, task automation, and intelligent interactions. From generating high-quality audio and video to engaging in prompt-based AI conversations and deploying specialized AI agents, ALTI Assistant brings a wide array of advanced artificial intelligence technologies into a single, user-friendly platform.
 
-Visit our website for more information: [ASON AI Website](https://www.asonai.com/)
+Visit our website for more information: [ALTI Assistant Website](https://altihq.com/)
 
 ---
 
@@ -39,7 +39,7 @@ Visit our website for more information: [ASON AI Website](https://www.asonai.com
 ## 📦 Tech Stack
 
 ### Core Service
-- **Node.js / Express** — Backend Framework for the ASON API Gateway
+- **Node.js / Express** — Backend Framework for the ALTI API Gateway
 - **MongoDB** — Primary Database for user data and application storage
 - **Redis** — Caching and Session Management
 - **Socket.IO** — Real-Time Communication

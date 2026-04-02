@@ -6,9 +6,9 @@
     "auditLog": "/app/ason-core-service/logs/errors/.c18104141023b7c5baf1f5442df15433657c5879-audit.json",
     "files": [
         {
-            "date": 1749868828482,
-            "name": "/app/ason-core-service/logs/errors/RH-2025-06-14-02-error.log",
-            "hash": "50318526c2a093d2e747318d08fcec566b3b09d73de58338f09e0a368f9faebf"
+            "date": 1773672410588,
+            "name": "/app/ason-core-service/logs/errors/RH-2026-03-16-14-error.log",
+            "hash": "f597906fd44a620cedadaad65d680a6364000ffb2fce1424846cd8359f9bb660"
         }
     ],
     "hashType": "sha256"

@@ -1,6 +1,6 @@
 # SaaS Tenant Management - Implementation Checklist
 
-This checklist provides a step-by-step guide for implementing multi-tenant functionality in ASON AI Core Service.
+This checklist provides a step-by-step guide for implementing multi-tenant functionality in ALTI Assitant Core Service.
 
 ---
 

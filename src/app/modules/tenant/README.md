@@ -1,6 +1,6 @@
 # Tenant Module
 
-Multi-tenant functionality for ASON AI Core Service.
+Multi-tenant functionality for ALTI Assistant Core Service.
 
 ## Overview
 

@@ -176,7 +176,7 @@ export const generateInvitationEmailHTML = (data) => {
     <div class="footer">
       <p>Need help? Contact us at <a href="mailto:support@asonai.com">support@asonai.com</a></p>
       <p style="margin-top: 10px;">
-        © ${new Date().getFullYear()} Ason AI. All rights reserved.
+        © ${new Date().getFullYear()} ALTI Assistant. All rights reserved.
       </p>
     </div>
   </div>
@@ -218,7 +218,7 @@ If you didn't expect this invitation or believe it was sent by mistake, you can 
 
 Need help? Contact us at support@asonai.com
 
-© ${new Date().getFullYear()} Ason AI. All rights reserved.
+© ${new Date().getFullYear()} ALTI Assistant. All rights reserved.
   `.trim();
 };
 
