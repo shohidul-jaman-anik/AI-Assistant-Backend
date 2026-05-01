@@ -7,50 +7,52 @@ import { subscriptionRoutes } from '../modules/payment/payment.route.js';
 import { tavilyAiRoutes } from '../modules/tavily/tavily.route.js';
 import { togetherAiRoutes } from '../modules/togetherAi/togeterAi.route.js';
 // import { serperAiRoutes } from '../modules/serper/serper.route.js';
-import { qwenAiRoutes } from '../modules/qwen/qwen.route.js';
-import { aiModelEndpointRoutes } from '../modules/aiModelServices/aiEndpoint.route.js';
-import { openAIAiRoutes } from '../modules/openAi/openAi.route.js';
-import { wishperAiRoutes } from '../modules/wishper/wishper.route.js';
 import { adminRoutes } from '../modules/admin/admin.route.js';
-import { llama4AiRoutes } from '../modules/Llama4/llama4.route.js';
-import { notificationRoutes } from '../modules/notification/notification.route.js';
-import { socialLoginRotes } from '../modules/social-login/social-login.route.js';
-import { supportRoutes } from '../modules/support/support.route.js';
-import { composioRoutes } from '../modules/composio/composio.route.js';
+import { aiModelEndpointRoutes } from '../modules/aiModelServices/aiEndpoint.route.js';
+import { articleWriterRoutes } from '../modules/article_writer/article_writer.route.js';
+import { brainstormRoutes } from '../modules/brainstorm/brainstorm.route.js';
 import { browserUseAiRoutes } from '../modules/browserUse/browserUse.route.js';
-import { cyberdeskRoutes } from '../modules/cyberdesk/cyberdesk.route.js';
-import { llamaindexRoutes } from '../modules/llamaindex/llamaindex.route.js';
 import { codeRoutes } from '../modules/code/code.route.js';
-import { writingRoutes } from '../modules/writing/workflow.route.js';
-import { summaryRoutes } from '../modules/summary/summary.route.js';
-import { searchRoute } from '../modules/search/search.route.js';
-import { conversationRoutes } from '../modules/conversations/conversation.route.js';
-import { imageRoutes } from '../modules/image/image.route.js';
-import { videoRoutes } from '../modules/video/video.route.js';
-import { deepResearchRoute } from '../modules/deep_research/deep_research.route.js';
-import { composioV2Routes } from '../modules/composio_v2/composio.route.js';
+import { composioRoutes } from '../modules/composio/composio.route.js';
 import { composioSimpleRoutes } from '../modules/composio_simple/composio.route.js';
-import { workflowAutomationRoutes } from '../modules/workflow_automation/workflowAutomation.route.js';
-import knowledgebaseRoutes from '../modules/knowledgebase/knowledgebase.routes.js';
-import { stripeRoutes } from '../modules/stripe/stripe.route.js';
-import knowledgeBankRoutes from '../modules/knowledge_bank/knowledge_bank.routes.js';
-import { enhancedImageRoute } from '../modules/enhanced_image/enhanced_image.route.js';
-import { TranscriptionRoutes } from '../modules/transcription/transcription.route.js';
-import presentationRoutes from '../modules/presentation/presentation.route.js';
-import reportRoutes from '../modules/report/report.route.js';
+import { composioV2Routes } from '../modules/composio_v2/composio.route.js';
+import { conversationRoutes } from '../modules/conversations/conversation.route.js';
+import { creativeWritingRoutes } from '../modules/creative_writing/creative_writing.route.js';
+import { cyberdeskRoutes } from '../modules/cyberdesk/cyberdesk.route.js';
+import { deepResearchRoute } from '../modules/deep_research/deep_research.route.js';
+import { documentAnalysisRoutes } from '../modules/document_analysis/document_analysis.route.js';
 import documentRoutes from '../modules/document_drafting/document.route.js';
 import { documentReviewRoutes } from '../modules/document_review/document_review.route.js';
-import translationRoutes from '../modules/translation/translation.route.js';
-import { rewriteRoutes } from '../modules/rewrite/rewrite.route.js';
-import { brainstormRoutes } from '../modules/brainstorm/brainstorm.route.js';
-import { planGeneratorRoutes } from '../modules/plan_generator/plan_generator.route.js';
-import { documentAnalysisRoutes } from '../modules/document_analysis/document_analysis.route.js';
-import { articleWriterRoutes } from '../modules/article_writer/article_writer.route.js';
+import { enhancedImageRoute } from '../modules/enhanced_image/enhanced_image.route.js';
+import { imageRoutes } from '../modules/image/image.route.js';
+import { knowledgeRoutes } from '../modules/knowledge/knowledge.route.js';
+import knowledgeBankRoutes from '../modules/knowledge_bank/knowledge_bank.routes.js';
+import knowledgebaseRoutes from '../modules/knowledgebase/knowledgebase.routes.js';
 import { legalContractRoutes } from '../modules/legal_contract/legal_contract.route.js';
 import { legalContractReviewRoutes } from '../modules/legal_contract_review/legal_contract_review.route.js';
-import { creativeWritingRoutes } from '../modules/creative_writing/creative_writing.route.js';
-import { knowledgeRoutes } from '../modules/knowledge/knowledge.route.js';
+import { llama4AiRoutes } from '../modules/Llama4/llama4.route.js';
+import { llamaindexRoutes } from '../modules/llamaindex/llamaindex.route.js';
+import { notificationRoutes } from '../modules/notification/notification.route.js';
+import { openAIAiRoutes } from '../modules/openAi/openAi.route.js';
+import { planGeneratorRoutes } from '../modules/plan_generator/plan_generator.route.js';
+import presentationRoutes from '../modules/presentation/presentation.route.js';
+import { qwenAiRoutes } from '../modules/qwen/qwen.route.js';
+import reportRoutes from '../modules/report/report.route.js';
+import { rewriteRoutes } from '../modules/rewrite/rewrite.route.js';
+import { searchRoute } from '../modules/search/search.route.js';
+import { socialLoginRotes } from '../modules/social-login/social-login.route.js';
+import { stockIntelligenceRoutes } from '../modules/stockIntelligence/stockIntelligence.routes.js';
+import { marketRoutes } from '../modules/stockTest/market.routes.js';
+import { stripeRoutes } from '../modules/stripe/stripe.route.js';
+import { summaryRoutes } from '../modules/summary/summary.route.js';
+import { supportRoutes } from '../modules/support/support.route.js';
 import { tenantRoutes } from '../modules/tenant/tenant.route.js';
+import { TranscriptionRoutes } from '../modules/transcription/transcription.route.js';
+import translationRoutes from '../modules/translation/translation.route.js';
+import { videoRoutes } from '../modules/video/video.route.js';
+import { wishperAiRoutes } from '../modules/wishper/wishper.route.js';
+import { workflowAutomationRoutes } from '../modules/workflow_automation/workflowAutomation.route.js';
+import { writingRoutes } from '../modules/writing/workflow.route.js';
 
 const router = express.Router();
 
@@ -161,111 +163,119 @@ const moduleRoutes = [
   },
   {
     path: '/writing',
-    route: writingRoutes
+    route: writingRoutes,
   },
   {
     path: '/summary',
-    route: summaryRoutes
+    route: summaryRoutes,
   },
   {
     path: '/search',
-    route: searchRoute
+    route: searchRoute,
   },
   {
     path: '/deep-research',
-    route: deepResearchRoute
+    route: deepResearchRoute,
   },
   {
     path: '/conversations',
-    route: conversationRoutes
+    route: conversationRoutes,
   },
   {
     path: '/image',
-    route: imageRoutes
+    route: imageRoutes,
   },
   {
     path: '/video',
-    route: videoRoutes
+    route: videoRoutes,
   },
   {
     path: '/knowledgebase',
-    route: knowledgebaseRoutes
+    route: knowledgebaseRoutes,
   },
   {
     path: '/knowledge-bank',
-    route: knowledgeBankRoutes
+    route: knowledgeBankRoutes,
   },
   {
     path: '/stripe',
-    route: stripeRoutes
+    route: stripeRoutes,
   },
   {
     path: '/enhanced-image',
-    route: enhancedImageRoute
+    route: enhancedImageRoute,
   },
   {
     path: '/transcription',
-    route: TranscriptionRoutes
+    route: TranscriptionRoutes,
   },
   {
     path: '/presentation',
-    route: presentationRoutes
+    route: presentationRoutes,
   },
   {
     path: '/reports',
-    route: reportRoutes
+    route: reportRoutes,
   },
   {
     path: '/documents',
-    route: documentRoutes
+    route: documentRoutes,
   },
   {
     path: '/document-review',
-    route: documentReviewRoutes
+    route: documentReviewRoutes,
   },
   {
     path: '/brainstorm',
-    route: brainstormRoutes
+    route: brainstormRoutes,
   },
   {
     path: '/translation',
-    route: translationRoutes
+    route: translationRoutes,
   },
   {
     path: '/rewrite',
-    route: rewriteRoutes
+    route: rewriteRoutes,
   },
   {
     path: '/plan-generator',
-    route: planGeneratorRoutes
+    route: planGeneratorRoutes,
   },
   {
     path: '/document-analysis',
-    route: documentAnalysisRoutes
+    route: documentAnalysisRoutes,
   },
   {
     path: '/article-writer',
-    route: articleWriterRoutes
+    route: articleWriterRoutes,
   },
   {
     path: '/legal-contract',
-    route: legalContractRoutes
+    route: legalContractRoutes,
   },
   {
     path: '/legal-contract-review',
-    route: legalContractReviewRoutes
+    route: legalContractReviewRoutes,
   },
   {
     path: '/creative-writing',
-    route: creativeWritingRoutes
+    route: creativeWritingRoutes,
   },
   {
     path: '/knowledge',
-    route: knowledgeRoutes
-  }
+    route: knowledgeRoutes,
+  },
+  {
+    path: '/stock-intelligence',
+    route: stockIntelligenceRoutes,
+  },
+  {
+    path: '/market',
+    route: marketRoutes,
+  },
 ];
 
-moduleRoutes.forEach(route => {
+moduleRoutes.forEach((route) => {
   console.log(`Registering route: ${route.path}`);
 
   return router.use(route.path, route.route);

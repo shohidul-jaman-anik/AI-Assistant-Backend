@@ -13,11 +13,12 @@ import bodyParser from 'body-parser';
 import cookieParser from 'cookie-parser';
 import passport from 'passport';
 import config from './config/index.js';
-import './src/app/middlewares/resetUsage/resetUsage.js';
 import './src/app/cron/usage/cleanupOldUsage.js';
-import passportConfig from './src/app/modules/social-login/config/passport.js';
-import { logger } from './src/shared/logger.js';
+import './src/app/middlewares/resetUsage/resetUsage.js';
 import usageLogger from './src/app/middlewares/usageLogger/usageLogger.js';
+import passportConfig from './src/app/modules/social-login/config/passport.js';
+import { dropStaleIndexes } from './src/app/modules/stockIntelligence/conversation.model.js';
+import { logger } from './src/shared/logger.js';
 
 // Load environment variables
 dotenv.config();
@@ -27,12 +28,9 @@ const app = express();
 // ✅ Use body-parser raw() FIRST for Stripe webhook before any JSON parsing
 app.use(
   '/api/v1/subscription/webhook',
-  express.raw({ type: 'application/json' }),
+  express.raw({ type: 'application/json' })
 );
-app.use(
-  '/api/v1/stripe/webhook',
-  express.raw({ type: 'application/json' }),
-);
+app.use('/api/v1/stripe/webhook', express.raw({ type: 'application/json' }));
 
 // app.use(cors({
 //   origin: '*',
@@ -43,13 +41,11 @@ app.use(
     origin: [
       'https://asonai.com',
       'https://www.asonai.com',
-      'https://ason-web.netlify.app',
+      'https://altihq.com',
       'http://localhost:3000',
-      'http://localhost:8080',
-      'http://localhost:3001'
     ],
     credentials: true,
-  }),
+  })
 );
 
 // Middleware
@@ -80,7 +76,7 @@ app.use(
       blockAllMixedContent: [],
       frameAncestors: ["'none'"],
     },
-  }),
+  })
 );
 app.use(helmet.referrerPolicy({ policy: 'same-origin' }));
 app.use(helmet.frameguard({ action: 'deny' }));
@@ -101,11 +97,16 @@ app.use((req, res, next) => {
 // MongoDB connection
 mongoose
   .connect(config.database_local)
+  .then(async () => {
+    await dropStaleIndexes(mongoose.connection); // ← add this line
+  })
   .then(() => logger.info('✅ Database connection successfully'))
-  .catch(err => {
+  .catch((err) => {
     logger.error('❌ Error connecting to the database:', err);
     process.exit(1); // Exit the application on database connection error
   });
+
+console.log('Database connection string:', config.database_local);
 
 // Initialize passport (no session)
 passportConfig(passport);
