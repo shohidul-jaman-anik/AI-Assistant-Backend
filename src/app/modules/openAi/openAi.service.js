@@ -209,10 +209,10 @@ const openAiAnonymousResService = async (prompt, sessionId) => {
 
     const payload = { prompt, sessionId, reply };
 
-    await RedisClient.publish(
-      OPENAI_RESPONSE_SERVICE_POST,
-      JSON.stringify(payload),
-    );
+    // await RedisClient.publish(
+    //   OPENAI_RESPONSE_SERVICE_POST,
+    //   JSON.stringify(payload),
+    // );
 
     return payload;
   } catch (error) {
