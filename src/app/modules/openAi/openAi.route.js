@@ -17,4 +17,12 @@ router.post(
   openAIAiController.Gpt4NanoGetResponse,
 );
 
+
+router.post(
+  '/anonymous-response',
+  // auth(ENUM_USER_ROLE.ADMIN, ENUM_USER_ROLE.USER),
+  openAIAiController.Gpt4oMiniAnonymousGetResponse,
+);
+
+
 export const openAIAiRoutes = router;
