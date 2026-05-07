@@ -325,6 +325,42 @@ const updateTenantSettings = catchAsync(async (req, res) => {
   sendResponse(res, { statusCode: httpStatus.OK, success: true, message: 'Tenant settings updated', data: result });
 });
 
+
+// ===========
+
+const makeUserAdminController = catchAsync(async (req, res) => {
+
+  console.log(req.params.userId, 'userId from params in controller');
+  console.log(req.body.role, 'role from body in controller');
+  const result = await AdminService.makeUserAdminService(
+    req.user,
+    req.params?.userId,
+    req.body?.role,
+  );
+
+  sendResponse(res, {
+    statusCode: httpStatus.OK,
+    success: true,
+    message: result.message,
+    data: result.data,
+  });
+});
+
+const deleteAnyUserController = catchAsync(async (req, res) => {
+  const result = await AdminService.deleteAnyUserService(
+    req.user,
+    req.params.userId,
+  );
+
+  sendResponse(res, {
+    statusCode: httpStatus.OK,
+    success: true,
+    message: result.message,
+    data: result,
+  });
+});
+
+
 export const AdminController = {
   getAllBuyer,
   deleteUser,
@@ -352,4 +388,6 @@ export const AdminController = {
   getTopUsersByUsage,
   getUsageLogs,
   getDailyUsage,
+  makeUserAdminController,
+  deleteAnyUserController
 };

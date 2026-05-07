@@ -9,6 +9,25 @@ import { AuthValidation } from './auth.validation.js';
 
 const router = express.Router();
 
+
+router
+  .route('/update-user/:userId')
+  .put(
+    auth(ENUM_USER_ROLE.ADMIN, ENUM_USER_ROLE.USER),
+    authController.updateUser
+  ); // is to use update user profile
+
+router
+  .route('/delete-account-otp/:id')
+  .delete(authController.deleteUserAccountOTP); // use to delete account
+
+router
+  .route('/delete-account/:id')
+  .delete(
+    auth(ENUM_USER_ROLE.ADMIN, ENUM_USER_ROLE.USER),
+    authController.deleteUserAccount
+  ); // User use to delete account
+
 router
   .route('/user/single-user')
   .get(auth(ENUM_USER_ROLE.ADMIN, ENUM_USER_ROLE.USER), authController.getUser); // user with id
@@ -16,9 +35,11 @@ router
 router.route('/register').post(
   createRateLimiter(5, 2),
   // validateRequest(AuthValidation.UserValidationSchema),
-  authController.register,
+  authController.register
 );
-router.route('/register/resend-confirmation').post(authController.resendEmailConfirmation);
+router
+  .route('/register/resend-confirmation')
+  .post(authController.resendEmailConfirmation);
 router.route('/register/confirmation').post(authController.confirmEmail); // verify mail
 
 router.route('/login').post(createRateLimiter(5, 5), authController.login); // login in app
@@ -26,7 +47,7 @@ router.route('/login').post(createRateLimiter(5, 5), authController.login); // l
 router.post(
   '/refresh-token',
   validateRequest(AuthValidation.refreshTokenZodSchema),
-  authController.refreshToken,
+  authController.refreshToken
 );
 
 router
@@ -35,28 +56,10 @@ router
 router
   .route('/reset-password')
   .post(createRateLimiter(5, 1), authController.resetPassword);
-router
-  .route('/change-password')
-  .post(
-    auth(ENUM_USER_ROLE.ADMIN, ENUM_USER_ROLE.USER),
-    // createRateLimiter(10, 1),
-    authController.changePassword,
-  );
-
-router
-  .route('/update-user/:userId')
-  .put(
-    auth(ENUM_USER_ROLE.ADMIN, ENUM_USER_ROLE.USER),
-    authController.updateUser,
-  ); // is to use update user profile
-router
-  .route('/delete-account-otp/:id')
-  .delete(authController.deleteUserAccountOTP); // use to delete account
-router
-  .route('/delete-account/:id')
-  .delete(
-    auth(ENUM_USER_ROLE.ADMIN, ENUM_USER_ROLE.USER),
-    authController.deleteUserAccount,
-  ); // use to delete account
+router.route('/change-password').post(
+  auth(ENUM_USER_ROLE.SUPER_ADMIN, ENUM_USER_ROLE.ADMIN, ENUM_USER_ROLE.USER),
+  // createRateLimiter(10, 1),
+  authController.changePassword
+);
 
 export const authRoutes = router;

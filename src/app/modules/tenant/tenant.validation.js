@@ -51,6 +51,7 @@ export const updateTenantSchema = z.object({
  */
 export const inviteMemberSchema = z.object({
   body: z.object({
+    tenantId: z.string().regex(/^[a-f\d]{24}$/i, 'Invalid tenant ID').optional(),
     email: z.string().email('Invalid email address'),
     role: z.enum(['admin', 'member'], {
       errorMap: () => ({ message: 'Role must be either admin or member' }),

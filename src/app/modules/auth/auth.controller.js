@@ -426,6 +426,8 @@ const sendMailWithMailGunController = async (req, res) => {
   }
 };
 
+
+
 export const authController = {
   register,
   login,
@@ -439,5 +441,5 @@ export const authController = {
   deleteUserAccount,
   deleteUserAccountOTP,
   changePassword,
-  sendMailWithMailGunController,
+  sendMailWithMailGunController
 };

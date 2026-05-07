@@ -424,5 +424,5 @@ export const authService = {
   loginService,
   refreshToken,
   updateUserService,
-  getUserService,
+  getUserService
 };

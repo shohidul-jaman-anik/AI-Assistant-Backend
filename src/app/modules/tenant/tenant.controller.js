@@ -213,7 +213,7 @@ const getTenantMembersByTenantId = catchAsync(async (req, res) => {
  * Invite user to tenant
  */
 const inviteMember = catchAsync(async (req, res) => {
-  const tenantId = req.user?.currentTenantId || req.user?.tenantId;
+  const tenantId = req.user?.currentTenantId || req.user?.tenantId || req.body?.tenantId;
   const userId = req.user?.id || req.user?._id;
   const { email, role } = req.body;
 

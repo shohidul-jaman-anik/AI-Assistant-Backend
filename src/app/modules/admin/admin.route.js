@@ -7,42 +7,48 @@ const router = express.Router();
 // Both admin and super_admin can access general admin routes
 const ADMIN_ROLES = [ENUM_USER_ROLE.ADMIN, ENUM_USER_ROLE.SUPER_ADMIN];
 
+router
+  .route('/make-admin/:userId')
+  .patch(
+    auth(ENUM_USER_ROLE.SUPER_ADMIN),
+    AdminController.makeUserAdminController
+  );
+
+router
+  .route('/delete-user-admin/:userId')
+  .delete(
+    auth(ENUM_USER_ROLE.SUPER_ADMIN),
+    AdminController.deleteAnyUserController
+  );
+
 router.put(
   '/update-user-role/:id',
   auth(ENUM_USER_ROLE.SUPER_ADMIN),
-  AdminController.updateUserRole,
+  AdminController.updateUserRole
 );
 
 router.delete(
   '/delete-user/:objectId',
   auth(...ADMIN_ROLES),
-  AdminController.deleteUser,
+  AdminController.deleteUser
 );
 
 router.get(
   '/buyer/all-user',
   auth(...ADMIN_ROLES),
-  AdminController.getAllBuyer,
+  AdminController.getAllBuyer
 );
 
-router.get(
-  '/all-user',
-  auth(...ADMIN_ROLES),
-  AdminController.getAllUsers,
-);
+router.get('/all-user', auth(...ADMIN_ROLES), AdminController.getAllUsers);
 
-router.get(
-  '/all-payment',
-  auth(...ADMIN_ROLES),
-  AdminController.getAllPayment,
-);
+router.get('/all-payment', auth(...ADMIN_ROLES), AdminController.getAllPayment);
 
 router.get('/admin/:email', AdminController.getAdmin);
 
 router.get(
   '/all-user/statistics',
   auth(...ADMIN_ROLES),
-  AdminController.getUserStatisticsByMonth,
+  AdminController.getUserStatisticsByMonth
 );
 
 // ============= Tenant Management Routes (Admin) =============
@@ -52,11 +58,7 @@ router.get(
  * @desc    Get all tenants with pagination
  * @access  Private (Admin only)
  */
-router.get(
-  '/tenants',
-  auth(...ADMIN_ROLES),
-  AdminController.getAllTenants,
-);
+router.get('/tenants', auth(...ADMIN_ROLES), AdminController.getAllTenants);
 
 /**
  * @route   GET /api/v1/admin/tenants/:tenantId
@@ -66,7 +68,7 @@ router.get(
 router.get(
   '/tenants/:tenantId',
   auth(...ADMIN_ROLES),
-  AdminController.getTenantDetails,
+  AdminController.getTenantDetails
 );
 
 /**
@@ -77,7 +79,7 @@ router.get(
 router.patch(
   '/tenants/:tenantId/status',
   auth(...ADMIN_ROLES),
-  AdminController.updateTenantStatus,
+  AdminController.updateTenantStatus
 );
 
 /**
@@ -88,7 +90,7 @@ router.patch(
 router.get(
   '/tenants/:tenantId/usage',
   auth(...ADMIN_ROLES),
-  AdminController.getTenantUsageAdmin,
+  AdminController.getTenantUsageAdmin
 );
 
 /**
@@ -99,13 +101,13 @@ router.get(
 router.post(
   '/tenants/:tenantId/extend-trial',
   auth(...ADMIN_ROLES),
-  AdminController.extendTenantTrial,
+  AdminController.extendTenantTrial
 );
 
 router.patch(
   '/tenants/:tenantId/settings',
   auth(...ADMIN_ROLES),
-  AdminController.updateTenantSettings,
+  AdminController.updateTenantSettings
 );
 
 // ─── Users (5.4–5.8) ─────────────────────────────────────────────────────────
@@ -113,31 +115,31 @@ router.patch(
 router.get(
   '/users/:userId',
   auth(...ADMIN_ROLES),
-  AdminController.getUserDetail,
+  AdminController.getUserDetail
 );
 
 router.patch(
   '/users/:userId',
   auth(...ADMIN_ROLES),
-  AdminController.updateUser,
+  AdminController.updateUser
 );
 
 router.post(
   '/users/:userId/reset-limit',
   auth(...ADMIN_ROLES),
-  AdminController.resetUserLimit,
+  AdminController.resetUserLimit
 );
 
 router.get(
   '/users/:userId/usage',
   auth(...ADMIN_ROLES),
-  AdminController.getUserUsage,
+  AdminController.getUserUsage
 );
 
 router.get(
   '/users/:userId/usage-logs',
   auth(...ADMIN_ROLES),
-  AdminController.getUserUsageLogs,
+  AdminController.getUserUsageLogs
 );
 
 // ─── Tenant Members (5.9–5.10) ───────────────────────────────────────────────
@@ -145,13 +147,13 @@ router.get(
 router.get(
   '/tenants/:tenantId/members',
   auth(...ADMIN_ROLES),
-  AdminController.getTenantMembers,
+  AdminController.getTenantMembers
 );
 
 router.delete(
   '/tenants/:tenantId/members/:userId',
   auth(...ADMIN_ROLES),
-  AdminController.removeTenantMember,
+  AdminController.removeTenantMember
 );
 
 // ─── Platform Usage (5.11–5.14) ──────────────────────────────────────────────
@@ -159,31 +161,23 @@ router.delete(
 router.get(
   '/usage/summary',
   auth(...ADMIN_ROLES),
-  AdminController.getPlatformUsageSummary,
+  AdminController.getPlatformUsageSummary
 );
 
 router.get(
   '/usage/by-module',
   auth(...ADMIN_ROLES),
-  AdminController.getUsageByModule,
+  AdminController.getUsageByModule
 );
 
 router.get(
   '/usage/by-user',
   auth(...ADMIN_ROLES),
-  AdminController.getTopUsersByUsage,
+  AdminController.getTopUsersByUsage
 );
 
-router.get(
-  '/usage/logs',
-  auth(...ADMIN_ROLES),
-  AdminController.getUsageLogs,
-);
+router.get('/usage/logs', auth(...ADMIN_ROLES), AdminController.getUsageLogs);
 
-router.get(
-  '/usage/daily',
-  auth(...ADMIN_ROLES),
-  AdminController.getDailyUsage,
-);
+router.get('/usage/daily', auth(...ADMIN_ROLES), AdminController.getDailyUsage);
 
 export const adminRoutes = router;

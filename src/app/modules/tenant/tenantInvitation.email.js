@@ -85,7 +85,7 @@ export const sendInvitationEmail = async (invitationData) => {
   }
 
   // Generate invitation link
-  const baseUrl = config.app?.frontend_url || 'https://app.asonai.com';
+  const baseUrl = config.client_url || 'https://altihq.com';
   const invitationLink = `${baseUrl}/accept-invite/${token}`;
 
   // Prepare email data
