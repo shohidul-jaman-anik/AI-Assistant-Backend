@@ -53,8 +53,8 @@ export const inviteMemberSchema = z.object({
   body: z.object({
     tenantId: z.string().regex(/^[a-f\d]{24}$/i, 'Invalid tenant ID').optional(),
     email: z.string().email('Invalid email address'),
-    role: z.enum(['admin', 'member'], {
-      errorMap: () => ({ message: 'Role must be either admin or member' }),
+    role: z.enum(['admin','owner', 'member'], {
+      errorMap: () => ({ message: 'Role must be either owner, admin or member' }),
     }),
   }),
 });
@@ -67,8 +67,8 @@ export const updateMemberRoleSchema = z.object({
     userId: z.string().regex(/^[a-f\d]{24}$/i, 'Invalid user ID'),
   }),
   body: z.object({
-    role: z.enum(['admin', 'member'], {
-      errorMap: () => ({ message: 'Role must be either admin or member' }),
+    role: z.enum(['admin','owner', 'member'], {
+      errorMap: () => ({ message: 'Role must be either owner, admin or member' }),
     }),
   }),
 });

@@ -22,7 +22,7 @@ const TenantInvitationSchema = new mongoose.Schema(
     },
     role: {
       type: String,
-      enum: ['admin', 'member'],
+      enum: ['owner','admin', 'member'],
       required: [true, 'Role is required'],
       default: 'member',
     },
