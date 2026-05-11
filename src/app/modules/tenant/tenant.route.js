@@ -99,13 +99,13 @@ router.patch(
  * @access  Private (Tenant members)
  */
 router.get(
-  '/members',
+  '/members/:tenantId',
   auth(ENUM_USER_ROLE.USER, ENUM_USER_ROLE.ADMIN),
   tenantController.getTenantMembers
 );
 
 router.get(
-  '/members/:tenantId',
+  '/member/:tenantId',
   auth(ENUM_USER_ROLE.USER, ENUM_USER_ROLE.ADMIN),
   // validateRequest(tenantValidation.tenantIdParamSchema),
   tenantController.getTenantMembersByTenantId
@@ -208,11 +208,11 @@ router.delete(
 
 /**
  * @route   GET /api/v1/tenant/usage
- * @desc    Get tenant usage statistics
+ * @desc    Get tenant user statistics
  * @access  Private (Tenant members)
  */
 router.get(
-  '/usage',
+  '/user/:tenantId',
   auth(ENUM_USER_ROLE.USER, ENUM_USER_ROLE.ADMIN),
   tenantController.getTenantUsage
 );
@@ -223,7 +223,7 @@ router.get(
  * @access  Private (Tenant members)
  */
 router.get(
-  '/limits',
+  '/limits/:tenantId',
   auth(ENUM_USER_ROLE.USER, ENUM_USER_ROLE.ADMIN),
   tenantController.getTenantLimits
 );
