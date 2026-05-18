@@ -242,7 +242,8 @@ const inviteMember = catchAsync(async (req, res) => {
  * Update member role
  */
 const updateMemberRole = catchAsync(async (req, res) => {
-  const tenantId = req.user?.currentTenantId || req.user?.tenantId;
+  // const tenantId =  req.user?.tenants?.[0]?.tenantId;
+  const tenantId = req.params.tenantId;
   const { userId } = req.params;
   const { role } = req.body;
 

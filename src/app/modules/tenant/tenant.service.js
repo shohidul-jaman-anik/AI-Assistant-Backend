@@ -1,14 +1,14 @@
 import httpStatus from 'http-status';
+import mongoose from 'mongoose';
 import ApiError from '../../../errors/ApiError.js';
 import { logger } from '../../../shared/logger.js';
-import Tenant from './tenant.model.js';
-import TenantMember from './tenantMember.model.js';
-import TenantInvitation from './tenantInvitation.model.js';
 import UserModel from '../auth/auth.model.js';
-import { tenantInvitationService } from './tenantInvitation.service.js';
-import { createCustomerService } from '../stripe/customer/stripe.service.js';
 import SubscriptionModel from '../payment/payment.model.js';
-import mongoose from 'mongoose';
+import { createCustomerService } from '../stripe/customer/stripe.service.js';
+import Tenant from './tenant.model.js';
+import TenantInvitation from './tenantInvitation.model.js';
+import { tenantInvitationService } from './tenantInvitation.service.js';
+import TenantMember from './tenantMember.model.js';
 
 /**
  * Create a new tenant
@@ -80,7 +80,9 @@ const createTenant = async (tenantData) => {
       };
       await tenant.save();
 
-      logger.info(`Stripe customer created for tenant: ${tenant._id}, customerId: ${stripeCustomer.id}`);
+      logger.info(
+        `Stripe customer created for tenant: ${tenant._id}, customerId: ${stripeCustomer.id}`
+      );
     } catch (error) {
       logger.error('Error creating Stripe customer for tenant:', error);
       // Don't fail tenant creation if Stripe customer creation fails
@@ -107,7 +109,9 @@ const createTenant = async (tenantData) => {
  */
 const getTenantById = async (tenantId) => {
   console.log(`Fetching tenant by ID: ${tenantId}`);
-  const tenant = await Tenant.findById(tenantId).populate('ownerId', 'name email').lean();
+  const tenant = await Tenant.findById(tenantId)
+    .populate('ownerId', 'name email')
+    .lean();
 
   const subscription = await SubscriptionModel.aggregate([
     { $match: { tenantId: new mongoose.Types.ObjectId(tenantId) } },
@@ -116,8 +120,8 @@ const getTenantById = async (tenantId) => {
         from: 'products',
         localField: 'price',
         foreignField: 'stripePriceId',
-        as: 'price'
-      }
+        as: 'price',
+      },
     },
     { $unwind: '$price' },
     { $sort: { createdAt: -1 } },
@@ -130,8 +134,7 @@ const getTenantById = async (tenantId) => {
 
   return {
     ...tenant,
-    subscription: subscription.length > 0 ? subscription[0] : null
-
+    subscription: subscription.length > 0 ? subscription[0] : null,
   };
 };
 
@@ -185,7 +188,7 @@ const getUserTenants = async (userId) => {
     // Find all active memberships for the user
     const tenantMemberships = await TenantMember.find({
       userId,
-      status: 'active'
+      status: 'active',
     })
       .populate('tenantId', 'name slug subdomain status plan')
       .sort({ joinedAt: -1 });
@@ -210,7 +213,9 @@ const getUserTenants = async (userId) => {
       joinedAt: membership.joinedAt,
     }));
 
-    logger.info(`Retrieved ${JSON.stringify(tenants)} tenants for user: ${userId}`);
+    logger.info(
+      `Retrieved ${JSON.stringify(tenants)} tenants for user: ${userId}`
+    );
 
     return {
       tenants,
@@ -243,11 +248,14 @@ const switchTenant = async (userId, tenantId) => {
     const tenantMembership = await TenantMember.findOne({
       userId,
       tenantId,
-      status: 'active'
+      status: 'active',
     });
 
     if (!tenantMembership) {
-      throw new ApiError(httpStatus.FORBIDDEN, 'User is not a member of this tenant');
+      throw new ApiError(
+        httpStatus.FORBIDDEN,
+        'User is not a member of this tenant'
+      );
     }
 
     // Get the tenant details
@@ -275,17 +283,26 @@ const switchTenant = async (userId, tenantId) => {
  * Get tenant members
  */
 const getTenantMembers = async (tenantId, options = {}) => {
-  console.log(`Fetching members for tenant ID: ${tenantId} with options:`, options);
+  console.log(
+    `Fetching members for tenant ID: ${tenantId} with options:`,
+    options
+  );
   const { page = 1, limit = 20 } = options;
   const skip = (page - 1) * limit;
 
   const members = await TenantMember.find({ tenantId, status: 'active' })
-    .populate('userId', 'name email')
+    .populate({
+      path: 'userId',
+      select: 'tenantRole email',
+    })
     .skip(skip)
     .limit(limit)
     .lean();
 
-  const total = await TenantMember.countDocuments({ tenantId, status: 'active' });
+  const total = await TenantMember.countDocuments({
+    tenantId,
+    status: 'active',
+  });
 
   return {
     members,
@@ -344,7 +361,10 @@ const inviteMember = async (invitationData) => {
   });
 
   if (existingMember && existingMember.userId) {
-    throw new ApiError(httpStatus.BAD_REQUEST, 'User is already a member of this tenant');
+    throw new ApiError(
+      httpStatus.BAD_REQUEST,
+      'User is already a member of this tenant'
+    );
   }
 
   // Check for pending invitation
@@ -354,7 +374,10 @@ const inviteMember = async (invitationData) => {
   );
 
   if (hasPendingInvitation) {
-    throw new ApiError(httpStatus.BAD_REQUEST, 'User already has a pending invitation');
+    throw new ApiError(
+      httpStatus.BAD_REQUEST,
+      'User already has a pending invitation'
+    );
   }
 
   // Create invitation
@@ -459,7 +482,9 @@ const getTenantLimits = async (tenantId) => {
  * Check if subdomain is available
  */
 const checkSubdomainAvailability = async (subdomain) => {
-  const existingTenant = await Tenant.findOne({ subdomain: subdomain.toLowerCase() });
+  const existingTenant = await Tenant.findOne({
+    subdomain: subdomain.toLowerCase(),
+  });
 
   return {
     subdomain: subdomain.toLowerCase(),

@@ -38,9 +38,10 @@ const handleWebhook = catchAsync(async (req, res, next) => {
 });
 
 const getAllSubscriptions = catchAsync(async (req, res, next) => {
-  const subscriptions = await SubscriptionModel.find({}).sort({
-    createdAt: -1,
-  });
+  const subscriptions = await SubscriptionModel.find({})
+    .populate('userId', 'name email') // add/remove fields as needed
+    .populate('productId', 'name price plan')     // optional: plan/product details
+    .sort({ createdAt: -1 });
   sendResponse(res, {
     statusCode: 200,
     success: true,

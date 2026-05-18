@@ -2,28 +2,39 @@ import mongoose from 'mongoose';
 
 const SubscriptionSchema = new mongoose.Schema(
   {
-    userId: { type: mongoose.Schema.Types.ObjectId, ref: 'User', required: true },
+    userId: {
+      type: mongoose.Schema.Types.ObjectId,
+      ref: 'User',
+      required: true,
+    },
     transactionId: { type: String, required: false },
     price: { type: String, required: true },
-    plan_name: { type: String, required: false, enum: ['free', 'explore', 'execute', 'command'] },
-    productId: { type: String, required: false },
+    plan_name: {
+      type: String,
+      required: false,
+      enum: ['free', 'explore', 'execute', 'command'],
+    },
+    productId: { type: String, required: false, ref: 'Product' },
     duration: { type: String, required: false, enum: ['month', 'year'] },
     expiresAt: { type: Date, required: false },
-    paymentStatus: { type: String, enum: ['paid', 'canceled', 'expired', 'pending'] },
+    paymentStatus: {
+      type: String,
+      enum: ['paid', 'canceled', 'expired', 'pending'],
+    },
     invoiceUrl: { type: String, default: null },
-    
+
     // Plan Features (copied from Product at subscription time)
     limits: {
       dailyRequestLimit: { type: Number, default: 10 },
-      ragType: { 
-        type: String, 
+      ragType: {
+        type: String,
         default: 'none',
-        enum: ['none', 'basic_text', 'advanced_multimodal', 'premium_agentic']
+        enum: ['none', 'basic_text', 'advanced_multimodal', 'premium_agentic'],
       },
       storagePerUser: { type: Number, default: 0 }, // in bytes
       canInviteTeam: { type: Boolean, default: false },
     },
-    
+
     // Multi-tenant support
     tenantId: {
       type: mongoose.Schema.Types.ObjectId,
@@ -31,12 +42,12 @@ const SubscriptionSchema = new mongoose.Schema(
       default: null,
       index: true,
     },
-    
+
     // Stripe subscription details
     stripeSubscriptionId: { type: String, unique: true, sparse: true },
     stripeCustomerId: { type: String },
     stripePriceId: { type: String },
-    
+
     // Billing cycle
     currentPeriodStart: { type: Date },
     currentPeriodEnd: { type: Date },
