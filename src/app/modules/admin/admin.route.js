@@ -58,7 +58,11 @@ router.get(
  * @desc    Get all tenants with pagination
  * @access  Private (Admin only)
  */
-router.get('/tenants', auth(...ADMIN_ROLES, ENUM_USER_ROLE.SUPER_ADMIN), AdminController.getAllTenants);
+router.get(
+  '/tenants',
+  auth(...ADMIN_ROLES, ENUM_USER_ROLE.SUPER_ADMIN),
+  AdminController.getAllTenants
+);
 
 /**
  * @route   GET /api/v1/admin/tenants/:tenantId
@@ -179,5 +183,32 @@ router.get(
 router.get('/usage/logs', auth(...ADMIN_ROLES), AdminController.getUsageLogs);
 
 router.get('/usage/daily', auth(...ADMIN_ROLES), AdminController.getDailyUsage);
+
+// ─────────────────────────────────────────────────────────────────────────────
+// Super Admin: Subscription Package Management Routes
+// ─────────────────────────────────────────────────────────────────────────────
+
+/**
+ * @route   GET /api/v1/admin/subscription-packages
+ * @desc    Get all available subscription packages
+ * @access  Private (Super Admin)
+ */
+router.get(
+  '/subscription-packages',
+  auth(ENUM_USER_ROLE.SUPER_ADMIN),
+  AdminController.getSubscriptionPackages
+);
+
+/**
+ * @route   POST /api/v1/admin/users/:userId/assign-subscription
+ * @desc    Assign a subscription package to a user
+ * @access  Private (Super Admin)
+ * @body    { productId, duration }
+ */
+router.post(
+  '/users/:userId/assign-subscription',
+  auth(ENUM_USER_ROLE.SUPER_ADMIN),
+  AdminController.assignSubscriptionToUser
+);
 
 export const adminRoutes = router;

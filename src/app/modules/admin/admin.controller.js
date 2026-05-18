@@ -17,12 +17,9 @@ const getAllBuyer = catchAsync(async (req, res) => {
   });
 });
 
-
-
 const deleteUser = catchAsync(async (req, res) => {
   const objectId = req.params?.objectId;
   const result = await AdminService.deleteUserService(objectId);
-
 
   if (!result.deletedCount) {
     return res.status(400).json({
@@ -40,7 +37,6 @@ const deleteUser = catchAsync(async (req, res) => {
 });
 
 const getAllUsers = catchAsync(async (req, res) => {
-
   const filters = pick(req.query, [
     'searchTerm',
     'email',
@@ -52,7 +48,7 @@ const getAllUsers = catchAsync(async (req, res) => {
 
   const users = await AdminService.getAllUsersService(
     filters,
-    paginationOptions,
+    paginationOptions
   );
 
   sendResponse(res, {
@@ -111,7 +107,7 @@ const getAllPayment = catchAsync(async (req, res) => {
 
   const result = await AdminService.getAllPaymentService(
     filters,
-    paginationOptions,
+    paginationOptions
   );
 
   sendResponse(res, {
@@ -129,7 +125,10 @@ const getAllTenants = catchAsync(async (req, res) => {
   const filters = pick(req.query, ['searchTerm', 'status', 'plan']);
   const paginationOptions = pick(req.query, paginationFields);
 
-  const result = await AdminService.getAllTenantsService(filters, paginationOptions);
+  const result = await AdminService.getAllTenantsService(
+    filters,
+    paginationOptions
+  );
 
   sendResponse(res, {
     statusCode: httpStatus.OK,
@@ -211,7 +210,12 @@ const extendTenantTrial = catchAsync(async (req, res) => {
 const getUserDetail = catchAsync(async (req, res) => {
   const { userId } = req.params;
   const result = await AdminService.getUserDetailService(userId);
-  sendResponse(res, { statusCode: httpStatus.OK, success: true, message: 'User retrieved successfully', data: result });
+  sendResponse(res, {
+    statusCode: httpStatus.OK,
+    success: true,
+    message: 'User retrieved successfully',
+    data: result,
+  });
 });
 
 // ─────────────────────────────────────────────────────────────────────────────
@@ -220,7 +224,12 @@ const getUserDetail = catchAsync(async (req, res) => {
 const updateUser = catchAsync(async (req, res) => {
   const { userId } = req.params;
   const result = await AdminService.updateUserService(userId, req.body);
-  sendResponse(res, { statusCode: httpStatus.OK, success: true, message: 'User updated successfully', data: result });
+  sendResponse(res, {
+    statusCode: httpStatus.OK,
+    success: true,
+    message: 'User updated successfully',
+    data: result,
+  });
 });
 
 // ─────────────────────────────────────────────────────────────────────────────
@@ -229,7 +238,12 @@ const updateUser = catchAsync(async (req, res) => {
 const resetUserLimit = catchAsync(async (req, res) => {
   const { userId } = req.params;
   const result = await AdminService.resetUserLimitService(userId);
-  sendResponse(res, { statusCode: httpStatus.OK, success: true, message: 'Daily limit reset successfully', data: result });
+  sendResponse(res, {
+    statusCode: httpStatus.OK,
+    success: true,
+    message: 'Daily limit reset successfully',
+    data: result,
+  });
 });
 
 // ─────────────────────────────────────────────────────────────────────────────
@@ -239,7 +253,12 @@ const getUserUsage = catchAsync(async (req, res) => {
   const { userId } = req.params;
   const { period } = req.query;
   const result = await AdminService.getUserUsageService(userId, period);
-  sendResponse(res, { statusCode: httpStatus.OK, success: true, message: 'User usage retrieved successfully', data: result });
+  sendResponse(res, {
+    statusCode: httpStatus.OK,
+    success: true,
+    message: 'User usage retrieved successfully',
+    data: result,
+  });
 });
 
 // ─────────────────────────────────────────────────────────────────────────────
@@ -249,8 +268,17 @@ const getUserUsageLogs = catchAsync(async (req, res) => {
   const { userId } = req.params;
   const filters = pick(req.query, ['module', 'status', 'startDate', 'endDate']);
   const paginationOptions = pick(req.query, paginationFields);
-  const result = await AdminService.getUserUsageLogsService(userId, filters, paginationOptions);
-  sendResponse(res, { statusCode: httpStatus.OK, success: true, message: 'User usage logs retrieved successfully', data: result });
+  const result = await AdminService.getUserUsageLogsService(
+    userId,
+    filters,
+    paginationOptions
+  );
+  sendResponse(res, {
+    statusCode: httpStatus.OK,
+    success: true,
+    message: 'User usage logs retrieved successfully',
+    data: result,
+  });
 });
 
 // ─────────────────────────────────────────────────────────────────────────────
@@ -259,8 +287,16 @@ const getUserUsageLogs = catchAsync(async (req, res) => {
 const getTenantMembers = catchAsync(async (req, res) => {
   const { tenantId } = req.params;
   const paginationOptions = pick(req.query, paginationFields);
-  const result = await AdminService.getTenantMembersService(tenantId, paginationOptions);
-  sendResponse(res, { statusCode: httpStatus.OK, success: true, message: 'Tenant members retrieved successfully', data: result });
+  const result = await AdminService.getTenantMembersService(
+    tenantId,
+    paginationOptions
+  );
+  sendResponse(res, {
+    statusCode: httpStatus.OK,
+    success: true,
+    message: 'Tenant members retrieved successfully',
+    data: result,
+  });
 });
 
 // ─────────────────────────────────────────────────────────────────────────────
@@ -269,7 +305,12 @@ const getTenantMembers = catchAsync(async (req, res) => {
 const removeTenantMember = catchAsync(async (req, res) => {
   const { tenantId, userId } = req.params;
   const result = await AdminService.removeTenantMemberService(tenantId, userId);
-  sendResponse(res, { statusCode: httpStatus.OK, success: true, message: 'Member removed from tenant successfully', data: result });
+  sendResponse(res, {
+    statusCode: httpStatus.OK,
+    success: true,
+    message: 'Member removed from tenant successfully',
+    data: result,
+  });
 });
 
 // ─────────────────────────────────────────────────────────────────────────────
@@ -278,7 +319,12 @@ const removeTenantMember = catchAsync(async (req, res) => {
 const getPlatformUsageSummary = catchAsync(async (req, res) => {
   const { period } = req.query;
   const result = await AdminService.getPlatformUsageSummaryService(period);
-  sendResponse(res, { statusCode: httpStatus.OK, success: true, message: 'Platform usage summary retrieved', data: result });
+  sendResponse(res, {
+    statusCode: httpStatus.OK,
+    success: true,
+    message: 'Platform usage summary retrieved',
+    data: result,
+  });
 });
 
 // ─────────────────────────────────────────────────────────────────────────────
@@ -287,7 +333,12 @@ const getPlatformUsageSummary = catchAsync(async (req, res) => {
 const getUsageByModule = catchAsync(async (req, res) => {
   const { period } = req.query;
   const result = await AdminService.getUsageByModuleService(period);
-  sendResponse(res, { statusCode: httpStatus.OK, success: true, message: 'Usage by module retrieved', data: result });
+  sendResponse(res, {
+    statusCode: httpStatus.OK,
+    success: true,
+    message: 'Usage by module retrieved',
+    data: result,
+  });
 });
 
 // ─────────────────────────────────────────────────────────────────────────────
@@ -296,17 +347,37 @@ const getUsageByModule = catchAsync(async (req, res) => {
 const getTopUsersByUsage = catchAsync(async (req, res) => {
   const { limit, period } = req.query;
   const result = await AdminService.getTopUsersByUsageService(limit, period);
-  sendResponse(res, { statusCode: httpStatus.OK, success: true, message: 'Top users by usage retrieved', data: result });
+  sendResponse(res, {
+    statusCode: httpStatus.OK,
+    success: true,
+    message: 'Top users by usage retrieved',
+    data: result,
+  });
 });
 
 // ─────────────────────────────────────────────────────────────────────────────
 // 5.14  Usage Log Browser
 // ─────────────────────────────────────────────────────────────────────────────
 const getUsageLogs = catchAsync(async (req, res) => {
-  const filters = pick(req.query, ['userId', 'tenantId', 'module', 'status', 'startDate', 'endDate']);
+  const filters = pick(req.query, [
+    'userId',
+    'tenantId',
+    'module',
+    'status',
+    'startDate',
+    'endDate',
+  ]);
   const paginationOptions = pick(req.query, paginationFields);
-  const result = await AdminService.getUsageLogsService(filters, paginationOptions);
-  sendResponse(res, { statusCode: httpStatus.OK, success: true, message: 'Usage logs retrieved successfully', data: result });
+  const result = await AdminService.getUsageLogsService(
+    filters,
+    paginationOptions
+  );
+  sendResponse(res, {
+    statusCode: httpStatus.OK,
+    success: true,
+    message: 'Usage logs retrieved successfully',
+    data: result,
+  });
 });
 
 // ─────────────────────────────────────────────────────────────────────────────
@@ -315,27 +386,38 @@ const getUsageLogs = catchAsync(async (req, res) => {
 const getDailyUsage = catchAsync(async (req, res) => {
   const { period } = req.query;
   const result = await AdminService.getDailyUsageService(period);
-  sendResponse(res, { statusCode: httpStatus.OK, success: true, message: 'Daily usage retrieved', data: result });
+  sendResponse(res, {
+    statusCode: httpStatus.OK,
+    success: true,
+    message: 'Daily usage retrieved',
+    data: result,
+  });
 });
 
 const updateTenantSettings = catchAsync(async (req, res) => {
   const { tenantId } = req.params;
   const { settings } = req.body;
-  const result = await AdminService.updateTenantSettingsService(tenantId, settings);
-  sendResponse(res, { statusCode: httpStatus.OK, success: true, message: 'Tenant settings updated', data: result });
+  const result = await AdminService.updateTenantSettingsService(
+    tenantId,
+    settings
+  );
+  sendResponse(res, {
+    statusCode: httpStatus.OK,
+    success: true,
+    message: 'Tenant settings updated',
+    data: result,
+  });
 });
-
 
 // ===========
 
 const makeUserAdminController = catchAsync(async (req, res) => {
-
   console.log(req.params.userId, 'userId from params in controller');
   console.log(req.body.role, 'role from body in controller');
   const result = await AdminService.makeUserAdminService(
     req.user,
     req.params?.userId,
-    req.body?.role,
+    req.body?.role
   );
 
   sendResponse(res, {
@@ -349,7 +431,7 @@ const makeUserAdminController = catchAsync(async (req, res) => {
 const deleteAnyUserController = catchAsync(async (req, res) => {
   const result = await AdminService.deleteAnyUserService(
     req.user,
-    req.params.userId,
+    req.params.userId
   );
 
   sendResponse(res, {
@@ -360,6 +442,55 @@ const deleteAnyUserController = catchAsync(async (req, res) => {
   });
 });
 
+// ─────────────────────────────────────────────────────────────────────────────
+// Subscription Package Management (Super Admin)
+// ─────────────────────────────────────────────────────────────────────────────
+
+/**
+ * GET /api/v1/admin/subscription-packages
+ * Retrieve all available subscription packages
+ */
+const getSubscriptionPackages = catchAsync(async (req, res) => {
+  const packages = await AdminService.getAvailableSubscriptionPackagesService();
+
+  sendResponse(res, {
+    statusCode: httpStatus.OK,
+    success: true,
+    message: 'Subscription packages retrieved successfully',
+    data: packages,
+  });
+});
+
+/**
+ * POST /api/v1/admin/users/:userId/assign-subscription
+ * Assign a subscription package to a user
+ * Body: { productId, duration }
+ */
+const assignSubscriptionToUser = catchAsync(async (req, res) => {
+  const { userId } = req.params;
+  const { productId, duration = 'month' } = req.body;
+
+  if (!productId) {
+    return sendResponse(res, {
+      statusCode: httpStatus.BAD_REQUEST,
+      success: false,
+      message: 'Product ID is required',
+    });
+  }
+
+  const result = await AdminService.assignSubscriptionToUserService(
+    userId,
+    productId,
+    duration
+  );
+
+  sendResponse(res, {
+    statusCode: httpStatus.OK,
+    success: true,
+    message: result.message,
+    data: result.data,
+  });
+});
 
 export const AdminController = {
   getAllBuyer,
@@ -389,5 +520,8 @@ export const AdminController = {
   getUsageLogs,
   getDailyUsage,
   makeUserAdminController,
-  deleteAnyUserController
+  deleteAnyUserController,
+  // Subscription Management
+  getSubscriptionPackages,
+  assignSubscriptionToUser,
 };

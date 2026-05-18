@@ -1,12 +1,14 @@
+import httpStatus from 'http-status';
 import mongoose from 'mongoose';
+import ApiError from '../../../errors/ApiError.js';
 import { logger } from '../../../shared/logger.js';
 import paginationHelpers from '../../helpers/paginationHelpers.js';
 import UserModel from '../auth/auth.model.js';
-import SubscriptionModel from '../payment/payment.model.js';
-import TenantMember from '../tenant/tenantMember.model.js';
-import ApiError from '../../../errors/ApiError.js';
-import httpStatus from 'http-status';
 import Token from '../auth/token.model.js';
+import SubscriptionModel from '../payment/payment.model.js';
+import Product from '../stripe/products/products.model.js';
+import Tenant from '../tenant/tenant.model.js';
+import TenantMember from '../tenant/tenantMember.model.js';
 
 // ===========================================
 //                  All Users
@@ -941,6 +943,201 @@ const deleteAnyUserService = async (currentUser, targetUserId) => {
   };
 };
 
+// ─────────────────────────────────────────────────────────────────────────────
+// Super Admin: Subscription Package Management
+// ─────────────────────────────────────────────────────────────────────────────
+
+/**
+ * Get all available subscription packages
+ * Returns list of Product objects with plan details and features
+ */
+const getAvailableSubscriptionPackagesService = async () => {
+  try {
+    const packages = await Product.find({ isActive: true, isVisible: true })
+      .select(
+        'plan name displayName description price interval features featuresList'
+      )
+      .sort({ sortOrder: 1 });
+
+    if (!packages || packages.length === 0) {
+      logger.warn('No subscription packages found in database');
+    }
+
+    return packages;
+  } catch (error) {
+    logger.error('Error fetching subscription packages:', error.message);
+    throw new ApiError(
+      httpStatus.INTERNAL_SERVER_ERROR,
+      'Failed to fetch subscription packages'
+    );
+  }
+};
+
+/**
+ * Assign a subscription package to a user (Super Admin Only)
+ * Creates or updates SubscriptionModel record without touching Stripe
+ * Syncs user and tenant subscription fields
+ *
+ * @param {string} userId - User ID to assign subscription to
+ * @param {string} productId - Product ID from Product collection
+ * @param {string} duration - 'month' or 'year'
+ * @returns {Object} - Assignment result with subscription details
+ */
+const assignSubscriptionToUserService = async (
+  userId,
+  productId,
+  duration = 'month'
+) => {
+  try {
+    // ── Validate user exists ──
+    const user = await UserModel.findById(userId);
+    if (!user) {
+      throw new ApiError(httpStatus.NOT_FOUND, 'User not found');
+    }
+
+    // ── Validate product exists ──
+    const product = await Product.findById(productId);
+    if (!product) {
+      throw new ApiError(
+        httpStatus.NOT_FOUND,
+        'Subscription package not found'
+      );
+    }
+
+    // ── Validate duration ──
+    if (!['month', 'year'].includes(duration)) {
+      throw new ApiError(
+        httpStatus.BAD_REQUEST,
+        'Duration must be "month" or "year"'
+      );
+    }
+
+    // ── Calculate expiration date based on duration ──
+    const expiresAt = new Date();
+    if (duration === 'month') {
+      expiresAt.setMonth(expiresAt.getMonth() + 1);
+    } else {
+      expiresAt.setFullYear(expiresAt.getFullYear() + 1);
+    }
+
+    // ── Extract plan limits from product features ──
+    const limits = {
+      dailyRequestLimit: product.features.dailyRequestLimit,
+      ragType: product.features.ragType,
+      storagePerUser: product.features.storagePerUser,
+      canInviteTeam: product.features.canInviteTeam,
+    };
+
+    // ── Create or update subscription record ──
+    const tenantId = user.activeTenantId || user.tenantId || null;
+
+    let subscription = await SubscriptionModel.findOne({
+      userId,
+      ...(tenantId && { tenantId }),
+    });
+
+    if (subscription) {
+      // Update existing subscription
+      subscription.productId = product._id;
+      subscription.plan_name = product.plan;
+      subscription.price = product.price;
+      subscription.duration = duration;
+      subscription.expiresAt = expiresAt;
+      subscription.paymentStatus = 'paid';
+      subscription.limits = limits;
+      subscription.transactionId = `admin-assign-${Date.now()}`; // Track admin assignment
+      await subscription.save();
+      logger.info('Subscription updated for user', {
+        userId,
+        planName: product.plan,
+        expiresAt,
+      });
+    } else {
+      // Create new subscription
+      const newSubscription = new SubscriptionModel({
+        userId,
+        tenantId,
+        productId: product._id,
+        plan_name: product.plan,
+        price: product.price,
+        duration,
+        expiresAt,
+        paymentStatus: 'paid',
+        limits,
+        transactionId: `admin-assign-${Date.now()}`,
+      });
+      subscription = await newSubscription.save();
+      logger.info('Subscription created for user', {
+        userId,
+        planName: product.plan,
+        expiresAt,
+      });
+    }
+
+    // ── Sync user subscription fields ──
+    user.isSubscribed = true;
+    user.subscription = {
+      price: product.price,
+      plan_name: product.plan,
+      duration,
+      expiresAt,
+      status: 'paid',
+    };
+    await user.save();
+    logger.info('User subscription synchronized', { userId });
+
+    // ── Sync tenant fields if user belongs to a tenant ──
+    if (tenantId) {
+      const tenant = await Tenant.findById(tenantId);
+      if (tenant) {
+        tenant.plan = product.plan;
+        tenant.status = 'active';
+        tenant.subscription = {
+          ...tenant.subscription,
+          status: 'active',
+          currentPeriodStart: new Date(),
+          currentPeriodEnd: expiresAt,
+        };
+        tenant.limits = {
+          maxApiCalls: product.features?.dailyRequestLimit
+            ? product.features.dailyRequestLimit * 30 // Estimate monthly
+            : 1000,
+          maxStorage: product.features?.storagePerUser || 5368709120,
+          maxUsers: 5,
+        };
+        await tenant.save();
+        logger.info('Tenant subscription synchronized', {
+          tenantId,
+          plan: product.plan,
+        });
+      }
+    }
+
+    return {
+      success: true,
+      message: `Subscription assigned successfully. Plan: ${product.plan}, Expires: ${expiresAt.toISOString()}`,
+      data: {
+        userId,
+        email: user.email,
+        planName: product.plan,
+        planDisplayName: product.displayName,
+        duration,
+        price: product.price,
+        expiresAt,
+        features: product.features,
+        subscriptionId: subscription._id,
+      },
+    };
+  } catch (error) {
+    logger.error('Error assigning subscription to user:', error.message);
+    if (error instanceof ApiError) throw error;
+    throw new ApiError(
+      httpStatus.INTERNAL_SERVER_ERROR,
+      'Failed to assign subscription'
+    );
+  }
+};
+
 export const AdminService = {
   getAllUsersService,
   getAllBuyerServices,
@@ -972,4 +1169,7 @@ export const AdminService = {
   getDailyUsageService,
   deleteAnyUserService,
   makeUserAdminService,
+  // Subscription Management
+  getAvailableSubscriptionPackagesService,
+  assignSubscriptionToUserService,
 };
