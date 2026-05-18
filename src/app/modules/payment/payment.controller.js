@@ -22,7 +22,7 @@ const createCheckoutSession = catchAsync(async (req, res, next) => {
 
   const sessionUrl = await PaymentService.createCheckoutSessionService(
     user,
-    plan,
+    plan
   );
 
   sendResponse(res, {
@@ -40,13 +40,23 @@ const handleWebhook = catchAsync(async (req, res, next) => {
 const getAllSubscriptions = catchAsync(async (req, res, next) => {
   const subscriptions = await SubscriptionModel.find({})
     .populate('userId', 'name email') // add/remove fields as needed
-    .populate('productId', 'name price plan')     // optional: plan/product details
+    .populate('productId', 'name price plan') // optional: plan/product details
     .sort({ createdAt: -1 });
+
+  // Total revenue calculation
+  const totalRevenue = subscriptions.reduce((total, subscription) => {
+    return total + (subscription.productId?.price || 0);
+  }, 0);
+
   sendResponse(res, {
     statusCode: 200,
     success: true,
     message: 'All subscriptions fetched successfully',
-    data: subscriptions,
+    data: {
+      totalRevenue,
+      totalSubscriptions: subscriptions.length,
+      subscriptions,
+    },
   });
 });
 
@@ -74,7 +84,7 @@ const getSubscriptionsByUserId = catchAsync(async (req, res, next) => {
   });
 });
 
-const incrementPromptsUsed = async userId => {
+const incrementPromptsUsed = async (userId) => {
   const session = await mongoose.startSession();
   try {
     session.startTransaction();
@@ -92,7 +102,7 @@ const incrementPromptsUsed = async userId => {
       await SubscriptionModel.updateOne(
         { _id: subscription._id },
         { $inc: { 'usage.promptsUsed': 1 } },
-        { session },
+        { session }
       );
     } else {
       user.freePlanUsage.promptsUsed += 1;
@@ -110,7 +120,7 @@ const incrementPromptsUsed = async userId => {
   }
 };
 
-const incrementImagesUsed = async userId => {
+const incrementImagesUsed = async (userId) => {
   const session = await mongoose.startSession();
   try {
     session.startTransaction();
@@ -128,7 +138,7 @@ const incrementImagesUsed = async userId => {
       await SubscriptionModel.updateOne(
         { _id: subscription._id },
         { $inc: { 'usage.imagesUsed': 1 } },
-        { session },
+        { session }
       );
     } else {
       user.freePlanUsage.imagesUsed += 1;
