@@ -3,56 +3,224 @@
  * Determines if a query is code-related and should be routed to Claude Sonnet 4.5
  */
 
+import { detectIntent } from '../../stockIntelligence/intentDetector.js';
+
 /**
  * Code-related keywords and patterns
  */
 const PROGRAMMING_LANGUAGES = [
-  'javascript', 'python', 'java', 'c++', 'cpp', 'typescript', 'go', 'golang',
-  'rust', 'php', 'ruby', 'swift', 'kotlin', 'c#', 'csharp', 'scala', 'perl',
-  'bash', 'shell', 'sql', 'html', 'css', 'react', 'vue', 'angular', 'node',
-  'nodejs', 'express', 'django', 'flask', 'spring', 'laravel', '.net', 'dotnet'
+  'javascript',
+  'python',
+  'java',
+  'c++',
+  'cpp',
+  'typescript',
+  'go',
+  'golang',
+  'rust',
+  'php',
+  'ruby',
+  'swift',
+  'kotlin',
+  'c#',
+  'csharp',
+  'scala',
+  'perl',
+  'bash',
+  'shell',
+  'sql',
+  'html',
+  'css',
+  'react',
+  'vue',
+  'angular',
+  'node',
+  'nodejs',
+  'express',
+  'django',
+  'flask',
+  'spring',
+  'laravel',
+  '.net',
+  'dotnet',
 ];
 
 const CODE_KEYWORDS = [
-  'function', 'class', 'method', 'variable', 'loop', 'algorithm', 'code', 'script',
-  'debug', 'error', 'bug', 'implement', 'refactor', 'syntax', 'compile',
-  'runtime', 'exception', 'async', 'await', 'promise', 'callback', 'closure',
-  'recursion', 'iteration', 'scope', 'inheritance', 'polymorphism', 'interface',
-  'abstract', 'static', 'const', 'let', 'var', 'import', 'export', 'require'
+  'function',
+  'class',
+  'method',
+  'variable',
+  'loop',
+  'algorithm',
+  'code',
+  'script',
+  'debug',
+  'error',
+  'bug',
+  'implement',
+  'refactor',
+  'syntax',
+  'compile',
+  'runtime',
+  'exception',
+  'async',
+  'await',
+  'promise',
+  'callback',
+  'closure',
+  'recursion',
+  'iteration',
+  'scope',
+  'inheritance',
+  'polymorphism',
+  'interface',
+  'abstract',
+  'static',
+  'const',
+  'let',
+  'var',
+  'import',
+  'export',
+  'require',
 ];
 
 const TECHNICAL_TERMS = [
-  'api', 'rest', 'graphql', 'endpoint', 'database', 'sql', 'nosql', 'mongodb',
-  'postgresql', 'mysql', 'redis', 'framework', 'library', 'package', 'module',
-  'npm', 'yarn', 'pip', 'git', 'github', 'docker', 'kubernetes', 'deploy',
-  'deployment', 'container', 'microservice', 'serverless', 'lambda', 'aws',
-  'azure', 'gcp', 'cloud', 'devops', 'ci/cd', 'jenkins', 'webpack', 'babel',
-  'eslint', 'prettier', 'testing', 'jest', 'mocha', 'pytest', 'junit'
+  'api',
+  'rest',
+  'graphql',
+  'endpoint',
+  'database',
+  'sql',
+  'nosql',
+  'mongodb',
+  'postgresql',
+  'mysql',
+  'redis',
+  'framework',
+  'library',
+  'package',
+  'module',
+  'npm',
+  'yarn',
+  'pip',
+  'git',
+  'github',
+  'docker',
+  'kubernetes',
+  'deploy',
+  'deployment',
+  'container',
+  'microservice',
+  'serverless',
+  'lambda',
+  'aws',
+  'azure',
+  'gcp',
+  'cloud',
+  'devops',
+  'ci/cd',
+  'jenkins',
+  'webpack',
+  'babel',
+  'eslint',
+  'prettier',
+  'testing',
+  'jest',
+  'mocha',
+  'pytest',
+  'junit',
 ];
 
 const DEVELOPMENT_ACTIONS = [
-  'write code', 'write script', 'write a script', 'create function', 'create script',
-  'implement', 'build', 'develop', 'program', 'make a script', 'generate code',
-  'fix bug', 'debug', 'troubleshoot', 'optimize', 'refactor', 'review code',
-  'how to code', 'coding', 'programming', 'software development', 'app development',
-  'show me code', 'give me code', 'provide code', 'code for', 'script for'
+  'write code',
+  'write script',
+  'write a script',
+  'create function',
+  'create script',
+  'implement',
+  'build',
+  'develop',
+  'program',
+  'make a script',
+  'generate code',
+  'fix bug',
+  'debug',
+  'troubleshoot',
+  'optimize',
+  'refactor',
+  'review code',
+  'how to code',
+  'coding',
+  'programming',
+  'software development',
+  'app development',
+  'show me code',
+  'give me code',
+  'provide code',
+  'code for',
+  'script for',
 ];
 
 const DATA_STRUCTURES = [
-  'array', 'list', 'linked list', 'stack', 'queue', 'tree', 'binary tree',
-  'graph', 'hash map', 'hash table', 'set', 'dictionary', 'heap', 'trie'
+  'array',
+  'list',
+  'linked list',
+  'stack',
+  'queue',
+  'tree',
+  'binary tree',
+  'graph',
+  'hash map',
+  'hash table',
+  'set',
+  'dictionary',
+  'heap',
+  'trie',
 ];
 
 const DESIGN_PATTERNS = [
-  'singleton', 'factory', 'observer', 'strategy', 'decorator', 'adapter',
-  'facade', 'proxy', 'mvc', 'mvvm', 'redux', 'flux', 'repository pattern'
+  'singleton',
+  'factory',
+  'observer',
+  'strategy',
+  'decorator',
+  'adapter',
+  'facade',
+  'proxy',
+  'mvc',
+  'mvvm',
+  'redux',
+  'flux',
+  'repository pattern',
 ];
 
 const SOFTWARE_CONCEPTS = [
-  'authentication', 'authorization', 'jwt', 'oauth', 'encryption', 'hashing',
-  'security', 'vulnerability', 'xss', 'csrf', 'injection', 'middleware',
-  'routing', 'controller', 'model', 'view', 'component', 'props', 'state',
-  'hooks', 'lifecycle', 'render', 'dom', 'virtual dom', 'webpack', 'bundler'
+  'authentication',
+  'authorization',
+  'jwt',
+  'oauth',
+  'encryption',
+  'hashing',
+  'security',
+  'vulnerability',
+  'xss',
+  'csrf',
+  'injection',
+  'middleware',
+  'routing',
+  'controller',
+  'model',
+  'view',
+  'component',
+  'props',
+  'state',
+  'hooks',
+  'lifecycle',
+  'render',
+  'dom',
+  'virtual dom',
+  'webpack',
+  'bundler',
 ];
 
 /**
@@ -74,37 +242,37 @@ function analyzeKeywordMatches(query) {
   };
 
   // Check programming languages
-  PROGRAMMING_LANGUAGES.forEach(lang => {
+  PROGRAMMING_LANGUAGES.forEach((lang) => {
     if (lowerQuery.includes(lang)) matches.languages++;
   });
 
   // Check code keywords
-  CODE_KEYWORDS.forEach(keyword => {
+  CODE_KEYWORDS.forEach((keyword) => {
     if (lowerQuery.includes(keyword)) matches.codeKeywords++;
   });
 
   // Check technical terms
-  TECHNICAL_TERMS.forEach(term => {
+  TECHNICAL_TERMS.forEach((term) => {
     if (lowerQuery.includes(term)) matches.technicalTerms++;
   });
 
   // Check data structures
-  DATA_STRUCTURES.forEach(ds => {
+  DATA_STRUCTURES.forEach((ds) => {
     if (lowerQuery.includes(ds)) matches.dataStructures++;
   });
 
   // Check design patterns
-  DESIGN_PATTERNS.forEach(pattern => {
+  DESIGN_PATTERNS.forEach((pattern) => {
     if (lowerQuery.includes(pattern)) matches.designPatterns++;
   });
 
   // Check software concepts
-  SOFTWARE_CONCEPTS.forEach(concept => {
+  SOFTWARE_CONCEPTS.forEach((concept) => {
     if (lowerQuery.includes(concept)) matches.softwareConcepts++;
   });
 
   // Check development actions
-  DEVELOPMENT_ACTIONS.forEach(action => {
+  DEVELOPMENT_ACTIONS.forEach((action) => {
     if (lowerQuery.includes(action)) matches.developmentActions++;
   });
 
@@ -121,18 +289,47 @@ function checkCodePatterns(query) {
   const lowerQuery = query.toLowerCase();
 
   // Check for code request patterns
-  if (/write\s+(a\s+)?.*?\s+(script|code|function|class|program)/.test(lowerQuery)) score += 3;
-  if (/create\s+(a\s+)?.*?\s+(script|code|function|class|program)/.test(lowerQuery)) score += 3;
-  if (/generate\s+(a\s+)?.*?\s+(script|code|function|class|program)/.test(lowerQuery)) score += 3;
-  if (/make\s+(a\s+)?.*?\s+(script|code|function|class|program)/.test(lowerQuery)) score += 3;
-  if (/(show|give|provide)\s+me\s+(a\s+)?(script|code|example)/.test(lowerQuery)) score += 3;
+  if (
+    /write\s+(a\s+)?.*?\s+(script|code|function|class|program)/.test(lowerQuery)
+  )
+    score += 3;
+  if (
+    /create\s+(a\s+)?.*?\s+(script|code|function|class|program)/.test(
+      lowerQuery
+    )
+  )
+    score += 3;
+  if (
+    /generate\s+(a\s+)?.*?\s+(script|code|function|class|program)/.test(
+      lowerQuery
+    )
+  )
+    score += 3;
+  if (
+    /make\s+(a\s+)?.*?\s+(script|code|function|class|program)/.test(lowerQuery)
+  )
+    score += 3;
+  if (
+    /(show|give|provide)\s+me\s+(a\s+)?(script|code|example)/.test(lowerQuery)
+  )
+    score += 3;
 
   // Check for code snippets (curly braces, semicolons, etc.)
   if (query.includes('{') && query.includes('}')) score += 2;
   if (query.includes('()') || query.includes('function(')) score += 2;
   if (query.includes('=>')) score += 2;
-  if (query.includes('const ') || query.includes('let ') || query.includes('var ')) score += 2;
-  if (query.includes('import ') || query.includes('from ') || query.includes('require(')) score += 1;
+  if (
+    query.includes('const ') ||
+    query.includes('let ') ||
+    query.includes('var ')
+  )
+    score += 2;
+  if (
+    query.includes('import ') ||
+    query.includes('from ') ||
+    query.includes('require(')
+  )
+    score += 1;
   if (query.includes('class ') || query.includes('extends ')) score += 2;
   if (query.includes('async ') || query.includes('await ')) score += 1;
 
@@ -177,8 +374,19 @@ function calculateConfidence(matches, patternScore, query) {
   }
 
   // Negative indicators (reduce score for non-code queries)
-  const nonCodeKeywords = ['weather', 'game', 'score', 'team', 'player', 'movie', 'song', 'recipe', 'restaurant', 'hotel'];
-  nonCodeKeywords.forEach(keyword => {
+  const nonCodeKeywords = [
+    'weather',
+    'game',
+    'score',
+    'team',
+    'player',
+    'movie',
+    'song',
+    'recipe',
+    'restaurant',
+    'hotel',
+  ];
+  nonCodeKeywords.forEach((keyword) => {
     if (lowerQuery.includes(keyword)) score -= 10;
   });
 
@@ -212,7 +420,9 @@ export function classifyQuery(query, history = []) {
   const isCodeRelated = confidence >= 0.5;
 
   console.log(`📊 Query Classification:`);
-  console.log(`   Query: "${query.substring(0, 100)}${query.length > 100 ? '...' : ''}"`);
+  console.log(
+    `   Query: "${query.substring(0, 100)}${query.length > 100 ? '...' : ''}"`
+  );
   console.log(`   Code-related: ${isCodeRelated ? 'YES' : 'NO'}`);
   console.log(`   Confidence: ${(confidence * 100).toFixed(1)}%`);
   console.log(`   Matches:`, matches);
@@ -229,6 +439,244 @@ export function classifyQuery(query, history = []) {
   };
 }
 
+const FINANCIAL_KEYWORDS = {
+  stockMarket: [
+    'stock market',
+    'stock',
+    'stocks',
+    'share',
+    'shares',
+    'equity',
+    'equities',
+    'ticker',
+    'tickers',
+    'stock price',
+    'share price',
+    'earnings',
+    'dividend',
+    'market cap',
+    'broker',
+    'portfolio',
+  ],
+  forex: [
+    'forex',
+    'fx',
+    'foreign exchange',
+    'currency pair',
+    'exchange rate',
+    'pip',
+    'pips',
+    'usd',
+    'eur',
+    'gbp',
+    'jpy',
+    'cad',
+    'aud',
+    'nzd',
+    'chf',
+  ],
+  options: [
+    'options',
+    'option chain',
+    'call option',
+    'put option',
+    'strike price',
+    'expiration',
+    'expiry',
+    'implied volatility',
+    'delta',
+    'gamma',
+    'theta',
+    'vega',
+  ],
+  analysis: [
+    'financial analysis',
+    'technical analysis',
+    'fundamental analysis',
+    'market analysis',
+    'support',
+    'resistance',
+    'trend line',
+    'rsi',
+    'macd',
+    'moving average',
+    'candlestick',
+    'volume profile',
+    'breakout',
+    'bullish',
+    'bearish',
+    'trend',
+    'outlook',
+  ],
+  investing: [
+    'invest',
+    'investment',
+    'buy or sell',
+    'buy/sell',
+    'hold',
+    'long term',
+    'swing trade',
+    'day trade',
+    'position trade',
+    'entry point',
+    'exit point',
+    'risk reward',
+    'asset allocation',
+    'diversification',
+  ],
+  news: [
+    'market news',
+    'financial news',
+    'earnings news',
+    'fed meeting',
+    'fomc',
+    'cpi',
+    'inflation data',
+    'interest rates',
+    'economic calendar',
+  ],
+};
+
+const FINANCIAL_PHRASES = [
+  'stock market',
+  'forex trading',
+  'options trading',
+  'technical analysis',
+  'financial analysis',
+  'market news',
+  'investment strategy',
+  'trading strategy',
+  'price target',
+  'support and resistance',
+  'should i buy',
+  'should i sell',
+  'is it a good investment',
+  'market outlook',
+  'earnings report',
+];
+
+const FINANCIAL_EXCLUSION_PATTERNS = [
+  /\b(write|create|generate|build|implement|debug|refactor)\b.*\b(code|script|bot|api|function|program|indicator in python)\b/i,
+  /\bjavascript\b|\bpython\b|\bjava\b|\btypescript\b|\breact\b|\bnode\b/i,
+  /\bsource code\b|\bprogramming\b|\balgorithm\b/i,
+];
+
+function analyzeFinancialKeywordMatches(query) {
+  const lowerQuery = query.toLowerCase();
+  const matches = {};
+
+  for (const [category, keywords] of Object.entries(FINANCIAL_KEYWORDS)) {
+    matches[category] = keywords.filter((keyword) =>
+      lowerQuery.includes(keyword)
+    ).length;
+  }
+
+  return matches;
+}
+
+export function classifyFinancialRequest(query, history = []) {
+  if (!query || typeof query !== 'string') {
+    return {
+      isFinancialRequest: false,
+      confidence: 0,
+      reason: 'Invalid query',
+      matches: {},
+      detectedIntents: [],
+      primaryCategory: 'general',
+      matchedKeywords: [],
+    };
+  }
+
+  const lowerQuery = query.toLowerCase();
+  const keywordMatches = analyzeFinancialKeywordMatches(query);
+  const detectedIntents = detectIntent(query);
+  const matchedKeywords = [];
+  let score = 0;
+
+  for (const [category, keywords] of Object.entries(FINANCIAL_KEYWORDS)) {
+    keywords.forEach((keyword) => {
+      if (lowerQuery.includes(keyword)) matchedKeywords.push(keyword);
+    });
+
+    if (keywordMatches[category] > 0) {
+      score += keywordMatches[category] * 8;
+    }
+  }
+
+  FINANCIAL_PHRASES.forEach((phrase) => {
+    if (lowerQuery.includes(phrase)) score += 10;
+  });
+
+  if (/\$[A-Z]{1,5}\b/.test(query)) score += 14;
+  if (/\b[A-Z]{3}\/[A-Z]{3}\b/.test(query)) score += 16;
+  if (/\b(call|put)s?\b/.test(lowerQuery)) score += 10;
+  if (/\b(chart|trend|setup|signal|forecast|outlook)\b/.test(lowerQuery))
+    score += 8;
+
+  if (detectedIntents.length > 0) {
+    score += 35;
+  }
+
+  const hasFinancialQuestion =
+    /\b(stock|forex|fx|option|market|invest|trading|earnings|portfolio|analysis|ticker|share)\b/i.test(
+      query
+    ) &&
+    /\?|\bwhat\b|\bhow\b|\bwhy\b|\bwhen\b|\bshould\b|\banalyze\b|\bnews\b|\boutlook\b/i.test(
+      query
+    );
+
+  if (hasFinancialQuestion) {
+    score += 10;
+  }
+
+  const hasExclusion = FINANCIAL_EXCLUSION_PATTERNS.some((pattern) =>
+    pattern.test(query)
+  );
+  if (hasExclusion) {
+    score -= 35;
+  }
+
+  const maxScore = 100;
+  const confidence = Math.max(0, Math.min(1, score / maxScore));
+  const topCategory = Object.entries(keywordMatches).sort(
+    (a, b) => b[1] - a[1]
+  )[0];
+  const primaryCategory =
+    topCategory?.[1] > 0
+      ? topCategory[0]
+      : detectedIntents.length > 0
+        ? 'live_market_data'
+        : 'general';
+  const isFinancialRequest = confidence >= 0.45 || detectedIntents.length > 0;
+
+  console.log('💹 Financial Classification:');
+  console.log(
+    `   Query: "${query.substring(0, 100)}${query.length > 100 ? '...' : ''}"`
+  );
+  console.log(`   Financial request: ${isFinancialRequest ? 'YES' : 'NO'}`);
+  console.log(`   Confidence: ${(confidence * 100).toFixed(1)}%`);
+  console.log('   Keyword matches:', keywordMatches);
+  console.log(
+    '   Detected intents:',
+    detectedIntents.map((intent) => intent.intent)
+  );
+
+  return {
+    isFinancialRequest,
+    confidence,
+    matches: keywordMatches,
+    detectedIntents,
+    matchedKeywords: [...new Set(matchedKeywords)].slice(0, 10),
+    primaryCategory,
+    reason: isFinancialRequest
+      ? `Financial/trading request detected (${(confidence * 100).toFixed(1)}% confidence)`
+      : hasExclusion
+        ? 'Code-generation style request excluded from financial routing'
+        : `Not a financial/trading request (${(confidence * 100).toFixed(1)}% confidence)`,
+    historyLength: Array.isArray(history) ? history.length : 0,
+  };
+}
+
 /**
  * Fast classification for simple queries
  * @param {string} query - The user query
@@ -238,9 +686,15 @@ export function classifyQueryFast(query) {
   const lowerQuery = query.toLowerCase();
 
   // Quick checks for obvious code queries
-  const hasLanguage = PROGRAMMING_LANGUAGES.some(lang => lowerQuery.includes(lang));
-  const hasCodeKeyword = CODE_KEYWORDS.slice(0, 10).some(kw => lowerQuery.includes(kw));
-  const hasCodePattern = /\{|\}|\(\)|=>|function|class|const |let |var /.test(query);
+  const hasLanguage = PROGRAMMING_LANGUAGES.some((lang) =>
+    lowerQuery.includes(lang)
+  );
+  const hasCodeKeyword = CODE_KEYWORDS.slice(0, 10).some((kw) =>
+    lowerQuery.includes(kw)
+  );
+  const hasCodePattern = /\{|\}|\(\)|=>|function|class|const |let |var /.test(
+    query
+  );
 
   if (hasLanguage || (hasCodeKeyword && hasCodePattern)) {
     return {
@@ -301,42 +755,122 @@ export function isAskingForCodeExample(query) {
     'write a function',
   ];
 
-  return codeExamplePhrases.some(phrase => lowerQuery.includes(phrase));
+  return codeExamplePhrases.some((phrase) => lowerQuery.includes(phrase));
 }
 
 /**
  * Writing-related keywords and patterns
  */
 const WRITING_KEYWORDS = [
-  'write', 'compose', 'draft', 'create', 'generate', 'craft', 'author',
-  'essay', 'article', 'blog', 'post', 'story', 'letter', 'email',
-  'report', 'document', 'paper', 'proposal', 'summary', 'review',
-  'description', 'caption', 'headline', 'title', 'paragraph',
-  'content', 'copy', 'text', 'message', 'script', 'speech',
-  'poem', 'narrative', 'biography', 'resume', 'cover letter'
+  'write',
+  'compose',
+  'draft',
+  'create',
+  'generate',
+  'craft',
+  'author',
+  'essay',
+  'article',
+  'blog',
+  'post',
+  'story',
+  'letter',
+  'email',
+  'report',
+  'document',
+  'paper',
+  'proposal',
+  'summary',
+  'review',
+  'description',
+  'caption',
+  'headline',
+  'title',
+  'paragraph',
+  'content',
+  'copy',
+  'text',
+  'message',
+  'script',
+  'speech',
+  'poem',
+  'narrative',
+  'biography',
+  'resume',
+  'cover letter',
 ];
 
 const WRITING_ACTIONS = [
-  'write me', 'write a', 'write an', 'compose a', 'compose an',
-  'draft a', 'draft an', 'create a', 'create an', 'generate a', 'generate an',
-  'help me write', 'i need to write', 'can you write',
-  'please write', 'could you write', 'would you write',
-  'write about', 'write on', 'writing about'
+  'write me',
+  'write a',
+  'write an',
+  'compose a',
+  'compose an',
+  'draft a',
+  'draft an',
+  'create a',
+  'create an',
+  'generate a',
+  'generate an',
+  'help me write',
+  'i need to write',
+  'can you write',
+  'please write',
+  'could you write',
+  'would you write',
+  'write about',
+  'write on',
+  'writing about',
 ];
 
 const CONTENT_TYPES = [
-  'essay', 'article', 'blog post', 'story', 'letter', 'email',
-  'report', 'document', 'paper', 'proposal', 'summary', 'review',
-  'description', 'caption', 'headline', 'title', 'paragraph',
-  'content', 'copy', 'message', 'script', 'speech', 'poem'
+  'essay',
+  'article',
+  'blog post',
+  'story',
+  'letter',
+  'email',
+  'report',
+  'document',
+  'paper',
+  'proposal',
+  'summary',
+  'review',
+  'description',
+  'caption',
+  'headline',
+  'title',
+  'paragraph',
+  'content',
+  'copy',
+  'message',
+  'script',
+  'speech',
+  'poem',
 ];
 
 const WRITING_CONTEXTS = [
-  'for social media', 'for linkedin', 'for twitter', 'for facebook',
-  'for instagram', 'for blog', 'for website', 'for newsletter',
-  'for presentation', 'for meeting', 'for client', 'for boss',
-  'professional', 'formal', 'informal', 'casual', 'creative',
-  'persuasive', 'informative', 'descriptive', 'narrative'
+  'for social media',
+  'for linkedin',
+  'for twitter',
+  'for facebook',
+  'for instagram',
+  'for blog',
+  'for website',
+  'for newsletter',
+  'for presentation',
+  'for meeting',
+  'for client',
+  'for boss',
+  'professional',
+  'formal',
+  'informal',
+  'casual',
+  'creative',
+  'persuasive',
+  'informative',
+  'descriptive',
+  'narrative',
 ];
 
 /**
@@ -349,7 +883,7 @@ export function classifyWritingRequest(query) {
     return {
       isWritingRequest: false,
       confidence: 0,
-      reason: 'Invalid query'
+      reason: 'Invalid query',
     };
   }
 
@@ -359,7 +893,7 @@ export function classifyWritingRequest(query) {
 
   // Check for writing action phrases (strong indicators)
   let hasWritingAction = false;
-  WRITING_ACTIONS.forEach(action => {
+  WRITING_ACTIONS.forEach((action) => {
     if (lowerQuery.includes(action)) {
       score += 15;
       hasWritingAction = true;
@@ -368,7 +902,7 @@ export function classifyWritingRequest(query) {
 
   // Check for content type mentions
   let contentTypeMatches = 0;
-  CONTENT_TYPES.forEach(type => {
+  CONTENT_TYPES.forEach((type) => {
     if (lowerQuery.includes(type)) {
       score += 10;
       contentTypeMatches++;
@@ -377,7 +911,7 @@ export function classifyWritingRequest(query) {
 
   // Check for writing keywords
   let writingKeywordMatches = 0;
-  WRITING_KEYWORDS.forEach(keyword => {
+  WRITING_KEYWORDS.forEach((keyword) => {
     if (lowerQuery.includes(keyword)) {
       score += 5;
       writingKeywordMatches++;
@@ -385,7 +919,7 @@ export function classifyWritingRequest(query) {
   });
 
   // Check for writing context
-  WRITING_CONTEXTS.forEach(context => {
+  WRITING_CONTEXTS.forEach((context) => {
     if (lowerQuery.includes(context)) {
       score += 8;
     }
@@ -394,13 +928,28 @@ export function classifyWritingRequest(query) {
   // IMPORTANT: Check for CODE-RELATED exclusions
   // If it's asking for code/script, it's NOT a writing request
   const codeExclusionKeywords = [
-    'javascript', 'python', 'java', ' code ', 'function', ' script',
-    'program', ' api ', 'database', 'algorithm', 'debug', 'compile',
-    'node', 'react', 'html', 'css', 'sql', 'programming'
+    'javascript',
+    'python',
+    'java',
+    ' code ',
+    'function',
+    ' script',
+    'program',
+    ' api ',
+    'database',
+    'algorithm',
+    'debug',
+    'compile',
+    'node',
+    'react',
+    'html',
+    'css',
+    'sql',
+    'programming',
   ];
 
   let hasCodeKeyword = false;
-  codeExclusionKeywords.forEach(keyword => {
+  codeExclusionKeywords.forEach((keyword) => {
     if (lowerQuery.includes(keyword)) {
       hasCodeKeyword = true;
       score -= 30; // Heavy penalty for code keywords
@@ -409,18 +958,28 @@ export function classifyWritingRequest(query) {
 
   // Check for code patterns that should exclude writing
   // More specific patterns to avoid false positives with words like "app"
-  if (/write\s+(a\s+|an\s+)?(script|code|function|program)\b/.test(lowerQuery)) {
+  if (
+    /write\s+(a\s+|an\s+)?(script|code|function|program)\b/.test(lowerQuery)
+  ) {
     hasCodeKeyword = true;
     score -= 40; // Even heavier penalty for explicit code writing requests
   }
 
-  if (/(create|generate|build)\s+(a\s+|an\s+)?(script|code|function|program|api)\b/.test(lowerQuery)) {
+  if (
+    /(create|generate|build)\s+(a\s+|an\s+)?(script|code|function|program|api)\b/.test(
+      lowerQuery
+    )
+  ) {
     hasCodeKeyword = true;
     score -= 40;
   }
 
   // Patterns that strongly suggest writing (not code)
-  if (/(write|compose|draft)\s+(me\s+)?(a|an)\s+(?!script|code|function|program)/.test(lowerQuery)) {
+  if (
+    /(write|compose|draft)\s+(me\s+)?(a|an)\s+(?!script|code|function|program)/.test(
+      lowerQuery
+    )
+  ) {
     score += 15;
   }
 
@@ -434,10 +993,13 @@ export function classifyWritingRequest(query) {
 
   // Determine if it's a writing request
   // Requirements: High confidence AND has writing action AND no code keywords
-  const isWritingRequest = confidence >= 0.4 && hasWritingAction && !hasCodeKeyword;
+  const isWritingRequest =
+    confidence >= 0.4 && hasWritingAction && !hasCodeKeyword;
 
   console.log(`📝 Writing Classification:`);
-  console.log(`   Query: "${query.substring(0, 100)}${query.length > 100 ? '...' : ''}"`);
+  console.log(
+    `   Query: "${query.substring(0, 100)}${query.length > 100 ? '...' : ''}"`
+  );
   console.log(`   Writing request: ${isWritingRequest ? 'YES' : 'NO'}`);
   console.log(`   Confidence: ${(confidence * 100).toFixed(1)}%`);
   console.log(`   Has writing action: ${hasWritingAction}`);
@@ -456,13 +1018,14 @@ export function classifyWritingRequest(query) {
       ? `Writing request detected (${(confidence * 100).toFixed(1)}% confidence)`
       : hasCodeKeyword
         ? 'Code-related request (not writing)'
-        : `Not a writing request (${(confidence * 100).toFixed(1)}% confidence)`
+        : `Not a writing request (${(confidence * 100).toFixed(1)}% confidence)`,
   };
 }
 
 export default {
   classifyQuery,
   classifyQueryFast,
+  classifyFinancialRequest,
   getCodeQueryConfidence,
   isAskingForCodeExample,
   classifyWritingRequest,

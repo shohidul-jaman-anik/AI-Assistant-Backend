@@ -58,7 +58,7 @@ router.get(
  * @desc    Get all tenants with pagination
  * @access  Private (Admin only)
  */
-router.get('/tenants', auth(...ADMIN_ROLES), AdminController.getAllTenants);
+router.get('/tenants', auth(...ADMIN_ROLES, ENUM_USER_ROLE.SUPER_ADMIN), AdminController.getAllTenants);
 
 /**
  * @route   GET /api/v1/admin/tenants/:tenantId
@@ -67,7 +67,7 @@ router.get('/tenants', auth(...ADMIN_ROLES), AdminController.getAllTenants);
  */
 router.get(
   '/tenants/:tenantId',
-  auth(...ADMIN_ROLES),
+  auth(...ADMIN_ROLES, ENUM_USER_ROLE.SUPER_ADMIN),
   AdminController.getTenantDetails
 );
 

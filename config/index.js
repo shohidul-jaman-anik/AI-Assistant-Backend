@@ -1,5 +1,4 @@
 import dotenv from 'dotenv';
-import { google } from 'googleapis';
 import path from 'path';
 
 dotenv.config({ path: path.join(process.cwd(), '.env') });
@@ -83,7 +82,10 @@ export default {
   },
   routing: {
     enableSmartRouting: process.env.ENABLE_SMART_ROUTING === 'true',
-    codeQueryThreshold: parseFloat(process.env.CODE_QUERY_CONFIDENCE_THRESHOLD) || 0.7,
+    codeQueryThreshold:
+      parseFloat(process.env.CODE_QUERY_CONFIDENCE_THRESHOLD) || 0.7,
+    financialQueryThreshold:
+      parseFloat(process.env.FINANCIAL_QUERY_CONFIDENCE_THRESHOLD) || 0.45,
   },
   google: {
     google_application_credentials: process.env.GOOGLE_APPLICATION_CREDENTIALS,
@@ -94,9 +96,13 @@ export default {
     model_id: process.env.MODEL_ID,
   },
   gcs: {
-    knowledge_bank_bucket: process.env.GCS_KNOWLEDGE_BANK_BUCKET || 'alti_knowledge_bank_files',
-    knowledgebot_bucket: process.env.GCS_KNOWLEDGEBOT_BUCKET || 'alti_assistant_knowledge_bot_files',
-    presentation_bucket: process.env.GCS_PRESENTATION_BUCKET || 'alti_assistant_presentation',
+    knowledge_bank_bucket:
+      process.env.GCS_KNOWLEDGE_BANK_BUCKET || 'alti_knowledge_bank_files',
+    knowledgebot_bucket:
+      process.env.GCS_KNOWLEDGEBOT_BUCKET ||
+      'alti_assistant_knowledge_bot_files',
+    presentation_bucket:
+      process.env.GCS_PRESENTATION_BUCKET || 'alti_assistant_presentation',
   },
   mail: {
     google_smtp_password: process.env.GOOGLE_SMTP_PASSWORD,

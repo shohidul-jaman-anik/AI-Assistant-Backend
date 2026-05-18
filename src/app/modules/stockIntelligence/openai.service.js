@@ -13,15 +13,24 @@ function getClient() {
   return _client;
 }
 
-export async function generateResponse(userPrompt, contextBlocks = [], errors = [], conversationHistory = []) {
+export async function generateResponse(
+  userPrompt,
+  contextBlocks = [],
+  errors = [],
+  conversationHistory = []
+) {
   const client = getClient();
-  const augmentedPrompt = buildAugmentedPrompt(userPrompt, contextBlocks, errors);
+  const augmentedPrompt = buildAugmentedPrompt(
+    userPrompt,
+    contextBlocks,
+    errors
+  );
 
   const messages = [
     { role: 'system', content: SYSTEM_INSTRUCTION },
     ...conversationHistory.map((turn) => ({
-      role: turn.role === 'model' ? 'assistant' : turn.role,
-      content: turn.text,
+      role: turn.role === 'model' ? 'assistant' : turn.role || 'user',
+      content: turn.text || turn.content || '',
     })),
     { role: 'user', content: augmentedPrompt },
   ];
@@ -35,11 +44,14 @@ export async function generateResponse(userPrompt, contextBlocks = [], errors = 
     top_p: 0.85,
   });
 
-  const text = completion.choices?.[0]?.message?.content?.trim()
-    || 'Unable to generate a response. Please try again.';
+  const text =
+    completion.choices?.[0]?.message?.content?.trim() ||
+    'Unable to generate a response. Please try again.';
 
   const usage = completion.usage;
-  console.log(`[OpenAI] ${completion.model} responded in ${Date.now() - start}ms | tokens: ${usage?.total_tokens}`);
+  console.log(
+    `[OpenAI] ${completion.model} responded in ${Date.now() - start}ms | tokens: ${usage?.total_tokens}`
+  );
 
   return {
     text,
